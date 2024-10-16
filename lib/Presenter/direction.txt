@@ -1,0 +1,9 @@
+Presenter:
+Vai trò: Presenter chịu trách nhiệm trung gian giữa View và Model.
+Chức năng:
+Nhận dữ liệu từ Model và chuyển dữ liệu đó cho View để hiển thị.
+Xử lý các sự kiện từ View, ví dụ: khi người dùng nhấn vào một nút, Presenter sẽ gọi đến Model để lấy dữ liệu hoặc thực hiện hành động thích hợp.
+Presenter thường không biết trực tiếp về cách hiển thị của View, nó chỉ thao tác với View qua một contract (giao kèo).
+Ví dụ: Khi người dùng chọn thời gian cắt tóc, Presenter sẽ lấy dữ liệu từ Model và cập nhật danh sách thời gian trống để hiển thị lên View.
+
+Cụ thể là chứ các file logic code (back end)

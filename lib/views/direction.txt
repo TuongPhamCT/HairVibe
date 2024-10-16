@@ -1,0 +1,9 @@
+View:
+Vai trò: View là thành phần chịu trách nhiệm hiển thị dữ liệu lên giao diện người dùng.
+Chức năng:
+Hiển thị dữ liệu mà nó nhận từ Presenter.
+Nhận đầu vào từ người dùng (ví dụ: nhấn nút, nhập thông tin) và chuyển sự kiện đó đến Presenter.
+View không thực hiện bất kỳ logic xử lý nào, chỉ là nơi hiển thị giao diện và tương tác với người dùng.
+Ví dụ: Giao diện người dùng hiển thị lịch cắt tóc, các thông tin về nhân viên và nút để người dùng đặt lịch.
+
+Cụ thể: Sẽ chứa các file giao diện ứng dụng (Front end)

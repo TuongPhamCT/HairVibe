@@ -1,0 +1,7 @@
+Contract (Giao kèo):
+Vai trò: Contract đóng vai trò như một interface định nghĩa sự tương tác giữa View và Presenter.
+Chức năng:
+Chứa các phương thức mà View và Presenter cần để giao tiếp với nhau.
+Đảm bảo View và Presenter có thể hoạt động mà không cần biết chi tiết cụ thể của nhau.
+
+Cụ thể: tạo ra các interface để cho Views và Presenter có thể làm việc với nhau.

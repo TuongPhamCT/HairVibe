@@ -1,0 +1,8 @@
+Model:
+Vai trò: Model chịu trách nhiệm quản lý dữ liệu, logic nghiệp vụ và quy trình xử lý của ứng dụng.
+Chức năng:
+Truy xuất và xử lý dữ liệu từ các nguồn như cơ sở dữ liệu, API, hoặc các nguồn dữ liệu khác.
+Model không biết đến sự tồn tại của View hoặc Presenter, nó chỉ cung cấp dữ liệu cho Presenter khi được yêu cầu.
+
+Cụ thể: Chứa các định nghĩa class đối tượng
+Như class user, các thuộc tính trong class, các phương thức ...
