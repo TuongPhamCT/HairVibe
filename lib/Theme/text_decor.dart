@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 //implement BUILDER PATTERN
 
@@ -9,9 +10,9 @@ import 'package:flutter/material.dart';
 class TextDecor {
   TextDecor(this.context);
   BuildContext context;
-  static const TextStyle title = TextStyle(
-    fontSize: 20,
-    fontWeight: FontWeight.bold,
+  static TextStyle title = GoogleFonts.abrilFatface(
+    fontSize: 40,
+    color: Colors.white,
   );
 }
 
@@ -24,7 +25,6 @@ extension TextDecorExtension on TextStyle {
 
   TextStyle get italic {
     return copyWith(
-      fontWeight: FontWeight.normal,
       fontStyle: FontStyle.italic,
     );
   }
