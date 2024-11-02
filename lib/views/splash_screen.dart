@@ -8,23 +8,18 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Stack(
-        alignment: Alignment.center,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Center(
-            child: Image.asset(
-              AssetHelper.logo,
-            ),
-          ),
           Container(
-            padding: EdgeInsets.only(top: 180),
-            child: Text(
-              'Hair Vibe',
-              style: TextDecor.title,
-            ),
+            width: size.width,
           ),
+          Image.asset(AssetHelper.logo, height: 300),
+          Text('Hair Vibe', style: TextDecor.title),
         ],
       ),
     );

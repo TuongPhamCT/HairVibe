@@ -6,4 +6,7 @@ class AssetHelper {
 
   //splash
   static const String logo = '${imgAssets}logo.png';
+
+  //auth
+  static const String backgroundImg = '${imgAssets}Background_img.png';
 }
