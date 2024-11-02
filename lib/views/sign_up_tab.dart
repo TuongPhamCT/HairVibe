@@ -65,7 +65,7 @@ class _SignUpTabState extends State<SignUpTab> {
             Expanded(child: Container()),
             CustomButton(
               onPressed: () {},
-              text: 'Sign Up',
+              text: 'SIGN UP',
             ),
           ],
         ),
