@@ -1,6 +1,4 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 
@@ -16,21 +14,22 @@ class CustomButton extends StatefulWidget {
 class _CustomButtonState extends State<CustomButton> {
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: widget.onPressed,
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-        height: 45,
-        decoration: BoxDecoration(
-          color: Palette.primary,
-          borderRadius: BorderRadius.circular(10),
+    return ElevatedButton(
+      onPressed: widget.onPressed,
+      style: ButtonStyle(
+        fixedSize: MaterialStateProperty.all<Size>(
+          Size(MediaQuery.of(context).size.width - 60, 45),
         ),
-        child: Center(
-          child: Text(
-            widget.text,
-            style: TextDecor.buttonText,
+        backgroundColor: MaterialStateProperty.all<Color>(Palette.primary),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
           ),
         ),
+      ),
+      child: Text(
+        widget.text,
+        style: TextDecor.buttonText,
       ),
     );
   }
