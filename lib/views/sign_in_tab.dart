@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
+import 'package:hairvibe/views/forgot_pass_screen.dart';
 import 'package:hairvibe/widgets/custom_button.dart';
 import 'package:hairvibe/widgets/sign_up_form.dart';
 
@@ -44,7 +45,9 @@ class _SignInTabState extends State<SignInTab> {
               margin: const EdgeInsets.only(top: 10),
               alignment: Alignment.center,
               child: InkWell(
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).pushNamed(ForgotPassScreen.routeName);
+                },
                 child: Text(
                   'FORGOT PASSWORD?',
                   style: TextDecor.buttonText.copyWith(
