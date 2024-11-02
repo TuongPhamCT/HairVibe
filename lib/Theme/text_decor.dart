@@ -43,6 +43,21 @@ class TextDecor {
     fontSize: 18,
     color: Colors.black,
   ).bold;
+
+  static TextStyle forgotTitle = GoogleFonts.roboto(
+    fontSize: 20,
+    color: Colors.white,
+  ).semibold;
+
+  static TextStyle leadingForgot = GoogleFonts.roboto(
+    fontSize: 13,
+    color: Palette.primary,
+  ).semibold;
+
+  static TextStyle roboMedium13 = GoogleFonts.roboto(
+    fontSize: 13,
+    color: Palette.hintText,
+  ).medium;
 }
 
 extension TextDecorExtension on TextStyle {
@@ -61,6 +76,18 @@ extension TextDecorExtension on TextStyle {
   TextStyle get bold {
     return copyWith(
       fontWeight: FontWeight.bold,
+    );
+  }
+
+  TextStyle get semibold {
+    return copyWith(
+      fontWeight: FontWeight.w600,
+    );
+  }
+
+  TextStyle get medium {
+    return copyWith(
+      fontWeight: FontWeight.w500,
     );
   }
 }
