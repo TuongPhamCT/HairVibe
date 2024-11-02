@@ -1,21 +1,19 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
-import 'package:hairvibe/views/reset_password_screen.dart';
+import 'package:hairvibe/widgets/custom_button.dart';
 import 'package:hairvibe/widgets/sign_up_form.dart';
 
-class ForgotPassScreen extends StatefulWidget {
-  const ForgotPassScreen({super.key});
-
-  static const String routeName = 'forgot_pass_screen';
+class ResetPasswordScreen extends StatefulWidget {
+  const ResetPasswordScreen({super.key});
+  static const String routeName = 'reset_password_screen';
 
   @override
-  State<ForgotPassScreen> createState() => _ForgotPassScreenState();
+  State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }
 
-class _ForgotPassScreenState extends State<ForgotPassScreen> {
-  TextEditingController emailController = TextEditingController();
+class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
+  TextEditingController newPasswordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,9 +32,7 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
             ),
             Text('FORGOT PASSWORD', style: TextDecor.forgotTitle),
             InkWell(
-              onTap: () {
-                Navigator.of(context).pushNamed(ResetPasswordScreen.routeName);
-              },
+              onTap: () {},
               child: Text('RESET', style: TextDecor.leadingForgot),
             ),
           ],
@@ -48,22 +44,23 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
             height: 30,
           ),
           SignUpForm(
-            textController: emailController,
-            lableText: 'Email',
-            obscureText: false,
+            textController: newPasswordController,
+            lableText: 'New Password',
+            obscureText: true,
+            keyboardType: TextInputType.text,
+            errorText: null,
+          ),
+          SignUpForm(
+            textController: confirmPasswordController,
+            lableText: 'Confirm Password',
+            obscureText: true,
             keyboardType: TextInputType.text,
             errorText: null,
           ),
           const SizedBox(
-            height: 10,
+            height: 30,
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: Text(
-              'Please enter the email associated with your account. We will email you a link to reset your password',
-              style: TextDecor.roboMedium13,
-            ),
-          ),
+          CustomButton(onPressed: () {}, text: "RESET"),
         ],
       ),
     );
