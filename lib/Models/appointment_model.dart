@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hairvibe/Models/service_model.dart';
 
 class AppointmentModel {
@@ -32,7 +33,7 @@ class AppointmentModel {
     'barberID': barberID,
     'branchID': branchID,
     'services': services.map((service) => service.toJson()).toList(),
-    'date': date,
+    'date': Timestamp.fromDate(date!),
     'status': status,
     'otherInfo': otherInfo
   };
@@ -46,7 +47,7 @@ class AppointmentModel {
       barberID: json['barberID'] as String,
       branchID: json['branchID'] as String,
       services: listServices.map((raw) => ServiceModel.fromJson(raw)).toList(),
-      date: json['date'] as DateTime,
+      date: (json['date'] as Timestamp).toDate(),
       status: json['status'] as String,
       otherInfo: json['otherInfo'] as String
     );
