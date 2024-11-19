@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hairvibe/views/all_service.dart';
 import 'package:hairvibe/views/appoinment/appointment.dart';
 import 'package:hairvibe/views/auth_screen.dart';
 import 'package:hairvibe/views/forgot_pass_screen.dart';
@@ -13,4 +14,5 @@ final Map<String, WidgetBuilder> routes = {
   ResetPasswordScreen.routeName: (context) => const ResetPasswordScreen(),
   HomeScreen.routeName: (context) => const HomeScreen(),
   AppointmentScreen.routeName: (context) => const AppointmentScreen(),
+  AllServiceScreen.routeName: (context) => const AllServiceScreen(),
 };
