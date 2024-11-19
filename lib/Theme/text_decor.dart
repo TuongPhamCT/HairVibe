@@ -58,6 +58,36 @@ class TextDecor {
     fontSize: 13,
     color: Palette.hintText,
   ).medium;
+
+  static TextStyle homeTitle = GoogleFonts.roboto(
+    fontSize: 20,
+    color: Colors.white,
+  ).bold;
+
+  static TextStyle serviceListItemTitle = GoogleFonts.roboto(
+    fontSize: 16,
+    color: Colors.white,
+  ).bold;
+
+  static TextStyle serviceListItemTime = GoogleFonts.roboto(
+    fontSize: 13,
+    color: Palette.hintText,
+  );
+
+  static TextStyle barberListItemKind = GoogleFonts.roboto(
+    fontSize: 14,
+    color: Palette.barberListItemKind,
+  );
+
+  static TextStyle searchHintText = GoogleFonts.inter(
+    fontSize: 15,
+    color: Palette.searchHintText,
+  ).semibold;
+
+  static TextStyle searchText = GoogleFonts.inter(
+    fontSize: 16,
+    color: Colors.black,
+  ).semibold;
 }
 
 extension TextDecorExtension on TextStyle {

@@ -14,6 +14,9 @@ class ResetPasswordScreen extends StatefulWidget {
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   TextEditingController newPasswordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
+
+  BuildContext? progressbarContext;
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,5 +67,21 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
         ],
       ),
     );
+  }
+
+  @override
+  void onWaitingProgressBar() {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          progressbarContext = context;
+          return const Center(child: CircularProgressIndicator());
+        });
+  }
+
+  @override
+  void onPopContext() {
+    Navigator.of(progressbarContext??context).pop();
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/views/forgot_pass_screen.dart';
+import 'package:hairvibe/views/home/home_screen.dart';
 import 'package:hairvibe/widgets/custom_button.dart';
 import 'package:hairvibe/widgets/sign_up_form.dart';
 
@@ -59,7 +60,9 @@ class _SignInTabState extends State<SignInTab> {
             ),
             Expanded(child: Container()),
             CustomButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushNamed(HomeScreen.routeName);
+              },
               text: 'LOG IN',
             ),
           ],

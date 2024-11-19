@@ -9,4 +9,7 @@ class AssetHelper {
 
   //auth
   static const String backgroundImg = '${imgAssets}Background_img.png';
+
+  //Barber list item avatar
+  static const String barberAvatar = '${imgAssets}BarberAvt.png';
 }
