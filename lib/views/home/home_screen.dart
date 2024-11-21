@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_icon_class/font_awesome_icon_class.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
+import 'package:hairvibe/views/all_barber/barber.dart';
 import 'package:hairvibe/views/all_service.dart';
 import 'package:hairvibe/widgets/bottom_bar.dart';
 import 'package:hairvibe/widgets/list_view/barber_list_item.dart';
@@ -138,7 +139,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: TextDecor.homeTitle,
                   ),
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.of(context).pushNamed(BarberScreen.routeName);
+                    },
                     child: Text(
                       'More',
                       style: TextDecor.leadingForgot,

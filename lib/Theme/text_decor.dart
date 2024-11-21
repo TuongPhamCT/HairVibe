@@ -88,6 +88,11 @@ class TextDecor {
     fontSize: 16,
     color: Colors.black,
   ).semibold;
+
+  static TextStyle weekCalendarDay = GoogleFonts.montserrat(
+    fontSize: 12,
+    color: Colors.white,
+  ).medium;
 }
 
 extension TextDecorExtension on TextStyle {
