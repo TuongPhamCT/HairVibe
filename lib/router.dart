@@ -5,6 +5,7 @@ import 'package:hairvibe/views/appoinment/appointment.dart';
 import 'package:hairvibe/views/auth_screen.dart';
 import 'package:hairvibe/views/forgot_pass_screen.dart';
 import 'package:hairvibe/views/home/home_screen.dart';
+import 'package:hairvibe/views/no_network.dart';
 import 'package:hairvibe/views/reset_password_screen.dart';
 import 'package:hairvibe/views/splash_screen.dart';
 
@@ -17,4 +18,5 @@ final Map<String, WidgetBuilder> routes = {
   AppointmentScreen.routeName: (context) => const AppointmentScreen(),
   AllServiceScreen.routeName: (context) => const AllServiceScreen(),
   BarberScreen.routeName: (context) => const BarberScreen(),
+  NoNetworkScreen.routeName: (context) => const NoNetworkScreen(),
 };

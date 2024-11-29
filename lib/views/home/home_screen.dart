@@ -165,6 +165,16 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: BottomBarCustom(
         currentIndex: _currentPageIndex,
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+        },
+        child: const Icon(
+          FontAwesomeIcons.plus,
+          color: Colors.black,
+          size: 30,
+        ),
+        backgroundColor: Palette.primary,
+      ),
     );
   }
 }
