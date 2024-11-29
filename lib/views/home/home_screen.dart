@@ -4,6 +4,7 @@ import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/views/all_barber/barber.dart';
 import 'package:hairvibe/views/all_service.dart';
+import 'package:hairvibe/views/booking/main_booking.dart';
 import 'package:hairvibe/widgets/bottom_bar.dart';
 import 'package:hairvibe/widgets/list_view/barber_list_item.dart';
 import 'package:hairvibe/widgets/list_view/service_list_item.dart';
@@ -167,6 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          Navigator.of(context).pushNamed(MainBooking.routeName);
         },
         child: const Icon(
           FontAwesomeIcons.plus,

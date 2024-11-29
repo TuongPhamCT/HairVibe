@@ -13,4 +13,11 @@ class Palette {
 
   static const Color barberListItemRating = Color(0xff6B7280);
   static const Color inactiveDayWeek = Color(0xffA5A5A5);
+
+  //calendar
+  static const Color titleCalendar = Color(0xffC6C6C6);
+  static const Color todayBackground = Color(0xffDAE9FC);
+  static const Color todayText = Color(0xff4493EF);
+
+  static const Color idBarber = Color(0xff8D8E8D);
 }

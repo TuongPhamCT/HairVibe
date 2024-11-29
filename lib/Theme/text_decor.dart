@@ -79,6 +79,16 @@ class TextDecor {
     color: Palette.barberListItemKind,
   );
 
+  static TextStyle timeWork = GoogleFonts.roboto(
+    fontSize: 11,
+    color: Palette.primary,
+  ).extraBold;
+
+  static TextStyle totalCost = GoogleFonts.roboto(
+    fontSize: 25,
+    color: Colors.white,
+  ).bold;
+
   static TextStyle searchHintText = GoogleFonts.inter(
     fontSize: 15,
     color: Palette.searchHintText,
@@ -89,9 +99,29 @@ class TextDecor {
     color: Colors.black,
   ).semibold;
 
+  static TextStyle nameBarberBook = GoogleFonts.inter(
+    fontSize: 20,
+    color: Colors.white,
+  ).semibold;
+
+  static TextStyle idBarber = GoogleFonts.inter(
+    fontSize: 15,
+    color: Palette.idBarber,
+  );
+
   static TextStyle weekCalendarDay = GoogleFonts.montserrat(
     fontSize: 12,
     color: Colors.white,
+  ).medium;
+
+  static TextStyle titleCalendar = GoogleFonts.montserrat(
+    fontSize: 12,
+    color: Palette.titleCalendar,
+  ).bold;
+
+  static TextStyle dayOfWeekCalendar = GoogleFonts.montserrat(
+    fontSize: 12,
+    color: Palette.titleCalendar,
   ).medium;
 }
 
@@ -111,6 +141,12 @@ extension TextDecorExtension on TextStyle {
   TextStyle get bold {
     return copyWith(
       fontWeight: FontWeight.bold,
+    );
+  }
+
+  TextStyle get extraBold {
+    return copyWith(
+      fontWeight: FontWeight.w800,
     );
   }
 

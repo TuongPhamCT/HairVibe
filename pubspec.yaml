@@ -48,6 +48,7 @@ dependencies:
   iconly: ^1.0.1
   salomon_bottom_bar: ^3.3.2
   get: ^4.6.6
+  table_calendar: ^3.0.9
 
 
 dev_dependencies:
