@@ -20,4 +20,5 @@ class Palette {
   static const Color todayText = Color(0xff4493EF);
 
   static const Color idBarber = Color(0xff8D8E8D);
+  static const Color voucherHint = Color(0xffA6A7A6);
 }
