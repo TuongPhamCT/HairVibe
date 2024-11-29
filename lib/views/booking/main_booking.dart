@@ -282,7 +282,7 @@ class _MainBookingState extends State<MainBooking> {
                       'NEXT',
                       style: TextDecor.buttonText,
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

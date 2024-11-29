@@ -16,6 +16,26 @@ class TextDecor {
     color: Colors.white,
   );
 
+  static TextStyle robo12 = GoogleFonts.roboto(
+    fontSize: 12,
+    color: Colors.black,
+  );
+
+  static TextStyle robo12Bold = GoogleFonts.roboto(
+    fontSize: 12,
+    color: Colors.black,
+  ).bold;
+
+  static TextStyle robo13SemiHint = GoogleFonts.roboto(
+    fontSize: 13,
+    color: Palette.voucherHint,
+  ).semibold;
+
+  static TextStyle robo15Semi = GoogleFonts.roboto(
+    fontSize: 15,
+    color: Colors.black,
+  ).semibold;
+
   static TextStyle authTab = GoogleFonts.roboto(
     fontSize: 15,
     color: Colors.white,
@@ -93,6 +113,26 @@ class TextDecor {
     fontSize: 15,
     color: Palette.searchHintText,
   ).semibold;
+
+  static TextStyle label1Appointment = GoogleFonts.inter(
+    fontSize: 16,
+    color: Palette.idBarber,
+  );
+
+  static TextStyle content1Appointment = GoogleFonts.inter(
+    fontSize: 16,
+    color: Colors.white,
+  ).semibold;
+
+  static TextStyle label2Appointment = GoogleFonts.inter(
+    fontSize: 16,
+    color: Palette.primary,
+  );
+
+  static TextStyle inter16Bold = GoogleFonts.inter(
+    fontSize: 16,
+    color: Palette.primary,
+  ).bold;
 
   static TextStyle searchText = GoogleFonts.inter(
     fontSize: 16,
