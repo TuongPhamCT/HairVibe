@@ -139,6 +139,11 @@ class TextDecor {
     color: Colors.black,
   ).semibold;
 
+  static TextStyle inter19Semi = GoogleFonts.inter(
+    fontSize: 19,
+    color: Palette.primary,
+  ).semibold;
+
   static TextStyle nameBarberBook = GoogleFonts.inter(
     fontSize: 20,
     color: Colors.white,
@@ -148,6 +153,11 @@ class TextDecor {
     fontSize: 15,
     color: Palette.idBarber,
   );
+
+  static TextStyle inter27Semi = GoogleFonts.inter(
+    fontSize: 27,
+    color: Colors.white,
+  ).semibold;
 
   static TextStyle weekCalendarDay = GoogleFonts.montserrat(
     fontSize: 12,

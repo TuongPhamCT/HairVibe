@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
+import 'package:hairvibe/views/booking/sucess_booking.dart';
 import 'package:hairvibe/views/booking/voucher_redeem.dart';
 
 class ConfirmBooking extends StatefulWidget {
@@ -289,9 +290,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
             const SizedBox(height: 30),
             ElevatedButton(
               onPressed: () {
-                setState(() {
-                  _haveVoucher = true;
-                });
+                Navigator.of(context).pushNamed(SucessBooking.routeName);
               },
               style: ButtonStyle(
                 padding: MaterialStateProperty.all<EdgeInsets>(
