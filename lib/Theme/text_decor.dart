@@ -104,10 +104,20 @@ class TextDecor {
     color: Palette.primary,
   ).extraBold;
 
+  static TextStyle detailBarberName = GoogleFonts.roboto(
+    fontSize: 24,
+    color: Colors.white,
+  ).bold;
+
   static TextStyle totalCost = GoogleFonts.roboto(
     fontSize: 25,
     color: Colors.white,
   ).bold;
+
+  static TextStyle inter14 = GoogleFonts.inter(
+    fontSize: 14,
+    color: Palette.voucherHint,
+  );
 
   static TextStyle searchHintText = GoogleFonts.inter(
     fontSize: 15,
