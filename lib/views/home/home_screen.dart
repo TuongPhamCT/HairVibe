@@ -8,6 +8,7 @@ import 'package:hairvibe/views/booking/main_booking.dart';
 import 'package:hairvibe/widgets/bottom_bar.dart';
 import 'package:hairvibe/widgets/list_view/barber_list_item.dart';
 import 'package:hairvibe/widgets/list_view/service_list_item.dart';
+import 'package:hairvibe/widgets/noti_bell.dart';
 import 'package:hairvibe/widgets/search_field.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -34,42 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         centerTitle: true,
         actions: [
-          Container(
-            margin: EdgeInsets.only(right: 30),
-            height: 30,
-            width: 30,
-            child: Stack(
-              alignment: Alignment.topRight,
-              children: [
-                IconButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: () {},
-                  icon: const Icon(
-                    FontAwesomeIcons.solidBell,
-                    color: Palette.primary,
-                    size: 27,
-                  ),
-                ),
-                Container(
-                  height: 16,
-                  width: 16,
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Center(
-                    child: Text(
-                      '$_soLuongThongBao',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 11,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          NotificationBell(soLuongThongBao: _soLuongThongBao),
         ],
       ),
       body: SingleChildScrollView(
