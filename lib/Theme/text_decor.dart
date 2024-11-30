@@ -41,6 +41,11 @@ class TextDecor {
     color: Colors.white,
   ).bold;
 
+  static TextStyle robo17Semi = GoogleFonts.roboto(
+    fontSize: 17,
+    color: Colors.white,
+  ).semibold;
+
   static TextStyle hintText = GoogleFonts.roboto(
     fontSize: 18,
     color: Palette.hintText,
