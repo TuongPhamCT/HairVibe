@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
+import 'package:hairvibe/views/all_barber/rating_barber.dart';
 import 'package:hairvibe/widgets/list_view/review_item.dart';
 
 class ReviewsTab extends StatelessWidget {
@@ -27,7 +28,9 @@ class ReviewsTab extends StatelessWidget {
               ),
               Expanded(child: Container()),
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).pushNamed(RatingBarberPage.routeName);
+                },
                 child: Text(
                   'Add Review',
                   style: TextDecor.nameBarberBook.copyWith(
