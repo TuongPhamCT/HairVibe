@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
@@ -90,7 +89,7 @@ class _VoucherRedeemState extends State<VoucherRedeem> {
               height: size.height * 0.75,
               child: ListView.builder(
                   itemBuilder: (context, index) {
-                    return VoucherItem();
+                    return const VoucherItem();
                   },
                   itemCount: 5),
             ),

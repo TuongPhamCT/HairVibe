@@ -38,13 +38,13 @@ class ReviewsTab extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-          Container(
+          SizedBox(
             height: 450,
             child: ListView.builder(
               itemCount: 5,
               shrinkWrap: true,
               itemBuilder: (context, index) {
-                return ReviewItem();
+                return const ReviewItem();
               },
             ),
           ),

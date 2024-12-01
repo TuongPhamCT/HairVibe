@@ -1,13 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
-import 'package:hairvibe/views/all_barber/photo_tab.dart';
 import 'package:hairvibe/views/appoinment/cancelled_tab.dart';
 import 'package:hairvibe/views/appoinment/completed_tab.dart';
 import 'package:hairvibe/views/appoinment/upcoming_tab.dart';
-import 'package:hairvibe/views/sign_in_tab.dart';
-import 'package:hairvibe/views/sign_up_tab.dart';
 import 'package:hairvibe/widgets/bottom_bar.dart';
 import 'package:hairvibe/widgets/noti_bell.dart';
 
@@ -20,14 +16,14 @@ class AppointmentScreen extends StatefulWidget {
 }
 
 class _AppointmentScreenState extends State<AppointmentScreen> {
-  int _currentPageIndex = 1;
-  int _soLuongThongBao = 2;
-  int _upcomingCount = 2;
-  int _completedCount = 2;
-  int _cancelledCount = 2;
-  int _testUpcoming = 0;
-  int _testCompleted = 0;
-  int _testCancelled = 0;
+  final int _currentPageIndex = 1;
+  final int _soLuongThongBao = 2;
+  final int _upcomingCount = 2;
+  final int _completedCount = 2;
+  final int _cancelledCount = 2;
+  final int _testUpcoming = 0;
+  final int _testCompleted = 0;
+  final int _testCancelled = 0;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -57,7 +53,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
               indicatorSize: TabBarIndicatorSize.tab,
               dividerColor: Colors.transparent,
               labelStyle: TextDecor.authTab,
-              tabs: [
+              tabs: const [
                 Tab(text: 'UPCOMING'),
                 Tab(text: 'COMPLETED'),
                 Tab(text: 'CANCELLED'),

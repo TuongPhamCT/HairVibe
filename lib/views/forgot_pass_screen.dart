@@ -1,6 +1,4 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/views/reset_password_screen.dart';
 import 'package:hairvibe/widgets/sign_up_form.dart';

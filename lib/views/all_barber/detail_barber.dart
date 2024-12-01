@@ -5,8 +5,6 @@ import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/config/asset_helper.dart';
 import 'package:hairvibe/views/all_barber/photo_tab.dart';
 import 'package:hairvibe/views/all_barber/review_tab.dart';
-import 'package:hairvibe/views/sign_in_tab.dart';
-import 'package:hairvibe/views/sign_up_tab.dart';
 
 class DetailBarber extends StatefulWidget {
   const DetailBarber({super.key});
@@ -64,12 +62,12 @@ class _DetailBarberState extends State<DetailBarber> {
               indicatorSize: TabBarIndicatorSize.tab,
               dividerColor: Colors.transparent,
               labelStyle: TextDecor.authTab,
-              tabs: [
+              tabs: const [
                 Tab(text: 'REVIEWS'),
                 Tab(text: 'PHOTOS'),
               ],
             ),
-            Expanded(
+            const Expanded(
               child: TabBarView(
                 children: [
                   ReviewsTab(),

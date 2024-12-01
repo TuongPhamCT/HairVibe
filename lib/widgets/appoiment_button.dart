@@ -18,7 +18,6 @@ class AppointmentButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: onPressed,
-      child: child,
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(25),
@@ -28,6 +27,7 @@ class AppointmentButton extends StatelessWidget {
         backgroundColor: backgroundColor,
         surfaceTintColor: Colors.transparent,
       ),
+      child: child,
     );
   }
 }

@@ -43,7 +43,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 const SizedBox(
                   height: 35,
                 ),
-                Container(
+                SizedBox(
                   width: size.width,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -68,12 +68,12 @@ class _AuthScreenState extends State<AuthScreen> {
                   indicatorSize: TabBarIndicatorSize.tab,
                   dividerColor: Colors.transparent,
                   labelStyle: TextDecor.authTab,
-                  tabs: [
+                  tabs: const [
                     Tab(text: 'SIGN UP'),
                     Tab(text: 'SIGN IN'),
                   ],
                 ),
-                Expanded(
+                const Expanded(
                   child: TabBarView(
                     children: [
                       SignUpTab(),

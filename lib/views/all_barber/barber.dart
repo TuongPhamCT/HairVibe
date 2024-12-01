@@ -13,7 +13,7 @@ class BarberScreen extends StatefulWidget {
 }
 
 class _BarberScreenState extends State<BarberScreen> {
-  int _listBarberCount = 5;
+  final int _listBarberCount = 5;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,7 +53,7 @@ class _BarberScreenState extends State<BarberScreen> {
                 shrinkWrap: true,
                 itemCount: _listBarberCount,
                 itemBuilder: (context, index) {
-                  return BarBerItemDetail();
+                  return const BarBerItemDetail();
                 },
               ),
             ],

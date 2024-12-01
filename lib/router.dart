@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hairvibe/views/all_barber/barber.dart';
 import 'package:hairvibe/views/all_barber/detail_barber.dart';
+import 'package:hairvibe/views/all_barber/rating_barber.dart';
 import 'package:hairvibe/views/all_service.dart';
 import 'package:hairvibe/views/appoinment/appointment.dart';
+import 'package:hairvibe/views/appoinment/cancel_appointment.dart';
 import 'package:hairvibe/views/auth_screen.dart';
 import 'package:hairvibe/views/booking/confirm_booking.dart';
 import 'package:hairvibe/views/booking/main_booking.dart';
@@ -35,4 +37,8 @@ final Map<String, WidgetBuilder> routes = {
 
   //Barber
   DetailBarber.routeName: (context) => const DetailBarber(),
+
+  // Cancel Appointment
+  CancelAppointmentPage.routeName: (context) => const CancelAppointmentPage(),
+  RatingBarberPage.routeName: (context) => const RatingBarberPage(),
 };

@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Hair Vibe',
-      home: AuthScreen(),
+      home: const AuthScreen(),
       debugShowCheckedModeBanner: false,
       routes: routes,
     );

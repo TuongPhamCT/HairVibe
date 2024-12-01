@@ -36,7 +36,7 @@ class BookBarberItem extends StatelessWidget {
               width: 85,
               height: 85,
               decoration: BoxDecoration(
-                image: DecorationImage(
+                image: const DecorationImage(
                   image: AssetImage(AssetHelper.barberAvatar),
                   fit: BoxFit.cover,
                 ),

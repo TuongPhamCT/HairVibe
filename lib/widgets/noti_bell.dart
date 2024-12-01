@@ -9,7 +9,7 @@ class NotificationBell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(right: 30),
+      margin: const EdgeInsets.only(right: 30),
       height: 30,
       width: 30,
       child: Stack(
@@ -28,14 +28,14 @@ class NotificationBell extends StatelessWidget {
             Container(
               height: 16,
               width: 16,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.red,
                 shape: BoxShape.circle,
               ),
               child: Center(
                 child: Text(
                   '$soLuongThongBao',
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 11,
                   ),
