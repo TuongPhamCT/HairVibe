@@ -5,16 +5,19 @@ class AppointmentButton extends StatelessWidget {
   final Color? backgroundColor;
   final BorderSide borderSide;
   final Widget? child;
+  final Function()? onPressed;
   const AppointmentButton(
       {super.key,
       this.width = 150,
       this.backgroundColor,
-      this.borderSide = BorderSide.none, this.child});
+      this.borderSide = BorderSide.none,
+      this.child,
+      this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: onPressed,
       child: child,
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/config/asset_helper.dart';
+import 'package:hairvibe/views/booking/view_booking.dart';
 import 'package:hairvibe/widgets/appoiment_button.dart';
 
 class UpcomingAppointmentItem extends StatefulWidget {
@@ -110,6 +111,7 @@ class _UpcomingAppointmentItemState extends State<UpcomingAppointmentItem> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               AppointmentButton(
+                onPressed: () {},
                 width: 140,
                 backgroundColor: Colors.white,
                 borderSide: BorderSide(color: Palette.primary, width: 2),
@@ -119,6 +121,9 @@ class _UpcomingAppointmentItemState extends State<UpcomingAppointmentItem> {
                 ),
               ),
               AppointmentButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(ViewBooking.routeName);
+                },
                 width: 140,
                 backgroundColor: Palette.primary,
                 child: Text(

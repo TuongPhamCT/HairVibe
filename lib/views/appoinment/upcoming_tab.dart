@@ -16,7 +16,7 @@ class UpcomingTab extends StatelessWidget {
           style: TextDecor.robo17Semi,
         ),
       );
-    } else
+    } else {
       return Container(
         width: size.width,
         height: double.infinity,
@@ -28,5 +28,6 @@ class UpcomingTab extends StatelessWidget {
           },
         ),
       );
+    }
   }
 }
