@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_icon_class/font_awesome_icon_class.dart';
 import 'package:hairvibe/Theme/palette.dart';
+import 'package:hairvibe/views/account/account_page.dart';
 import 'package:hairvibe/views/appoinment/appointment.dart';
-import 'package:hairvibe/views/forgot_pass_screen.dart';
 import 'package:hairvibe/views/home/home_screen.dart';
+import 'package:hairvibe/views/voucher/voucher_page.dart';
 
 class BottomBarCustom extends StatefulWidget {
   final int currentIndex;
@@ -33,9 +34,9 @@ class _BottomBarCustomState extends State<BottomBarCustom> {
           } else if (value == 1) {
             Navigator.of(context).pushNamed(AppointmentScreen.routeName);
           } else if (value == 2) {
-            Navigator.of(context).pushNamed(ForgotPassScreen.routeName);
+            Navigator.of(context).pushNamed(VoucherPage.routeName);
           } else {
-            Navigator.of(context).pushNamed(ForgotPassScreen.routeName);
+            Navigator.of(context).pushNamed(AccountPage.routeName);
           }
         },
         backgroundColor: Colors.black,
