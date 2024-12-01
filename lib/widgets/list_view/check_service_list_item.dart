@@ -35,8 +35,8 @@ class CheckServiceListItem extends StatelessWidget {
                 Checkbox(
                   checkColor: Colors.white,
                   activeColor: Palette.primary,
-                  shape: CircleBorder(),
-                  side: BorderSide(color: Palette.primary),
+                  shape: const CircleBorder(),
+                  side: const BorderSide(color: Palette.primary),
                   value: isChecked,
                   onChanged: (value) {
                     onChanged(value!);

@@ -13,7 +13,7 @@ class AllServiceScreen extends StatefulWidget {
 }
 
 class _AllServiceScreenState extends State<AllServiceScreen> {
-  int _listServiceCount = 20;
+  final int _listServiceCount = 20;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,7 +53,7 @@ class _AllServiceScreenState extends State<AllServiceScreen> {
                 shrinkWrap: true,
                 itemCount: _listServiceCount,
                 itemBuilder: (context, index) {
-                  return ServiceListItem();
+                  return const ServiceListItem();
                 },
               ),
             ],

@@ -41,6 +41,16 @@ class TextDecor {
     color: Colors.white,
   ).bold;
 
+  static TextStyle robo16Semi = GoogleFonts.roboto(
+    fontSize: 16,
+    color: Colors.white,
+  ).semibold;
+
+  static TextStyle serviceListItemTitle = GoogleFonts.roboto(
+    fontSize: 16,
+    color: Colors.white,
+  ).bold;
+
   static TextStyle robo17Semi = GoogleFonts.roboto(
     fontSize: 17,
     color: Colors.white,
@@ -89,11 +99,6 @@ class TextDecor {
     color: Colors.white,
   ).bold;
 
-  static TextStyle serviceListItemTitle = GoogleFonts.roboto(
-    fontSize: 16,
-    color: Colors.white,
-  ).bold;
-
   static TextStyle serviceListItemTime = GoogleFonts.roboto(
     fontSize: 13,
     color: Palette.hintText,
@@ -122,6 +127,11 @@ class TextDecor {
   static TextStyle inter10Medi = GoogleFonts.inter(
     fontSize: 10,
     color: Palette.idBarber,
+  ).medium;
+
+  static TextStyle inter12Medi = GoogleFonts.inter(
+    fontSize: 10,
+    color: Palette.voucherHint,
   ).medium;
 
   static TextStyle inter13Medi = GoogleFonts.inter(

@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/config/asset_helper.dart';
-import 'package:hairvibe/views/booking/view_booking.dart';
 import 'package:hairvibe/widgets/appoiment_button.dart';
 
-class CompletedAppointItem extends StatefulWidget {
-  const CompletedAppointItem({super.key});
+class CancelledAppointItem extends StatefulWidget {
+  const CancelledAppointItem({super.key});
 
   @override
-  State<CompletedAppointItem> createState() => _CompletedAppointItemState();
+  State<CancelledAppointItem> createState() => _CancelledAppointItemState();
 }
 
-class _CompletedAppointItemState extends State<CompletedAppointItem> {
+class _CancelledAppointItemState extends State<CancelledAppointItem> {
   bool isRemind = true;
   @override
   Widget build(BuildContext context) {
@@ -80,13 +79,11 @@ class _CompletedAppointItemState extends State<CompletedAppointItem> {
             height: 15,
           ),
           AppointmentButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed(ViewBooking.routeName);
-            },
+            onPressed: () {},
             width: double.maxFinite,
             backgroundColor: Palette.primary,
             child: Text(
-              'View Receipt',
+              'Re-Book',
               style: TextDecor.inter13Semi,
             ),
           ),

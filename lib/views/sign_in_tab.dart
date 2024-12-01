@@ -21,7 +21,7 @@ class _SignInTabState extends State<SignInTab> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return SingleChildScrollView(
-      child: Container(
+      child: SizedBox(
         height: size.height * 0.77,
         child: Column(
           children: [

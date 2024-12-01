@@ -20,9 +20,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _soLuongThongBao = 2;
-  int _listServiceCount = 4;
-  int _currentPageIndex = 0;
+  final int _soLuongThongBao = 2;
+  final int _listServiceCount = 4;
+  final int _currentPageIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Row(
                 children: [
-                  Expanded(
+                  const Expanded(
                     child: SearchField(),
                   ),
                   const SizedBox(width: 20),
@@ -94,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 shrinkWrap: true,
                 itemCount: _listServiceCount,
                 itemBuilder: (context, index) {
-                  return ServiceListItem();
+                  return const ServiceListItem();
                 },
               ),
               const SizedBox(height: 30),
@@ -122,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 shrinkWrap: true,
                 itemCount: _listServiceCount,
                 itemBuilder: (context, index) {
-                  return BarberListItem();
+                  return const BarberListItem();
                 },
               ),
             ],
@@ -136,12 +136,12 @@ class _HomeScreenState extends State<HomeScreen> {
         onPressed: () {
           Navigator.of(context).pushNamed(MainBooking.routeName);
         },
+        backgroundColor: Palette.primary,
         child: const Icon(
           FontAwesomeIcons.plus,
           color: Colors.black,
           size: 30,
         ),
-        backgroundColor: Palette.primary,
       ),
     );
   }

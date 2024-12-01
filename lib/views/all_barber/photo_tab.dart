@@ -28,7 +28,7 @@ class PhotosBarberTab extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-          Container(
+          SizedBox(
             height: 450,
             child: GridView(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

@@ -24,7 +24,7 @@ class UpcomingTab extends StatelessWidget {
         child: ListView.builder(
           itemCount: soLuong,
           itemBuilder: (context, index) {
-            return UpcomingAppointmentItem();
+            return const UpcomingAppointmentItem();
           },
         ),
       );

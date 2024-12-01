@@ -1,4 +1,3 @@
-import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
@@ -33,7 +32,7 @@ class _SignUpFormState extends State<SignUpForm> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       height: 45,
       child: TextField(
         controller: widget.textController,
@@ -62,16 +61,16 @@ class _SignUpFormState extends State<SignUpForm> {
           labelStyle: TextDecor.hintText,
           floatingLabelStyle: TextDecor.lableText,
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Palette.primary),
+            borderSide: const BorderSide(color: Palette.primary),
             borderRadius: BorderRadius.circular(8),
           ),
           errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.red),
+            borderSide: const BorderSide(color: Colors.red),
             borderRadius: BorderRadius.circular(8),
           ),
           errorText: widget.errorText,
           errorStyle: TextDecor.errorText,
-          contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           hintStyle: TextDecor.hintText,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),

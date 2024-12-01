@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/config/asset_helper.dart';
+import 'package:hairvibe/views/appoinment/cancel_appointment.dart';
 import 'package:hairvibe/views/booking/view_booking.dart';
 import 'package:hairvibe/widgets/appoiment_button.dart';
 
@@ -71,7 +72,7 @@ class _UpcomingAppointmentItemState extends State<UpcomingAppointmentItem> {
                 width: 65,
                 height: 65,
                 decoration: BoxDecoration(
-                  image: DecorationImage(
+                  image: const DecorationImage(
                     image: AssetImage(AssetHelper.barberAvatar),
                     fit: BoxFit.cover,
                   ),
@@ -111,10 +112,13 @@ class _UpcomingAppointmentItemState extends State<UpcomingAppointmentItem> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               AppointmentButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context)
+                      .pushNamed(CancelAppointmentPage.routeName);
+                },
                 width: 140,
                 backgroundColor: Colors.white,
-                borderSide: BorderSide(color: Palette.primary, width: 2),
+                borderSide: const BorderSide(color: Palette.primary, width: 2),
                 child: Text(
                   'Cancel',
                   style: TextDecor.inter13Semi.copyWith(color: Palette.primary),

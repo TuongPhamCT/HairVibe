@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/views/booking/confirm_booking.dart';
@@ -19,7 +18,7 @@ class MainBooking extends StatefulWidget {
 class _MainBookingState extends State<MainBooking> {
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
-  List<bool> _isSelected = List.generate(5, (_) => false);
+  final List<bool> _isSelected = List.generate(5, (_) => false);
 
   int _selectedIndex = -1; // Chỉ mục của item được chọn (-1: không chọn)
   final List<String> _items = [
@@ -195,7 +194,7 @@ class _MainBookingState extends State<MainBooking> {
                                   });
                                 },
                                 child: Text(
-                                  (index * 3 + 7).toString() + ':00',
+                                  '${index * 3 + 7}:00',
                                   style: TextDecor.timeWork.copyWith(
                                     color: _isSelected[index]
                                         ? Palette.primary
