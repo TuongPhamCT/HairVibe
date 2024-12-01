@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
+import 'package:hairvibe/widgets/list_view/completed_appointment_item.dart';
+import 'package:hairvibe/widgets/list_view/upcoming_appointment_item.dart';
 
 class CompletedTab extends StatelessWidget {
   final int soLuong;
@@ -7,6 +9,7 @@ class CompletedTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     if (soLuong == 0) {
       return Center(
         child: Text(
@@ -14,7 +17,18 @@ class CompletedTab extends StatelessWidget {
           style: TextDecor.robo17Semi,
         ),
       );
+    } else {
+      return Container(
+        width: size.width,
+        height: double.infinity,
+        padding: const EdgeInsets.all(30),
+        child: ListView.builder(
+          itemCount: soLuong,
+          itemBuilder: (context, index) {
+            return CompletedAppointItem();
+          },
+        ),
+      );
     }
-    return const Placeholder();
   }
 }
