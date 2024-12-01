@@ -119,6 +119,21 @@ class TextDecor {
     color: Colors.white,
   ).bold;
 
+  static TextStyle inter10Medi = GoogleFonts.inter(
+    fontSize: 10,
+    color: Palette.idBarber,
+  ).medium;
+
+  static TextStyle inter13Medi = GoogleFonts.inter(
+    fontSize: 13,
+    color: Colors.black,
+  ).medium;
+
+  static TextStyle inter13Semi = GoogleFonts.inter(
+    fontSize: 13,
+    color: Colors.black,
+  ).semibold;
+
   static TextStyle inter14 = GoogleFonts.inter(
     fontSize: 14,
     color: Palette.voucherHint,

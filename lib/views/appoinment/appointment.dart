@@ -67,13 +67,13 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
               child: TabBarView(
                 children: [
                   UpcomingTab(
-                    soLuong: _testUpcoming,
+                    soLuong: _upcomingCount,
                   ),
                   CompletedTab(
-                    soLuong: _testCompleted,
+                    soLuong: _completedCount,
                   ),
                   CancelledTab(
-                    soLuong: _testCancelled,
+                    soLuong: _cancelledCount,
                   ),
                 ],
               ),
