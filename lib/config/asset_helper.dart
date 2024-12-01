@@ -12,4 +12,7 @@ class AssetHelper {
 
   //Barber list item avatar
   static const String barberAvatar = '${imgAssets}BarberAvt.png';
+
+  //NO chat
+  static const String noChat = '${imgAssets}nochat.png';
 }
