@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_icon_class/font_awesome_icon_class.dart';
 import 'package:hairvibe/Theme/palette.dart';
+import 'package:hairvibe/views/notification/notification_page.dart';
 
 class NotificationBell extends StatelessWidget {
   final int soLuongThongBao;
@@ -17,7 +18,9 @@ class NotificationBell extends StatelessWidget {
         children: [
           IconButton(
             padding: EdgeInsets.zero,
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pushNamed(NotificationsPage.routeName);
+            },
             icon: const Icon(
               FontAwesomeIcons.solidBell,
               color: Palette.primary,

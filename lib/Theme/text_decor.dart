@@ -31,6 +31,11 @@ class TextDecor {
     color: Palette.voucherHint,
   ).semibold;
 
+  static TextStyle robo14Bold = GoogleFonts.roboto(
+    fontSize: 14,
+    color: Palette.primary,
+  ).bold;
+
   static TextStyle robo15Semi = GoogleFonts.roboto(
     fontSize: 15,
     color: Colors.black,
@@ -81,6 +86,11 @@ class TextDecor {
 
   static TextStyle forgotTitle = GoogleFonts.roboto(
     fontSize: 20,
+    color: Colors.white,
+  ).semibold;
+
+  static TextStyle robo23Semi = GoogleFonts.roboto(
+    fontSize: 23,
     color: Colors.white,
   ).semibold;
 
@@ -213,6 +223,11 @@ class TextDecor {
     fontSize: 12,
     color: Palette.titleCalendar,
   ).medium;
+
+  static TextStyle appName = GoogleFonts.abrilFatface(
+    fontSize: 40,
+    color: Colors.white,
+  );
 }
 
 extension TextDecorExtension on TextStyle {
