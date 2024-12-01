@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hairvibe/views/account/account_page.dart';
 import 'package:hairvibe/views/all_barber/barber.dart';
 import 'package:hairvibe/views/all_barber/detail_barber.dart';
 import 'package:hairvibe/views/all_barber/rating_barber.dart';
@@ -16,6 +17,8 @@ import 'package:hairvibe/views/home/home_screen.dart';
 import 'package:hairvibe/views/no_network.dart';
 import 'package:hairvibe/views/reset_password_screen.dart';
 import 'package:hairvibe/views/splash_screen.dart';
+import 'package:hairvibe/views/voucher/redeem_voucher.dart';
+import 'package:hairvibe/views/voucher/voucher_page.dart';
 
 final Map<String, WidgetBuilder> routes = {
   SplashScreen.routeName: (context) => const SplashScreen(),
@@ -41,4 +44,8 @@ final Map<String, WidgetBuilder> routes = {
   // Cancel Appointment
   CancelAppointmentPage.routeName: (context) => const CancelAppointmentPage(),
   RatingBarberPage.routeName: (context) => const RatingBarberPage(),
+
+  VoucherPage.routeName: (context) => const VoucherPage(),
+  AccountPage.routeName: (context) => const AccountPage(),
+  RedeemVoucher.routeName: (context) => const RedeemVoucher(),
 };
