@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hairvibe/Contract/sign_up_tab_contract.dart';
 import 'package:hairvibe/Models/user_model.dart';
@@ -24,40 +23,35 @@ class SignUpTabPresenter {
   }
 
   String? _validateName(String? name) {
-    if (name!.isNotEmpty){
+    if (name!.isNotEmpty) {
       return null;
     }
     return "Required";
   }
 
   String? _validatePhoneNumber(String? phone) {
-    if (phone!.isNotEmpty){
+    if (phone!.isNotEmpty) {
       return null;
     }
     return "Required";
   }
 
   String? _validatePassword(String? password) {
-    if (password!.length >= 8){
+    if (password!.length >= 8) {
       return null;
     }
     return "Password must be at least 8 characters long.";
   }
 
   String? _validateConfirmPassword(String? password, String? confirmPassword) {
-    if (password == confirmPassword){
+    if (password == confirmPassword) {
       return null;
     }
     return "Passwords do not match";
   }
 
-  Future<Map<String, String?>> signUp(
-      String email,
-      String name,
-      String phone,
-      String password,
-      String confirmPassword
-  ) async {
+  Future<Map<String, String?>> signUp(String email, String name, String phone,
+      String password, String confirmPassword) async {
     email = email.trim();
     name = name.trim();
 
@@ -67,10 +61,11 @@ class SignUpTabPresenter {
     errorTexts["name"] = _validateName(name);
     errorTexts["phoneNumber"] = _validatePhoneNumber(phone);
     errorTexts["password"] = _validatePassword(password);
-    errorTexts["confirmPassword"] = _validateConfirmPassword(password, confirmPassword);
+    errorTexts["confirmPassword"] =
+        _validateConfirmPassword(password, confirmPassword);
 
-    for (String? value in errorTexts.values){
-      if (value != null){
+    for (String? value in errorTexts.values) {
+      if (value != null) {
         return errorTexts;
       }
     }
@@ -83,14 +78,14 @@ class SignUpTabPresenter {
     if (result == true) {
       _view?.onEmailAlreadyInUse();
     } else if (result == false) {
-      UserCredential userData = await _auth.signInWithEmailAndPassword(email, password);
+      UserCredential? userData =
+          await _auth.signUpWithEmailAndPassword(email, password);
       UserModel model = UserModel(
-        userID: userData.user!.uid,
-        email: email,
-        name: name,
-        phoneNumber: phone,
-        userType: UserModel.CUSTOMER
-      );
+          userID: userData!.user!.uid,
+          email: email,
+          name: name,
+          phoneNumber: phone,
+          userType: UserModel.CUSTOMER);
       _userRepo.addUserToFirestore(model);
       _view?.onSignUpSucceeded();
     } else if (result == null) {

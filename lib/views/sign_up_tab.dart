@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hairvibe/Contract/sign_up_tab_contract.dart';
 import 'package:hairvibe/Presenter/sign_up_tab_presenter.dart';
+import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/widgets/custom_button.dart';
 import 'package:hairvibe/widgets/sign_up_form.dart';
 
@@ -82,14 +83,13 @@ class _SignUpTabState extends State<SignUpTab> implements SignUpTabContract {
             CustomButton(
               onPressed: () async {
                 Map<String, String?>? result = await _presenter?.signUp(
-                  emailController.text,
-                  fullNameController.text,
-                  phoneController.text,
-                  passwordController.text,
-                  confirmPassController.text
-                );
+                    emailController.text,
+                    fullNameController.text,
+                    phoneController.text,
+                    passwordController.text,
+                    confirmPassController.text);
 
-                if (result!.isNotEmpty){
+                if (result!.isNotEmpty) {
                   setState(() {
                     emailError = result["email"];
                     fullNameError = result["name"];
@@ -98,7 +98,6 @@ class _SignUpTabState extends State<SignUpTab> implements SignUpTabContract {
                     confirmPasswordError = result["confirmPassword"];
                   });
                 }
-
               },
               text: 'SIGN UP',
             ),
@@ -116,13 +115,20 @@ class _SignUpTabState extends State<SignUpTab> implements SignUpTabContract {
 
   @override
   void onPopContext() {
-    // TODO: implement onPopContext
+    Navigator.of(context, rootNavigator: true).pop();
   }
 
   @override
   void onSignUpFailed() {
-
-    // TODO: implement onSignUpFailed
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        backgroundColor: Palette.primary,
+        content: Text(
+          'Cannot Sign up! Please try again later!',
+          style: TextStyle(color: Colors.red),
+        ),
+      ),
+    );
   }
 
   @override
@@ -132,6 +138,11 @@ class _SignUpTabState extends State<SignUpTab> implements SignUpTabContract {
 
   @override
   void onWaitingProgressBar() {
-    // TODO: implement onWaitingProgressBar
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return const Center(child: CircularProgressIndicator());
+        });
   }
 }
