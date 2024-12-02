@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hairvibe/Contract/sign_in_tab_contract.dart';
+import 'package:hairvibe/Presenter/sign_in_tab_presenter.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/views/forgot_pass_screen.dart';
@@ -13,9 +15,19 @@ class SignInTab extends StatefulWidget {
   State<SignInTab> createState() => _SignInTabState();
 }
 
-class _SignInTabState extends State<SignInTab> {
+class _SignInTabState extends State<SignInTab> implements SignInTabContract {
+  SignInTabPresenter? _presenter;
+
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  String errorText = "";
+
+  @override
+  void initState() {
+    _presenter = SignInTabPresenter(this);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +52,7 @@ class _SignInTabState extends State<SignInTab> {
               lableText: 'Password',
               obscureText: true,
               keyboardType: TextInputType.text,
-              errorText: null,
+              errorText: errorText != "" ? errorText : null,
             ),
             Container(
               margin: const EdgeInsets.only(top: 10),
@@ -61,7 +73,7 @@ class _SignInTabState extends State<SignInTab> {
             Expanded(child: Container()),
             CustomButton(
               onPressed: () {
-                Navigator.of(context).pushNamed(HomeScreen.routeName);
+                _presenter!.login(emailController.text, passwordController.text);
               },
               text: 'LOG IN',
             ),
@@ -69,5 +81,28 @@ class _SignInTabState extends State<SignInTab> {
         ),
       ),
     );
+  }
+
+  @override
+  void onLoginFailed() {
+    // TODO: implement onLoginFailed
+    errorText = "Email or password is invalid";
+  }
+
+  @override
+  void onLoginSucceeded() {
+    // TODO: implement onLoginSucceeded
+    errorText = "";
+    Navigator.of(context).pushNamed(HomeScreen.routeName);
+  }
+
+  @override
+  void onPopContext() {
+    // TODO: implement onPopContext
+  }
+
+  @override
+  void onWaitingProgressBar() {
+    // TODO: implement onWaitingProgressBar
   }
 }

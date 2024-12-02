@@ -33,7 +33,7 @@ class _SignUpFormState extends State<SignUpForm> {
     Size size = MediaQuery.of(context).size;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-      height: 45,
+      height: widget.errorText == null ? 45 : 70,
       child: TextField(
         controller: widget.textController,
         keyboardType: widget.keyboardType,
