@@ -73,7 +73,8 @@ class _SignInTabState extends State<SignInTab> implements SignInTabContract {
             Expanded(child: Container()),
             CustomButton(
               onPressed: () {
-                _presenter!.login(emailController.text, passwordController.text);
+                _presenter!
+                    .login(emailController.text, passwordController.text);
               },
               text: 'LOG IN',
             ),
@@ -85,7 +86,15 @@ class _SignInTabState extends State<SignInTab> implements SignInTabContract {
 
   @override
   void onLoginFailed() {
-    // TODO: implement onLoginFailed
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        backgroundColor: Palette.primary,
+        content: Text(
+          'Cannot Sign up! Please try again later!',
+          style: TextStyle(color: Colors.red),
+        ),
+      ),
+    );
     errorText = "Email or password is invalid";
   }
 
@@ -98,11 +107,16 @@ class _SignInTabState extends State<SignInTab> implements SignInTabContract {
 
   @override
   void onPopContext() {
-    // TODO: implement onPopContext
+    Navigator.of(context, rootNavigator: true).pop();
   }
 
   @override
   void onWaitingProgressBar() {
-    // TODO: implement onWaitingProgressBar
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return const Center(child: CircularProgressIndicator());
+        });
   }
 }
