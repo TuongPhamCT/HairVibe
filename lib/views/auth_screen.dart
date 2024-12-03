@@ -13,7 +13,22 @@ class AuthScreen extends StatefulWidget {
   State<AuthScreen> createState() => _AuthScreenState();
 }
 
-class _AuthScreenState extends State<AuthScreen> {
+class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.animateTo(1);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -68,16 +83,18 @@ class _AuthScreenState extends State<AuthScreen> {
                   indicatorSize: TabBarIndicatorSize.tab,
                   dividerColor: Colors.transparent,
                   labelStyle: TextDecor.authTab,
+                  controller: _tabController,
                   tabs: const [
                     Tab(text: 'SIGN UP'),
                     Tab(text: 'SIGN IN'),
                   ],
                 ),
-                const Expanded(
+                Expanded(
                   child: TabBarView(
+                    controller: _tabController,
                     children: [
-                      SignUpTab(),
-                      SignInTab(),
+                      SignUpTab(tabController: _tabController),
+                      const SignInTab(),
                     ],
                   ),
                 ),

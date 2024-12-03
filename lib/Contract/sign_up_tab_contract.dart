@@ -4,4 +4,5 @@ abstract class SignUpTabContract {
   void onEmailAlreadyInUse() {}
   void onSignUpSucceeded() {}
   void onSignUpFailed() {}
+  void onValidatingFailed(Map<String, String?> errors) {}
 }

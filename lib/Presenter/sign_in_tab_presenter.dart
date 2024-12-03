@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hairvibe/Contract/sign_in_tab_contract.dart';
 import 'package:hairvibe/Models/user_repo.dart';
 import 'package:hairvibe/facades/AuthenticatorFacade.dart';
@@ -6,7 +5,7 @@ import 'package:hairvibe/facades/AuthenticatorFacade.dart';
 import '../Models/user_model.dart';
 
 class SignInTabPresenter {
-  final SignInTabContract? _view;
+  final SignInTabContract _view;
 
   SignInTabPresenter(this._view);
   final AuthenticatorFacade _auth = AuthenticatorFacade();
@@ -14,17 +13,18 @@ class SignInTabPresenter {
 
   Future<void> login(String email, String password) async {
     try {
+      _view.onWaitingProgressBar();
       await _auth.signInWithEmailAndPassword(email, password);
       //UserCredential userCredential = await _auth.signInWithEmailAndPassword(email, password);
       //UserModel userData = await _userRepo.getUserById(userCredential.user!.uid);
       //_prefService.saveUserData(userData);
     } catch (e) {
-      _view?.onPopContext();
-      _view?.onLoginFailed();
+      _view.onPopContext();
+      _view.onLoginFailed();
       return;
     }
-    _view?.onPopContext();
-    _view?.onLoginSucceeded();
+    _view.onPopContext();
+    _view.onLoginSucceeded();
   }
 
   String? validatePassword(String? password) {

@@ -7,6 +7,7 @@ class AuthenticatorFacade {
 
   // Get current user ID
   String? get userId => FirebaseAuth.instance.currentUser?.uid;
+  String? get userEmail => FirebaseAuth.instance.currentUser?.email;
 
   // Sign out
   Future<void> signOut() async {
@@ -41,6 +42,7 @@ class AuthenticatorFacade {
     }
   }
 
+  // check email
   Future<bool?> checkIfEmailExists(String emailAddress) async {
     try {
       final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -57,6 +59,46 @@ class AuthenticatorFacade {
       }
     } catch (e) {
       return null;
+    }
+  }
+
+  // send reset password email
+  Future<bool> sendPasswordResetEmail(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      return true;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('@AuthFacade: No user found with this email.');
+      } else if (e.code == 'invalid-email') {
+        print('@AuthFacade: Invalid email format.');
+      }
+      return false;
+    }
+  }
+
+  // Change password
+  Future<bool> changePassword(String newPassword) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        await user.updatePassword(newPassword);
+        print("@AuthFacade: Password changed successfully.");
+        return true;
+      } else {
+        print("@AuthFacade: No user is signed in.");
+        return false;
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('@AuthFacade: The password is too weak.');
+      } else if (e.code == 'requires-recent-login') {
+        print('@AuthFacade: Please re-authenticate to change your password.');
+      } else {
+        print('@AuthFacade: Error: ${e.message}');
+      }
+      return false;
     }
   }
 }

@@ -8,6 +8,8 @@ import 'package:hairvibe/views/home/home_screen.dart';
 import 'package:hairvibe/widgets/custom_button.dart';
 import 'package:hairvibe/widgets/sign_up_form.dart';
 
+import '../widgets/util_widgets.dart';
+
 class SignInTab extends StatefulWidget {
   const SignInTab({super.key});
 
@@ -85,24 +87,23 @@ class _SignInTabState extends State<SignInTab> implements SignInTabContract {
 
   @override
   void onLoginFailed() {
-    // TODO: implement onLoginFailed
-    errorText = "Email or password is invalid";
+    setState(() {
+      errorText = "Email or password is invalid";
+    });
   }
 
   @override
   void onLoginSucceeded() {
-    // TODO: implement onLoginSucceeded
-    errorText = "";
     Navigator.of(context).pushNamed(HomeScreen.routeName);
   }
 
   @override
   void onPopContext() {
-    // TODO: implement onPopContext
+    Navigator.of(context, rootNavigator: true).pop();
   }
 
   @override
   void onWaitingProgressBar() {
-    // TODO: implement onWaitingProgressBar
+    UtilWidgets.createLoadingWidget(context);
   }
 }

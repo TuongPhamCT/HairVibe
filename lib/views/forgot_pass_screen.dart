@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hairvibe/Contract/forgot_pass_contract.dart';
+import 'package:hairvibe/Presenter/forgot_pass_presenter.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/views/reset_password_screen.dart';
 import 'package:hairvibe/widgets/sign_up_form.dart';
@@ -12,8 +14,18 @@ class ForgotPassScreen extends StatefulWidget {
   State<ForgotPassScreen> createState() => _ForgotPassScreenState();
 }
 
-class _ForgotPassScreenState extends State<ForgotPassScreen> {
+class _ForgotPassScreenState extends State<ForgotPassScreen> implements ForgotPassScreenContract {
+  ForgotPassScreenPresenter? _presenter;
+
   TextEditingController emailController = TextEditingController();
+  String? emailError;
+
+  @override
+  void initState() {
+    _presenter = ForgotPassScreenPresenter(this);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +45,7 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
             Text('FORGOT PASSWORD', style: TextDecor.forgotTitle),
             InkWell(
               onTap: () {
-                Navigator.of(context).pushNamed(ResetPasswordScreen.routeName);
+                _presenter?.resetPassword(emailController.text);
               },
               child: Text('RESET', style: TextDecor.leadingForgot),
             ),
@@ -50,7 +62,7 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
             lableText: 'Email',
             obscureText: false,
             keyboardType: TextInputType.text,
-            errorText: null,
+            errorText: emailError,
           ),
           const SizedBox(
             height: 10,
@@ -65,5 +77,30 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
         ],
       ),
     );
+  }
+
+  @override
+  void onEmailNotFound() {
+    emailError = "This email doesn't exist";
+  }
+
+  @override
+  void onPopContext() {
+    // TODO: implement onPopContext
+  }
+
+  @override
+  void onResetFailed() {
+    // TODO: implement onResetFailed
+  }
+
+  @override
+  void onResetSucceeded() {
+    // TODO: implement onResetSucceeded
+  }
+
+  @override
+  void onWaitingProgressBar() {
+    // TODO: implement onWaitingProgressBar
   }
 }
