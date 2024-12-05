@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../Theme/palette.dart';
+
 abstract class UtilWidgets {
 
   // const title
@@ -51,6 +53,18 @@ abstract class UtilWidgets {
           ],
         );
       },
+    );
+  }
+
+  static void createSnackBar(BuildContext context, String content){
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Palette.primary,
+        content: Text(
+          content,
+          style: const TextStyle(color: Colors.red),
+        ),
+      ),
     );
   }
 

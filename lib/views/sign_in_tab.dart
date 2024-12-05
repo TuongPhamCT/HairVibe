@@ -88,16 +88,7 @@ class _SignInTabState extends State<SignInTab> implements SignInTabContract {
 
   @override
   void onLoginFailed() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        backgroundColor: Palette.primary,
-        content: Text(
-          'Cannot Sign up! Please try again later!',
-          style: TextStyle(color: Colors.red),
-        ),
-      ),
-    );
-    errorText = "Email or password is invalid";
+    UtilWidgets.createSnackBar(context, 'Cannot sign in! Please try again later!');
   }
 
   @override
@@ -113,5 +104,12 @@ class _SignInTabState extends State<SignInTab> implements SignInTabContract {
   @override
   void onWaitingProgressBar() {
     UtilWidgets.createLoadingWidget(context);
+  }
+
+  @override
+  void onInvalidEmailOrPassword() {
+    setState(() {
+      errorText = "Email or password is invalid";
+    });
   }
 }

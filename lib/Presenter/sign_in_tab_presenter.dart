@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hairvibe/Contract/sign_in_tab_contract.dart';
 import 'package:hairvibe/Models/user_repo.dart';
 import 'package:hairvibe/facades/AuthenticatorFacade.dart';
@@ -18,20 +19,18 @@ class SignInTabPresenter {
       //UserCredential userCredential = await _auth.signInWithEmailAndPassword(email, password);
       //UserModel userData = await _userRepo.getUserById(userCredential.user!.uid);
       //_prefService.saveUserData(userData);
-    } catch (e) {
+    } on FirebaseAuthException catch (e) {
       _view.onPopContext();
+      if (e.code == 'user-not-found' || e.code == 'wrong-password') {
+        _view.onInvalidEmailOrPassword();
+      } else {
+        _view.onLoginFailed();
+      }
+    } catch (e) {
       _view.onLoginFailed();
       return;
     }
     _view.onPopContext();
     _view.onLoginSucceeded();
-  }
-
-  String? validatePassword(String? password) {
-    password = password?.trim();
-    if (password == null || password.isEmpty) {
-      return "Please enter your password!";
-    }
-    return null;
   }
 }

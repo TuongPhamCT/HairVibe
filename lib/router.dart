@@ -37,7 +37,7 @@ final Map<String, WidgetBuilder> routes = {
   // Booking
   MainBooking.routeName: (context) => const MainBooking(),
   ConfirmBooking.routeName: (context) => const ConfirmBooking(),
-  SucessBooking.routeName: (context) => const SucessBooking(),
+  SuccessBooking.routeName: (context) => const SuccessBooking(),
   ViewBooking.routeName: (context) => const ViewBooking(),
   VoucherRedeem.routeName: (context) => const VoucherRedeem(),
 
