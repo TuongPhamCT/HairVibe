@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "549524436611",
+    "project_id": "hairvibe-520c0",
+    "storage_bucket": "hairvibe-520c0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:549524436611:android:f1fe971fb887dab5aa4db6",
+        "android_client_info": {
+          "package_name": "com.example.hairvibe"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGjb-xfNlmf3flsOG61As5k1uiDquZFjs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
