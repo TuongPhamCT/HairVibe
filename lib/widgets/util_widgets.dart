@@ -8,15 +8,15 @@ abstract class UtilWidgets {
 
   static void createLoadingWidget(BuildContext context) {
     showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return const Center(child: CircularProgressIndicator());
-      }
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return const Center(child: CircularProgressIndicator());
+        }
     );
   }
 
-  static void createDialog(BuildContext context, String title, String content, Function onClick) {
+  static void createDialog(BuildContext context, String title, String content, VoidCallback onClick) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -26,8 +26,8 @@ abstract class UtilWidgets {
           content: Text(content),
           actions: [
             TextButton(
+              onPressed: onClick,
               child: const Text('OK'),
-              onPressed: () => onClick,
             ),
           ],
         );
@@ -35,7 +35,7 @@ abstract class UtilWidgets {
     );
   }
 
-  static void createDismissibleDialog(BuildContext context, String title, String content, Function onClick) {
+  static void createDismissibleDialog(BuildContext context, String title, String content, VoidCallback onClick) {
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -45,8 +45,8 @@ abstract class UtilWidgets {
           content: Text(content),
           actions: [
             TextButton(
+              onPressed: onClick,
               child: const Text('OK'),
-              onPressed: () => onClick,
             ),
           ],
         );

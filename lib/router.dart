@@ -11,7 +11,7 @@ import 'package:hairvibe/views/appoinment/cancel_appointment.dart';
 import 'package:hairvibe/views/auth_screen.dart';
 import 'package:hairvibe/views/booking/confirm_booking.dart';
 import 'package:hairvibe/views/booking/main_booking.dart';
-import 'package:hairvibe/views/booking/sucess_booking.dart';
+import 'package:hairvibe/views/booking/success_booking.dart';
 import 'package:hairvibe/views/booking/view_booking.dart';
 import 'package:hairvibe/views/booking/voucher_redeem.dart';
 import 'package:hairvibe/views/forgot_pass_screen.dart';
