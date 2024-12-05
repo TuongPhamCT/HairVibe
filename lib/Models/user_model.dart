@@ -39,8 +39,8 @@ class UserModel {
       name: json['name'] as String,
       phoneNumber: json['phoneNumber'] as String,
       userType: json['userType'] as String,
-      image: json['image'] as String,
-      info: json['info'] as String,
+      image: json['image'] as String?,
+      info: json['info'] as String?,
     );
   }
 

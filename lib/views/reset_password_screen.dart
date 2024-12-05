@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hairvibe/Contract/reset_password_contract.dart';
+import 'package:hairvibe/Presenter/reset_password_presenter.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/widgets/custom_button.dart';
 import 'package:hairvibe/widgets/sign_up_form.dart';
@@ -11,12 +13,20 @@ class ResetPasswordScreen extends StatefulWidget {
   State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }
 
-class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
+class _ResetPasswordScreenState extends State<ResetPasswordScreen> implements ResetPasswordScreenContract {
+  ResetPasswordScreenPresenter? _presenter;
+
   TextEditingController newPasswordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
   BuildContext? progressbarContext;
-  
+
+  @override
+  void initState() {
+    _presenter = ResetPasswordScreenPresenter(this);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
