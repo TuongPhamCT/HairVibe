@@ -75,7 +75,8 @@ class _SignInTabState extends State<SignInTab> implements SignInTabContract {
             Expanded(child: Container()),
             CustomButton(
               onPressed: () {
-                _presenter!.login(emailController.text, passwordController.text);
+                _presenter!
+                    .login(emailController.text, passwordController.text);
               },
               text: 'LOG IN',
             ),
@@ -87,9 +88,16 @@ class _SignInTabState extends State<SignInTab> implements SignInTabContract {
 
   @override
   void onLoginFailed() {
-    setState(() {
-      errorText = "Email or password is invalid";
-    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        backgroundColor: Palette.primary,
+        content: Text(
+          'Cannot Sign up! Please try again later!',
+          style: TextStyle(color: Colors.red),
+        ),
+      ),
+    );
+    errorText = "Email or password is invalid";
   }
 
   @override
