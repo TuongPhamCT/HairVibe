@@ -34,4 +34,14 @@ class UserRepository {
     final UserModel user = UserModel.fromJson(documentSnapshot.data() as Map<String, dynamic>);
     return user;
   }
+
+  Future<List<UserModel>> getAllBarbers() async {
+    final QuerySnapshot querySnapshot = await _storage.collection(UserModel.collectionName)
+        .where('userType', isEqualTo: UserModel.BARBER).get();
+    final barbers = querySnapshot
+        .docs
+        .map((doc) => UserModel.fromJson(doc as Map<String, dynamic>))
+        .toList();
+    return barbers;
+  }
 }

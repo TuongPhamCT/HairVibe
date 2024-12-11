@@ -3,7 +3,16 @@ import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 
 class ServiceListItem extends StatefulWidget {
-  const ServiceListItem({super.key});
+  String? serviceName;
+  String? duration;
+  String? cost;
+
+  ServiceListItem({
+    super.key,
+    this.serviceName,
+    this.duration,
+    this.cost
+  });
 
   @override
   State<ServiceListItem> createState() => _ServiceListItemState();
@@ -27,17 +36,17 @@ class _ServiceListItemState extends State<ServiceListItem> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Buzz cut',
+                widget.serviceName ?? "",
                 style: TextDecor.serviceListItemTitle,
               ),
               Text(
-                '30 minutes',
+                widget.duration ?? "-:-",
                 style: TextDecor.serviceListItemTime,
               ),
             ],
           ),
           Text(
-            '10.000 VNĐ',
+            widget.cost ?? "XX,000 VNĐ",
             style: TextDecor.serviceListItemTitle,
           ),
         ],
