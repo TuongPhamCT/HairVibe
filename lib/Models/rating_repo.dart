@@ -47,4 +47,13 @@ class RatingRepository {
         .toList();
     return ratings;
   }
+
+  Future<double> calculateRatingOfBarber(String id) async {
+    List<RatingModel> list = await getRatingsByBarberId(id);
+    double avgRating = 0;
+    for (RatingModel model in list){
+      avgRating += (model.rate ?? 0);
+    }
+    return avgRating / list.length;
+  }
 }

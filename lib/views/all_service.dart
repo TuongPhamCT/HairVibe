@@ -53,7 +53,7 @@ class _AllServiceScreenState extends State<AllServiceScreen> {
                 shrinkWrap: true,
                 itemCount: _listServiceCount,
                 itemBuilder: (context, index) {
-                  return const ServiceListItem();
+                  return ServiceListItem();
                 },
               ),
             ],

@@ -4,7 +4,16 @@ import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/config/asset_helper.dart';
 
 class BarberListItem extends StatefulWidget {
-  const BarberListItem({super.key});
+  String? barberName;
+  String? description;
+  String? rating;
+
+  BarberListItem({
+    super.key,
+    this.barberName,
+    this.description,
+    this.rating
+  });
 
   @override
   State<BarberListItem> createState() => _BarberListItemState();
@@ -40,14 +49,14 @@ class _BarberListItemState extends State<BarberListItem> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Nhat Duy Pham Nguyen',
+                widget.barberName ?? "Barber Name",
                 style: TextDecor.serviceListItemTitle,
               ),
               const SizedBox(
                 height: 5,
               ),
               Text(
-                'Pro Barber',
+                widget.description ?? "Description",
                 style: TextDecor.barberListItemKind,
               ),
               const SizedBox(
@@ -64,7 +73,7 @@ class _BarberListItemState extends State<BarberListItem> {
                     width: 5,
                   ),
                   Text(
-                    '4.5',
+                    widget.rating ?? "0.0",
                     style: TextDecor.barberListItemKind.copyWith(
                       color: Palette.barberListItemRating,
                     ),

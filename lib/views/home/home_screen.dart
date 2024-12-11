@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_icon_class/font_awesome_icon_class.dart';
+import 'package:hairvibe/Contract/home_screen_contract.dart';
+import 'package:hairvibe/Models/rating_repo.dart';
+import 'package:hairvibe/Models/service_model.dart';
+import 'package:hairvibe/Models/user_model.dart';
+import 'package:hairvibe/Presenter/home_screen_presenter.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
+import 'package:hairvibe/Utility.dart';
 import 'package:hairvibe/views/all_barber/barber.dart';
 import 'package:hairvibe/views/all_service.dart';
 import 'package:hairvibe/views/booking/main_booking.dart';
@@ -19,10 +25,35 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> implements HomeScreenContract {
+  HomeScreenPresenter? _presenter;
+
+  List<UserModel> _barberList = [];
+  List<ServiceModel> _serviceList = [];
+  Map<String, double> _ratings = {};
+
   final int _soLuongThongBao = 2;
-  final int _listServiceCount = 4;
   final int _currentPageIndex = 0;
+
+  @override
+  void initState() {
+    _presenter = HomeScreenPresenter(this);
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    loadData();
+  }
+
+  Future<void> loadData() async {
+    await _presenter?.getData();
+    _barberList = _presenter != null ? _presenter!.barberList : [];
+    _serviceList = _presenter != null ? _presenter!.serviceList : [];
+    _ratings = _presenter != null ? _presenter!.ratings : {};
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,9 +123,14 @@ class _HomeScreenState extends State<HomeScreen> {
               ListView.builder(
                 physics: const ScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: _listServiceCount,
+                itemCount: _serviceList.length,
                 itemBuilder: (context, index) {
-                  return const ServiceListItem();
+                  ServiceModel service = _serviceList[index];
+                  return ServiceListItem(
+                    serviceName: service.name,
+                    duration: Utility.formatDurationFromSeconds(service.duration),
+                    cost: "${Utility.formatCurrency(service.price)} VNĐ",
+                  );
                 },
               ),
               const SizedBox(height: 30),
@@ -120,9 +156,14 @@ class _HomeScreenState extends State<HomeScreen> {
               ListView.builder(
                 physics: const ScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: _listServiceCount,
+                itemCount: _barberList.length,
                 itemBuilder: (context, index) {
-                  return const BarberListItem();
+                  UserModel barber = _barberList[index];
+                  return BarberListItem(
+                    barberName: barber.name,
+                    description: "Barber",
+                    rating: _ratings[barber.userID] != null ? _ratings[barber.userID]!.toStringAsFixed(2) : "0",
+                  );
                 },
               ),
             ],
@@ -144,5 +185,21 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void onBarberPressed() {
+    // TODO: implement onBarberPressed
+  }
+
+  @override
+  void onLoadDataSucceed() {
+    // TODO: implement onLoadDataSucceed
+    setState(() {});
+  }
+
+  @override
+  void onServicePressed() {
+    // TODO: implement onServicePressed
   }
 }
