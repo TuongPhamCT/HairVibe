@@ -14,6 +14,9 @@ class HomeScreenPresenter {
   final UserRepository _userRepo = UserRepository();
   final RatingRepository _ratingRepo = RatingRepository();
 
+  static const maxServiceLength = 4;
+  static const maxBarberLength = 3;
+
   List<ServiceModel> serviceList = [];
   List<UserModel> barberList = [];
 
@@ -22,6 +25,8 @@ class HomeScreenPresenter {
   Future<void> getData() async {
     serviceList = await _serviceRepo.getAllServices();
     barberList = await _userRepo.getAllBarbers();
+    serviceList = serviceList.getRange(0, maxServiceLength).toList();
+    barberList = barberList.getRange(0, maxBarberLength).toList();
     for (UserModel barber in barberList) {
       ratings[barber.userID!] = await _ratingRepo.calculateRatingOfBarber(barber.userID!);
     }

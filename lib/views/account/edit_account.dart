@@ -87,7 +87,7 @@ class _EditAccountState extends State<EditAccount> implements EditAccountContrac
           ),
         ],
       ),
-      body: isLoading ? const Center( child: CircularProgressIndicator()) : SingleChildScrollView(
+      body: isLoading ? UtilWidgets.getLoadingWidget() : SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
