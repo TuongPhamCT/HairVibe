@@ -68,4 +68,7 @@ abstract class UtilWidgets {
     );
   }
 
+  static Widget getLoadingWidget(){
+    return const Center( child: CircularProgressIndicator());
+  }
 }

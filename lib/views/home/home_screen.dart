@@ -16,6 +16,7 @@ import 'package:hairvibe/widgets/list_view/barber_list_item.dart';
 import 'package:hairvibe/widgets/list_view/service_list_item.dart';
 import 'package:hairvibe/widgets/noti_bell.dart';
 import 'package:hairvibe/widgets/search_field.dart';
+import 'package:hairvibe/widgets/util_widgets.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -27,6 +28,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> implements HomeScreenContract {
   HomeScreenPresenter? _presenter;
+  bool isLoading = true;
 
   List<UserModel> _barberList = [];
   List<ServiceModel> _serviceList = [];
@@ -120,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> implements HomeScreenContract {
                 ],
               ),
               const SizedBox(height: 9),
-              ListView.builder(
+              isLoading ? UtilWidgets.getLoadingWidget() : ListView.builder(
                 physics: const ScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: _serviceList.length,
@@ -153,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen> implements HomeScreenContract {
                 ],
               ),
               const SizedBox(height: 9),
-              ListView.builder(
+              isLoading ? UtilWidgets.getLoadingWidget() : ListView.builder(
                 physics: const ScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: _barberList.length,
@@ -195,7 +197,9 @@ class _HomeScreenState extends State<HomeScreen> implements HomeScreenContract {
   @override
   void onLoadDataSucceed() {
     // TODO: implement onLoadDataSucceed
-    setState(() {});
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
