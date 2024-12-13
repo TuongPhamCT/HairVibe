@@ -8,6 +8,8 @@ import 'package:hairvibe/views/home/home_screen.dart';
 import 'package:hairvibe/widgets/custom_button.dart';
 import 'package:hairvibe/widgets/sign_up_form.dart';
 
+import '../widgets/util_widgets.dart';
+
 class SignInTab extends StatefulWidget {
   const SignInTab({super.key});
 
@@ -86,22 +88,11 @@ class _SignInTabState extends State<SignInTab> implements SignInTabContract {
 
   @override
   void onLoginFailed() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        backgroundColor: Palette.primary,
-        content: Text(
-          'Cannot Sign up! Please try again later!',
-          style: TextStyle(color: Colors.red),
-        ),
-      ),
-    );
-    errorText = "Email or password is invalid";
+    UtilWidgets.createSnackBar(context, 'Cannot sign in! Please try again later!');
   }
 
   @override
   void onLoginSucceeded() {
-    // TODO: implement onLoginSucceeded
-    errorText = "";
     Navigator.of(context).pushNamed(HomeScreen.routeName);
   }
 
@@ -112,11 +103,13 @@ class _SignInTabState extends State<SignInTab> implements SignInTabContract {
 
   @override
   void onWaitingProgressBar() {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) {
-          return const Center(child: CircularProgressIndicator());
-        });
+    UtilWidgets.createLoadingWidget(context);
+  }
+
+  @override
+  void onInvalidEmailOrPassword() {
+    setState(() {
+      errorText = "Email or password is invalid";
+    });
   }
 }

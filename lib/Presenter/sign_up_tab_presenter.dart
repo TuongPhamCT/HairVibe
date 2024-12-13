@@ -6,7 +6,7 @@ import 'package:hairvibe/facades/AuthenticatorFacade.dart';
 import 'package:string_validator/string_validator.dart';
 
 class SignUpTabPresenter {
-  final SignUpTabContract? _view;
+  final SignUpTabContract _view;
   final AuthenticatorFacade _auth = AuthenticatorFacade();
   final UserRepository _userRepo = UserRepository();
 
@@ -50,8 +50,14 @@ class SignUpTabPresenter {
     return "Passwords do not match";
   }
 
-  Future<Map<String, String?>> signUp(String email, String name, String phone,
-      String password, String confirmPassword) async {
+
+  Future<void> signUp(
+      String email,
+      String name,
+      String phone,
+      String password,
+      String confirmPassword
+  ) async {
     email = email.trim();
     name = name.trim();
 
@@ -64,22 +70,25 @@ class SignUpTabPresenter {
     errorTexts["confirmPassword"] =
         _validateConfirmPassword(password, confirmPassword);
 
-    for (String? value in errorTexts.values) {
-      if (value != null) {
-        return errorTexts;
+    for (String? value in errorTexts.values){
+      if (value != null){
+        _view.onValidatingFailed(errorTexts);
       }
     }
 
     // Sign Up email
-    _view?.onWaitingProgressBar();
+    _view.onWaitingProgressBar();
     bool? result = await _auth.checkIfEmailExists(email);
-    _view?.onPopContext();
+    _view.onPopContext();
 
     if (result == true) {
-      _view?.onEmailAlreadyInUse();
+      _view.onEmailAlreadyInUse();
     } else if (result == false) {
-      UserCredential? userData =
-          await _auth.signUpWithEmailAndPassword(email, password);
+      UserCredential? userData = await _auth.signUpWithEmailAndPassword(email, password);
+      if (userData == null){
+        _view.onSignUpFailed();
+        return;
+      }
       UserModel model = UserModel(
           userID: userData!.user!.uid,
           email: email,
@@ -87,10 +96,10 @@ class SignUpTabPresenter {
           phoneNumber: phone,
           userType: UserModel.CUSTOMER);
       _userRepo.addUserToFirestore(model);
-      _view?.onSignUpSucceeded();
+      _view.onSignUpSucceeded();
     } else if (result == null) {
-      _view?.onSignUpFailed();
+      _view.onSignUpFailed();
     }
-    return {};
+    return;
   }
 }

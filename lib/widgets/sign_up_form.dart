@@ -8,13 +8,15 @@ class SignUpForm extends StatefulWidget {
   bool? obscureText;
   final TextInputType? keyboardType;
   final String? errorText;
+  bool? enabled;
   SignUpForm(
       {super.key,
       required this.textController,
       required this.lableText,
       this.obscureText,
       this.keyboardType,
-      this.errorText});
+      this.errorText,
+      this.enabled});
 
   @override
   State<SignUpForm> createState() => _SignUpFormState();
@@ -42,6 +44,7 @@ class _SignUpFormState extends State<SignUpForm> {
         onTapOutside: (event) {
           FocusScope.of(context).unfocus();
         },
+        enabled: widget.enabled,
         style: TextDecor.inputText,
         decoration: InputDecoration(
           suffixIcon: widget.obscureText == true

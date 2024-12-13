@@ -5,8 +5,12 @@ import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/widgets/custom_button.dart';
 import 'package:hairvibe/widgets/sign_up_form.dart';
 
+import '../widgets/util_widgets.dart';
+
 class SignUpTab extends StatefulWidget {
-  const SignUpTab({super.key});
+  final TabController tabController;
+
+  const SignUpTab({super.key, required this.tabController});
 
   @override
   State<SignUpTab> createState() => _SignUpTabState();
@@ -14,6 +18,7 @@ class SignUpTab extends StatefulWidget {
 
 class _SignUpTabState extends State<SignUpTab> implements SignUpTabContract {
   SignUpTabPresenter? _presenter;
+  TabController? _tabController;
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -30,6 +35,7 @@ class _SignUpTabState extends State<SignUpTab> implements SignUpTabContract {
   @override
   void initState() {
     _presenter = SignUpTabPresenter(this);
+    _tabController = widget.tabController;
     super.initState();
   }
 
@@ -82,22 +88,13 @@ class _SignUpTabState extends State<SignUpTab> implements SignUpTabContract {
             Expanded(child: Container()),
             CustomButton(
               onPressed: () async {
-                Map<String, String?>? result = await _presenter?.signUp(
-                    emailController.text,
-                    fullNameController.text,
-                    phoneController.text,
-                    passwordController.text,
-                    confirmPassController.text);
-
-                if (result!.isNotEmpty) {
-                  setState(() {
-                    emailError = result["email"];
-                    fullNameError = result["name"];
-                    phoneError = result["phoneNumber"];
-                    passwordError = result["password"];
-                    confirmPasswordError = result["confirmPassword"];
-                  });
-                }
+                await _presenter?.signUp(
+                  emailController.text,
+                  fullNameController.text,
+                  phoneController.text,
+                  passwordController.text,
+                  confirmPassController.text
+                );
               },
               text: 'SIGN UP',
             ),
@@ -109,8 +106,9 @@ class _SignUpTabState extends State<SignUpTab> implements SignUpTabContract {
 
   @override
   void onEmailAlreadyInUse() {
-    emailError = "Email has already been taken";
-    setState(() {});
+    setState(() {
+      emailError = "Email has already been taken";
+    });
   }
 
   @override
@@ -120,29 +118,44 @@ class _SignUpTabState extends State<SignUpTab> implements SignUpTabContract {
 
   @override
   void onSignUpFailed() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        backgroundColor: Palette.primary,
-        content: Text(
-          'Cannot Sign up! Please try again later!',
-          style: TextStyle(color: Colors.red),
-        ),
-      ),
+    UtilWidgets.createDismissibleDialog(
+        context,
+        UtilWidgets.NOTIFICATION,
+        "Sign up failed!",
+        () {
+          Navigator.of(context, rootNavigator: true).pop();
+        }
     );
   }
 
   @override
   void onSignUpSucceeded() {
-    // TODO: implement onSignUpSucceeded
+    UtilWidgets.createDialog(
+        context,
+        UtilWidgets.NOTIFICATION,
+        "Sign up successfully!",
+        () {
+          Navigator.of(context, rootNavigator: true).pop();
+          _tabController?.animateTo(2);
+        }
+    );
   }
 
   @override
   void onWaitingProgressBar() {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) {
-          return const Center(child: CircularProgressIndicator());
-        });
+    UtilWidgets.createLoadingWidget(context);
+  }
+
+  @override
+  void onValidatingFailed(Map<String, String?> errors) {
+    if (errors.isNotEmpty){
+      setState(() {
+        emailError = errors["email"];
+        fullNameError = errors["name"];
+        phoneError = errors["phoneNumber"];
+        passwordError = errors["password"];
+        confirmPasswordError = errors["confirmPassword"];
+      });
+    }
   }
 }

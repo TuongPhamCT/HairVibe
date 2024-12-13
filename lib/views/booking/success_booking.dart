@@ -5,8 +5,8 @@ import 'package:hairvibe/views/booking/view_booking.dart';
 import 'package:hairvibe/views/home/home_screen.dart';
 import 'package:hairvibe/widgets/custom_button.dart';
 
-class SucessBooking extends StatelessWidget {
-  const SucessBooking({super.key});
+class SuccessBooking extends StatelessWidget {
+  const SuccessBooking({super.key});
   static const String routeName = 'sucess_booking_page';
 
   @override

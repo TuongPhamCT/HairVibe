@@ -29,7 +29,7 @@ class ServiceRepository {
 
   void deleteServiceById(String id) async => _storage.collection(ServiceModel.collectionName).doc(id).delete();
 
-  Future<List<ServiceModel>> getAllServices(String id) async {
+  Future<List<ServiceModel>> getAllServices() async {
     final QuerySnapshot querySnapshot = await _storage.collection(ServiceModel.collectionName).get();
     final ratings = querySnapshot
         .docs

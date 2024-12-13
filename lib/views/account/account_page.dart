@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_icon_class/font_awesome_icon_class.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
+import 'package:hairvibe/facades/AuthenticatorFacade.dart';
 import 'package:hairvibe/views/account/about_us.dart';
 import 'package:hairvibe/views/account/edit_account.dart';
+import 'package:hairvibe/views/auth_screen.dart';
 import 'package:hairvibe/widgets/bottom_bar.dart';
 import 'package:hairvibe/widgets/noti_bell.dart';
 
@@ -16,8 +18,11 @@ class AccountPage extends StatefulWidget {
 }
 
 class _AccountPageState extends State<AccountPage> {
+  AuthenticatorFacade _auth = AuthenticatorFacade();
+
   int _currentPageIndex = 3;
   int _soLuongThongBao = 2;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,7 +78,12 @@ class _AccountPageState extends State<AccountPage> {
             ),
             const SizedBox(height: 40),
             InkWell(
-              onTap: () {},
+              onTap: () async {
+                await _auth.signOut();
+                if (context.mounted) {
+                  Navigator.of(context).pushNamed(AuthScreen.routeName);
+                }
+              },
               child: Row(
                 children: [
                   const Icon(
