@@ -19,7 +19,7 @@ abstract class Utility {
       return "00,000";
     }
 
-    return amount!.toStringAsFixed(2).replaceAllMapped(
+    return amount.toStringAsFixed(2).replaceAllMapped(
         RegExp(r'\B(?=(\d{3})+(?!\d))'), (match) => ',');
   }
 }
