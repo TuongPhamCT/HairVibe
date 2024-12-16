@@ -1,4 +1,5 @@
 abstract class BarberScreenContract {
   void onLoadDataSucceed();
-  void onBarberPressed();
+  void onBookBarberPressed();
+  void onDetailBarberPressed();
 }

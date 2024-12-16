@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:hairvibe/Builders/WidgetBuilder/completed_appoint_item_builder.dart';
+import 'package:hairvibe/Models/appointment_model.dart';
+import 'package:hairvibe/Presenter/appointment_tab_presenter.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/widgets/list_view/completed_appointment_item.dart';
 
 class CompletedTab extends StatelessWidget {
-  final int soLuong;
-  const CompletedTab({super.key, required this.soLuong});
+  final AppointmentTabPresenter presenter;
+  final List<AppointmentModel> appointments;
+
+  const CompletedTab({
+    super.key,
+    required this.presenter,
+    required this.appointments
+  });
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    if (soLuong == 0) {
+    if (appointments.isEmpty) {
       return Center(
         child: Text(
           'You have no completed appointments',
@@ -22,9 +31,15 @@ class CompletedTab extends StatelessWidget {
         height: double.infinity,
         padding: const EdgeInsets.all(30),
         child: ListView.builder(
-          itemCount: soLuong,
+          itemCount: appointments.length,
           itemBuilder: (context, index) {
-            return const CompletedAppointItem();
+            CompletedAppointItemBuilder builder = CompletedAppointItemBuilder();
+            builder.setAppointment(appointments[index]);
+            builder.setBarber(presenter.findBarberByID(appointments[index].barberID!)!);
+            builder.setOnViewReceiptPressed(() async {
+              await presenter.handleViewReceiptPressed(appointments[index]);
+            });
+            return builder.createWidget();
           },
         ),
       );

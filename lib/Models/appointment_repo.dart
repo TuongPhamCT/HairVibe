@@ -27,8 +27,55 @@ class AppointmentRepository {
     return isSuccess;
   }
 
+  Future<AppointmentModel> getAppointmentById(String id) async {
+    final DocumentReference<Map<String, dynamic>> collectionRef = _storage.collection(AppointmentModel.collectionName).doc(id);
+    DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await collectionRef.get();
+
+    final AppointmentModel appointment = AppointmentModel.fromJson(documentSnapshot.data() as Map<String, dynamic>);
+    return appointment;
+  }
+
   Future<List<AppointmentModel>> getAllAppointments(String id) async {
     final QuerySnapshot querySnapshot = await _storage.collection(AppointmentModel.collectionName).get();
+    final appointments = querySnapshot
+        .docs
+        .map((doc) => AppointmentModel.fromJson(doc as Map<String, dynamic>))
+        .toList();
+    return appointments;
+  }
+
+  Future<List<AppointmentModel>> getAllCancelledAppointments(String id) async {
+    final QuerySnapshot querySnapshot
+        = await _storage.collection(AppointmentModel.collectionName)
+                        .where('status', isEqualTo: AppointmentStatus.CANCELLED)
+                        .where('barberID', isEqualTo: id)
+                        .get();
+    final appointments = querySnapshot
+        .docs
+        .map((doc) => AppointmentModel.fromJson(doc as Map<String, dynamic>))
+        .toList();
+    return appointments;
+  }
+
+  Future<List<AppointmentModel>> getAllCompletedAppointments(String id) async {
+    final QuerySnapshot querySnapshot
+        = await _storage.collection(AppointmentModel.collectionName)
+                        .where('status', isEqualTo: AppointmentStatus.COMPLETED)
+                        .where('barberID', isEqualTo: id)
+                        .get();
+    final appointments = querySnapshot
+        .docs
+        .map((doc) => AppointmentModel.fromJson(doc as Map<String, dynamic>))
+        .toList();
+    return appointments;
+  }
+
+  Future<List<AppointmentModel>> getAllUpcomingAppointments(String id) async {
+    final QuerySnapshot querySnapshot
+        = await _storage.collection(AppointmentModel.collectionName)
+                        .where('status', isEqualTo: AppointmentStatus.UPCOMING)
+                        .where('barberID', isEqualTo: id)
+                        .get();
     final appointments = querySnapshot
         .docs
         .map((doc) => AppointmentModel.fromJson(doc as Map<String, dynamic>))

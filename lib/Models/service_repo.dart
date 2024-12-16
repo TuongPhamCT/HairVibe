@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hairvibe/Models/appointment_model.dart';
+import 'package:hairvibe/Models/appointment_repo.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hairvibe/Models/service_model.dart';
 

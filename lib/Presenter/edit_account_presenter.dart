@@ -1,7 +1,7 @@
 import 'package:hairvibe/Contract/edit_account_contract.dart';
 import 'package:hairvibe/Models/user_model.dart';
 import 'package:hairvibe/Models/user_repo.dart';
-import 'package:hairvibe/facades/AuthenticatorFacade.dart';
+import 'package:hairvibe/facades/authenticator_facade.dart';
 
 class EditAccountPresenter {
   final EditAccountContract _view;

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hairvibe/Models/service_model.dart';
+import 'package:hairvibe/Singletons/appointment_singleton.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
+import 'package:hairvibe/Utility.dart';
 import 'package:hairvibe/views/home/home_screen.dart';
 
 class ViewBooking extends StatelessWidget {
@@ -10,6 +13,44 @@ class ViewBooking extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
+    final Map<String, dynamic> data = AppointmentSingleton.getInstance().getViewBookingData();
+    List<ServiceModel> services = data[ViewBookingData.SERVICES] as List<ServiceModel>;
+    List<Widget> serviceNames = [];
+    List<Widget> servicePrices = [];
+
+    for (ServiceModel service in services) {
+      serviceNames.add(
+        Text(
+          service.name ?? "Service Name",
+          style: TextDecor.label2Appointment,
+        )
+      );
+      serviceNames.add(const SizedBox(height: 10));
+
+      servicePrices.add(
+          Text(
+            Utility.formatCurrency(service.price),
+            style: TextDecor.label2Appointment,
+          )
+      );
+      servicePrices.add(const SizedBox(height: 10));
+    }
+
+    serviceNames.add(
+      Text(
+        'Discount',
+        style: TextDecor.label2Appointment,
+      ),
+    );
+
+    servicePrices.add(
+      Text(
+        "${data[ViewBookingData.DISCOUNT]}%",
+        style: TextDecor.content1Appointment,
+      ),
+    );
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -72,27 +113,27 @@ class ViewBooking extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Duy',
+                          data[ViewBookingData.NAME],
                           style: TextDecor.content1Appointment,
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          '0123456789',
+                          data[ViewBookingData.PHONE],
                           style: TextDecor.content1Appointment,
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          'October 10, 2021',
+                          data[ViewBookingData.BOOKING_DATE],
                           style: TextDecor.content1Appointment,
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          '10:00 AM',
+                          data[ViewBookingData.BOOKING_TIME],
                           style: TextDecor.content1Appointment,
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          'Duy',
+                          data[ViewBookingData.BARBER],
                           style: TextDecor.content1Appointment,
                         ),
                       ],
@@ -120,54 +161,14 @@ class ViewBooking extends StatelessWidget {
                         width: size.width * 0.35,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Haircut',
-                              style: TextDecor.label2Appointment,
-                            ),
-                            const SizedBox(height: 10),
-                            Text(
-                              'Hairwash',
-                              style: TextDecor.label2Appointment,
-                            ),
-                            const SizedBox(height: 10),
-                            Text(
-                              'Shaving',
-                              style: TextDecor.label2Appointment,
-                            ),
-                            const SizedBox(height: 10),
-                            Text(
-                              'Discount',
-                              style: TextDecor.label2Appointment,
-                            ),
-                          ],
+                          children: serviceNames,
                         ),
                       ),
                       SizedBox(
                         width: size.width * 0.35,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              '20k',
-                              style: TextDecor.content1Appointment,
-                            ),
-                            const SizedBox(height: 10),
-                            Text(
-                              '20k',
-                              style: TextDecor.content1Appointment,
-                            ),
-                            const SizedBox(height: 10),
-                            Text(
-                              '20k',
-                              style: TextDecor.content1Appointment,
-                            ),
-                            const SizedBox(height: 10),
-                            Text(
-                              '30%',
-                              style: TextDecor.content1Appointment,
-                            ),
-                          ],
+                          children: servicePrices,
                         ),
                       ),
                     ],
@@ -187,7 +188,7 @@ class ViewBooking extends StatelessWidget {
                         style: TextDecor.inter16Bold,
                       ),
                       Text(
-                        '60k',
+                        Utility.formatCurrency(data[ViewBookingData.TOTAL_PRICE]),
                         style: TextDecor.content1Appointment,
                       ),
                     ],
@@ -201,15 +202,15 @@ class ViewBooking extends StatelessWidget {
                 Navigator.of(context).pushNamed(HomeScreen.routeName);
               },
               style: ButtonStyle(
-                padding: MaterialStateProperty.all<EdgeInsets>(
+                padding: WidgetStateProperty.all<EdgeInsets>(
                   const EdgeInsets.all(0),
                 ),
-                fixedSize: MaterialStateProperty.all<Size>(
+                fixedSize: WidgetStateProperty.all<Size>(
                   Size(size.width * 0.75, 45),
                 ),
                 backgroundColor:
-                    MaterialStateProperty.all<Color>(Palette.primary),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    WidgetStateProperty.all<Color>(Palette.primary),
+                shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_icon_class/font_awesome_icon_class.dart';
+import 'package:hairvibe/Builders/WidgetBuilder/barber_list_item_builder.dart';
 import 'package:hairvibe/Contract/home_screen_contract.dart';
 import 'package:hairvibe/Models/rating_repo.dart';
 import 'package:hairvibe/Models/service_model.dart';
@@ -17,6 +18,8 @@ import 'package:hairvibe/widgets/list_view/service_list_item.dart';
 import 'package:hairvibe/widgets/noti_bell.dart';
 import 'package:hairvibe/widgets/search_field.dart';
 import 'package:hairvibe/widgets/util_widgets.dart';
+
+import '../../Builders/WidgetBuilder/service_list_item_builder.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -51,9 +54,6 @@ class _HomeScreenState extends State<HomeScreen> implements HomeScreenContract {
 
   Future<void> loadData() async {
     await _presenter?.getData();
-    _barberList = _presenter != null ? _presenter!.barberList : [];
-    _serviceList = _presenter != null ? _presenter!.serviceList : [];
-    _ratings = _presenter != null ? _presenter!.ratings : {};
   }
 
   @override
@@ -127,12 +127,12 @@ class _HomeScreenState extends State<HomeScreen> implements HomeScreenContract {
                 shrinkWrap: true,
                 itemCount: _serviceList.length,
                 itemBuilder: (context, index) {
-                  ServiceModel service = _serviceList[index];
-                  return ServiceListItem(
-                    serviceName: service.name,
-                    duration: Utility.formatDurationFromSeconds(service.duration),
-                    cost: "${Utility.formatCurrency(service.price)} VNĐ",
-                  );
+                  ServiceListItemBuilder builder = ServiceListItemBuilder();
+                  builder.setService(_serviceList[index]);
+                  builder.setOnPressed(() {
+                    _presenter!.handleServicePressed(builder.service!);
+                  });
+                  return builder.createWidget();
                 },
               ),
               const SizedBox(height: 30),
@@ -160,12 +160,15 @@ class _HomeScreenState extends State<HomeScreen> implements HomeScreenContract {
                 shrinkWrap: true,
                 itemCount: _barberList.length,
                 itemBuilder: (context, index) {
+                  BarberListItemBuilder builder = BarberListItemBuilder();
                   UserModel barber = _barberList[index];
-                  return BarberListItem(
-                    barberName: barber.name,
-                    description: "Barber",
-                    rating: _ratings[barber.userID] != null ? _ratings[barber.userID]!.toStringAsFixed(2) : "0",
-                  );
+                  builder.setBarber(barber);
+                  builder.setDescription("Barber");
+                  builder.setRating(_ratings[barber.userID] != null ? _ratings[barber.userID]!.toStringAsFixed(1) : "0");
+                  builder.setOnPressed(() {
+                    _presenter?.handleBarberPressed(barber);
+                  });
+                  return builder.createWidget();
                 },
               ),
             ],
@@ -198,6 +201,9 @@ class _HomeScreenState extends State<HomeScreen> implements HomeScreenContract {
   void onLoadDataSucceed() {
     // TODO: implement onLoadDataSucceed
     setState(() {
+      _barberList = _presenter!.barberList;
+      _serviceList = _presenter!.serviceList;
+      _ratings = _presenter!.ratings;
       isLoading = false;
     });
   }

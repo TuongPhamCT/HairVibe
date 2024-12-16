@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_icon_class/font_awesome_icon_class.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
-import 'package:hairvibe/facades/AuthenticatorFacade.dart';
+import 'package:hairvibe/facades/authenticator_facade.dart';
 import 'package:hairvibe/views/account/about_us.dart';
 import 'package:hairvibe/views/account/edit_account.dart';
 import 'package:hairvibe/views/auth_screen.dart';

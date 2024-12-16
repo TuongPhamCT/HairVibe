@@ -1,5 +1,5 @@
 import 'package:hairvibe/Contract/forgot_pass_contract.dart';
-import '../facades/AuthenticatorFacade.dart';
+import '../facades/authenticator_facade.dart';
 
 class ForgotPassScreenPresenter {
   final ForgotPassScreenContract _view;

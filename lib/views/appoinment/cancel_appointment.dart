@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_icon_class/font_awesome_icon_class.dart';
+import 'package:hairvibe/Contract/cancel_appointment_contract.dart';
+import 'package:hairvibe/Presenter/cancel_appointment_presenter.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/widgets/custom_button.dart';
 import 'package:hairvibe/widgets/noti_bell.dart';
+
+import '../../widgets/util_widgets.dart';
 
 class CancelAppointmentPage extends StatefulWidget {
   const CancelAppointmentPage({super.key});
@@ -13,11 +17,44 @@ class CancelAppointmentPage extends StatefulWidget {
   State<CancelAppointmentPage> createState() => _CancelAppointmentPageState();
 }
 
-class _CancelAppointmentPageState extends State<CancelAppointmentPage> {
+class _CancelAppointmentPageState extends State<CancelAppointmentPage> implements CancelAppointmentPageContract {
+  CancelAppointmentPagePresenter? _presenter;
+
   final int _soLuongThongBao = 3;
   String? _selectedReason;
+  final TextEditingController otherReasonController = TextEditingController();
+
+  final Map<String, String> choices = {
+    "choice1" : "Schedule change",
+    "choice2" : "Weather condition",
+    "choice3" : "I have alternative option",
+    "choice4" : "Other"
+  };
+
+  @override
+  void initState() {
+    _presenter = CancelAppointmentPagePresenter(this);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    List<Widget> widgets = choices.entries.map((entry) {
+      return RadioListTile<String>(
+        fillColor: WidgetStateColor.resolveWith((states) => Colors.white),
+        contentPadding: const EdgeInsets.all(0),
+        title:
+        Text(entry.value, style: TextDecor.robo16Semi),
+        value: entry.key,
+        groupValue: _selectedReason,
+        onChanged: (value) {
+          setState(() {
+            _selectedReason = value;
+          });
+        },
+      );
+    }).toList();
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -55,63 +92,7 @@ class _CancelAppointmentPageState extends State<CancelAppointmentPage> {
                 child: ListView(
                   physics: const NeverScrollableScrollPhysics(),
                   padding: const EdgeInsets.all(16.0),
-                  children: [
-                    RadioListTile<String>(
-                      fillColor: MaterialStateColor.resolveWith(
-                          (states) => Colors.white),
-                      contentPadding: const EdgeInsets.all(0),
-                      title:
-                          Text('Schedule Change', style: TextDecor.robo16Semi),
-                      value: 'choice1',
-                      groupValue: _selectedReason,
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedReason = value;
-                        });
-                      },
-                    ),
-                    RadioListTile<String>(
-                      fillColor: MaterialStateColor.resolveWith(
-                          (states) => Colors.white),
-                      contentPadding: const EdgeInsets.all(0),
-                      title: Text('Weather Condition',
-                          style: TextDecor.robo16Semi),
-                      value: 'choice2',
-                      groupValue: _selectedReason,
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedReason = value;
-                        });
-                      },
-                    ),
-                    RadioListTile<String>(
-                      fillColor: MaterialStateColor.resolveWith(
-                          (states) => Colors.white),
-                      contentPadding: const EdgeInsets.all(0),
-                      title: Text('I have alternative_option',
-                          style: TextDecor.robo16Semi),
-                      value: 'choice3',
-                      groupValue: _selectedReason,
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedReason = value;
-                        });
-                      },
-                    ),
-                    RadioListTile<String>(
-                      fillColor: MaterialStateColor.resolveWith(
-                          (states) => Colors.white),
-                      contentPadding: const EdgeInsets.all(0),
-                      title: Text('Other', style: TextDecor.robo16Semi),
-                      value: 'choice4',
-                      groupValue: _selectedReason,
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedReason = value;
-                        });
-                      },
-                    ),
-                  ],
+                  children: widgets,
                 ),
               ),
               const SizedBox(
@@ -130,6 +111,7 @@ class _CancelAppointmentPageState extends State<CancelAppointmentPage> {
                       onTapOutside: (event) {
                         FocusScope.of(context).unfocus();
                       },
+                      controller: otherReasonController,
                       style: TextDecor.robo16Semi.copyWith(color: Colors.black),
                       maxLines: 5,
                       decoration: InputDecoration(
@@ -150,7 +132,13 @@ class _CancelAppointmentPageState extends State<CancelAppointmentPage> {
                 height: 80,
               ),
               CustomButton(
-                onPressed: () {},
+                onPressed: () async {
+                  if (_selectedReason == 'choice4') {
+                    await _presenter?.handleConfirmPressed(otherReasonController.text);
+                  } else {
+                    await _presenter?.handleConfirmPressed(choices[_selectedReason]!);
+                  }
+                },
                 text: 'CONFIRM',
               ),
             ],
@@ -158,5 +146,33 @@ class _CancelAppointmentPageState extends State<CancelAppointmentPage> {
         ),
       ),
     );
+  }
+
+  @override
+  void onConfirmSucceed() {
+    UtilWidgets.createDialog(
+        context,
+        UtilWidgets.NOTIFICATION,
+        "Cancel appointment successfully",
+        () {
+          Navigator.of(context, rootNavigator: true).pop();
+          Navigator.of(context, rootNavigator: true).pop();
+        }
+    );
+  }
+
+  @override
+  void onPopContext() {
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  @override
+  void onWaitingProgressBar() {
+    UtilWidgets.createLoadingWidget(context);
+  }
+
+  @override
+  void onConfirmFailed(String error) {
+    UtilWidgets.createSnackBar(context, error);
   }
 }

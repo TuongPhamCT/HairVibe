@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
+import 'package:hairvibe/Utility.dart';
 import 'package:hairvibe/config/asset_helper.dart';
 import 'package:hairvibe/views/booking/view_booking.dart';
 import 'package:hairvibe/widgets/appoiment_button.dart';
 
 class CompletedAppointItem extends StatefulWidget {
-  const CompletedAppointItem({super.key});
+  final DateTime? date;
+  final String? barberName;
+  final String? serviceID;
+  final VoidCallback? onViewReceiptPressed;
+
+  const CompletedAppointItem({
+    super.key,
+    this.date,
+    this.barberName,
+    this.serviceID,
+    this.onViewReceiptPressed
+  });
 
   @override
   State<CompletedAppointItem> createState() => _CompletedAppointItemState();
@@ -27,7 +39,7 @@ class _CompletedAppointItemState extends State<CompletedAppointItem> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'October 10, 2024 - 10:00 AM',
+            Utility.formatStringFromDateTime(widget.date),
             style: TextDecor.inter13Medi,
           ),
           Container(
@@ -57,14 +69,14 @@ class _CompletedAppointItemState extends State<CompletedAppointItem> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Duy',
+                    widget.barberName ?? "Barber Name",
                     style:
                         TextDecor.searchHintText.copyWith(color: Colors.black),
                   ),
                   const SizedBox(
                     height: 10,
                   ),
-                  Text('Service ID: 123456', style: TextDecor.inter10Medi),
+                  Text('Service ID: ${widget.serviceID}', style: TextDecor.inter10Medi),
                 ],
               ),
             ],
@@ -80,9 +92,7 @@ class _CompletedAppointItemState extends State<CompletedAppointItem> {
             height: 15,
           ),
           AppointmentButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed(ViewBooking.routeName);
-            },
+            onPressed: widget.onViewReceiptPressed,
             width: double.maxFinite,
             backgroundColor: Palette.primary,
             child: Text(
