@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hairvibe/Singletons/barber_singleton.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/config/asset_helper.dart';
@@ -8,6 +9,33 @@ class PhotosBarberTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<String> urls = BarberSingleton.getInstance().getBarberImageUrls();
+    List<Widget> widgets = urls.map((url) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: SizedBox(
+          width: 150,
+          height: 150,
+          child: Image.network(
+            url,
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) return child;
+              return Center(
+                child: CircularProgressIndicator(
+                  value: loadingProgress.expectedTotalBytes != null
+                      ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                      : null,
+                ),
+              );
+            },
+            errorBuilder: (context, error, stackTrace) {
+              return const Image(image: AssetImage(AssetHelper.barberAvatar));
+            },
+          ),
+        ),
+      );
+    }).toList();
+
     return Container(
       padding: const EdgeInsets.all(25),
       child: Column(
@@ -20,7 +48,7 @@ class PhotosBarberTab extends StatelessWidget {
               ),
               const SizedBox(width: 10),
               Text(
-                '(4)',
+                "${urls.length}",
                 style: TextDecor.nameBarberBook.copyWith(
                   color: Palette.primary,
                 ),
@@ -36,52 +64,7 @@ class PhotosBarberTab extends StatelessWidget {
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
               ),
-              children: [
-                Container(
-                  height: 150,
-                  width: 150,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: const DecorationImage(
-                      image: AssetImage(AssetHelper.barberAvatar),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                Container(
-                  height: 150,
-                  width: 150,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: const DecorationImage(
-                      image: AssetImage(AssetHelper.barberAvatar),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                Container(
-                  height: 150,
-                  width: 150,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: const DecorationImage(
-                      image: AssetImage(AssetHelper.barberAvatar),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                Container(
-                  height: 150,
-                  width: 150,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: const DecorationImage(
-                      image: AssetImage(AssetHelper.barberAvatar),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ],
+              children: widgets,
             ),
           ),
         ],

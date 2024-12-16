@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_icon_class/font_awesome_icon_class.dart';
+import 'package:hairvibe/Contract/detail_barber_contract.dart';
+import 'package:hairvibe/Presenter/detail_barber_presenter.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/config/asset_helper.dart';
@@ -14,7 +16,15 @@ class DetailBarber extends StatefulWidget {
   State<DetailBarber> createState() => _DetailBarberState();
 }
 
-class _DetailBarberState extends State<DetailBarber> {
+class _DetailBarberState extends State<DetailBarber> implements DetailBarberContract {
+  DetailBarberPresenter? _presenter;
+
+  @override
+  void initState() {
+    _presenter = DetailBarberPresenter(this);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -45,15 +55,15 @@ class _DetailBarberState extends State<DetailBarber> {
               width: 100,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(80),
-                image: const DecorationImage(
-                  image: AssetImage(AssetHelper.barberAvatar),
+                image: DecorationImage(
+                  image: NetworkImage(_presenter!.getBarberAvatarUrl()),
                   fit: BoxFit.cover,
                 ),
               ),
             ),
             const SizedBox(height: 10),
             Text(
-              'Duy',
+              _presenter?.getBarberName() ?? 'Barber Name',
               style: TextDecor.detailBarberName,
             ),
             TabBar(
@@ -79,5 +89,10 @@ class _DetailBarberState extends State<DetailBarber> {
         ),
       ),
     );
+  }
+
+  @override
+  void onLoadDataSucceed() {
+    // TODO: implement onLoadDataSucceed
   }
 }

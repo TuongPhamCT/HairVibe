@@ -90,11 +90,11 @@ class SignUpTabPresenter {
         return;
       }
       UserModel model = UserModel(
-          userID: userData!.user!.uid,
+          userID: userData.user!.uid,
           email: email,
           name: name,
           phoneNumber: phone,
-          userType: UserModel.CUSTOMER);
+          userType: UserType.CUSTOMER);
       _userRepo.addUserToFirestore(model);
       _view.onSignUpSucceeded();
     } else if (result == null) {
