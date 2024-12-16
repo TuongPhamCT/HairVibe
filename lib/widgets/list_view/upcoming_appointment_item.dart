@@ -1,20 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
+import 'package:hairvibe/Utility.dart';
 import 'package:hairvibe/config/asset_helper.dart';
 import 'package:hairvibe/views/appoinment/cancel_appointment.dart';
 import 'package:hairvibe/views/booking/view_booking.dart';
 import 'package:hairvibe/widgets/appoiment_button.dart';
 
-class UpcomingAppointmentItem extends StatefulWidget {
-  const UpcomingAppointmentItem({super.key});
+class UpcomingAppointItem extends StatefulWidget {
+  final DateTime? date;
+  final String? barberName;
+  final String? serviceID;
+  final VoidCallback? onCancelPressed;
+  final VoidCallback? onViewReceiptPressed;
+  const UpcomingAppointItem({
+    super.key,
+    this.date,
+    this.barberName,
+    this.serviceID,
+    this.onCancelPressed,
+    this.onViewReceiptPressed
+  });
 
   @override
-  State<UpcomingAppointmentItem> createState() =>
-      _UpcomingAppointmentItemState();
+  State<UpcomingAppointItem> createState() =>
+      _UpcomingAppointItemState();
 }
 
-class _UpcomingAppointmentItemState extends State<UpcomingAppointmentItem> {
+class _UpcomingAppointItemState extends State<UpcomingAppointItem> {
   bool isRemind = true;
   @override
   Widget build(BuildContext context) {
@@ -30,7 +43,7 @@ class _UpcomingAppointmentItemState extends State<UpcomingAppointmentItem> {
           Row(
             children: [
               Text(
-                'October 10, 2024 - 10:00 AM',
+                Utility.formatStringFromDateTime(widget.date),
                 style: TextDecor.inter13Medi,
               ),
               Expanded(child: Container()),
@@ -86,14 +99,14 @@ class _UpcomingAppointmentItemState extends State<UpcomingAppointmentItem> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Duy',
+                    widget.barberName ?? "Barber Name",
                     style:
                         TextDecor.searchHintText.copyWith(color: Colors.black),
                   ),
                   const SizedBox(
                     height: 10,
                   ),
-                  Text('Service ID: 123456', style: TextDecor.inter10Medi),
+                  Text('Service ID: ${widget.serviceID}', style: TextDecor.inter10Medi),
                 ],
               ),
             ],
@@ -112,10 +125,7 @@ class _UpcomingAppointmentItemState extends State<UpcomingAppointmentItem> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               AppointmentButton(
-                onPressed: () {
-                  Navigator.of(context)
-                      .pushNamed(CancelAppointmentPage.routeName);
-                },
+                onPressed: widget.onCancelPressed,
                 width: 140,
                 backgroundColor: Colors.white,
                 borderSide: const BorderSide(color: Palette.primary, width: 2),
@@ -125,9 +135,10 @@ class _UpcomingAppointmentItemState extends State<UpcomingAppointmentItem> {
                 ),
               ),
               AppointmentButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed(ViewBooking.routeName);
-                },
+                // onPressed: () {
+                //   Navigator.of(context).pushNamed(ViewBooking.routeName);
+                // },
+                onPressed: widget.onViewReceiptPressed,
                 width: 140,
                 backgroundColor: Palette.primary,
                 child: Text(

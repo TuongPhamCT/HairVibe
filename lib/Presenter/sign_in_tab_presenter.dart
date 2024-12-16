@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hairvibe/Contract/sign_in_tab_contract.dart';
 import 'package:hairvibe/Models/user_repo.dart';
-import 'package:hairvibe/facades/AuthenticatorFacade.dart';
+import 'package:hairvibe/facades/authenticator_facade.dart';
 
 import '../Models/user_model.dart';
 

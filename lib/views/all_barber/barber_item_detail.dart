@@ -5,14 +5,27 @@ import 'package:hairvibe/config/asset_helper.dart';
 import 'package:hairvibe/views/all_barber/barber_image_item.dart';
 import 'package:hairvibe/views/all_barber/detail_barber.dart';
 
-class BarBerItemDetail extends StatefulWidget {
-  const BarBerItemDetail({super.key});
+class BarberItemDetail extends StatefulWidget {
+  final String? barberName;
+  final String? description;
+  final String? rating;
+  final VoidCallback? onDetailPressed;
+  final VoidCallback? onBookPressed;
+
+  const BarberItemDetail({
+    super.key,
+    this.barberName,
+    this.description,
+    this.rating,
+    this.onDetailPressed,
+    this.onBookPressed
+  });
 
   @override
-  State<BarBerItemDetail> createState() => _BarBerItemDetailState();
+  State<BarberItemDetail> createState() => _BarberItemDetailState();
 }
 
-class _BarBerItemDetailState extends State<BarBerItemDetail> {
+class _BarberItemDetailState extends State<BarberItemDetail> {
   final List<String> weekDays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 
   List<DateTime> getCurrentWeekDates() {
@@ -26,9 +39,7 @@ class _BarBerItemDetailState extends State<BarBerItemDetail> {
   Widget build(BuildContext context) {
     List<DateTime> weekDates = getCurrentWeekDates();
     return InkWell(
-      onTap: () {
-        Navigator.of(context).pushNamed(DetailBarber.routeName);
-      },
+      onTap: widget.onDetailPressed,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
         margin: const EdgeInsets.only(top: 16),
@@ -60,14 +71,14 @@ class _BarBerItemDetailState extends State<BarBerItemDetail> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Nhat Duy Pham Nguyen',
+                      widget.barberName ?? "Barber Name",
                       style: TextDecor.serviceListItemTitle,
                     ),
                     const SizedBox(
                       height: 5,
                     ),
                     Text(
-                      'Pro Barber',
+                      widget.description ?? "Barber",
                       style: TextDecor.barberListItemKind,
                     ),
                     const SizedBox(
@@ -84,7 +95,7 @@ class _BarBerItemDetailState extends State<BarBerItemDetail> {
                           width: 5,
                         ),
                         Text(
-                          '4.5',
+                          widget.rating ?? "0.0",
                           style: TextDecor.barberListItemKind.copyWith(
                             color: Palette.barberListItemRating,
                           ),
@@ -167,13 +178,13 @@ class _BarBerItemDetailState extends State<BarBerItemDetail> {
                   ],
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: widget.onBookPressed,
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Palette.primary),
-                    padding: MaterialStateProperty.all(
+                    backgroundColor: WidgetStateProperty.all(Palette.primary),
+                    padding: WidgetStateProperty.all(
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                     ),
-                    shape: MaterialStateProperty.all(
+                    shape: WidgetStateProperty.all(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),

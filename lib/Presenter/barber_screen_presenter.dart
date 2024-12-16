@@ -23,7 +23,11 @@ class BarberScreenPresenter {
     _view.onLoadDataSucceed();
   }
 
-  void handleBarberPressed(UserModel model) {
-    _view.onBarberPressed();
+  void handleBookBarberPressed(UserModel model) {
+    _view.onBookBarberPressed();
+  }
+
+  void handleDetailBarberPressed(UserModel model) {
+    _view.onDetailBarberPressed();
   }
 }

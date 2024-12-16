@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:hairvibe/Models/appointment_model.dart';
+import 'package:hairvibe/Presenter/appointment_tab_presenter.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/widgets/list_view/cancel_appoint_item.dart';
 
+import '../../Builders/WidgetBuilder/cancelled_appoint_item_builder.dart';
+
 class CancelledTab extends StatelessWidget {
-  final int soLuong;
-  const CancelledTab({super.key, required this.soLuong});
+  final AppointmentTabPresenter presenter;
+  final List<AppointmentModel> appointments;
+
+  const CancelledTab({
+    super.key,
+    required this.presenter,
+    required this.appointments
+  });
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    if (soLuong == 0) {
+    if (appointments.isEmpty) {
       return Center(
         child: Text(
           'You have no cancelled appointments',
@@ -22,9 +32,15 @@ class CancelledTab extends StatelessWidget {
         height: double.infinity,
         padding: const EdgeInsets.all(30),
         child: ListView.builder(
-          itemCount: soLuong,
+          itemCount: appointments.length,
           itemBuilder: (context, index) {
-            return const CancelledAppointItem();
+            CancelledAppointItemBuilder builder = CancelledAppointItemBuilder();
+            builder.setAppointment(appointments[index]);
+            builder.setBarber(presenter.findBarberByID(appointments[index].barberID!)!);
+            builder.setOnRebookPressed(() {
+              presenter.handleRebookPressed(appointments[index]);
+            });
+            return builder.createWidget();
           },
         ),
       );

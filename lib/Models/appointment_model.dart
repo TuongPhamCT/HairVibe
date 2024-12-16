@@ -6,23 +6,21 @@ class AppointmentModel {
   String? appointmentID;
   String? customerID;
   String? barberID;
-  String? branchID;
-  List<ServiceModel> services = [];
+  List<ServiceModel>? services = [];
   DateTime? date;
   String? status;
-  String? otherInfo;
+  Map<String, Object?>? otherInfo = {};
 
   static String collectionName = 'Appointments';
 
   AppointmentModel(
     {
-      required this.appointmentID,
-      required this.customerID,
-      required this.barberID,
-      required this.branchID,
-      required this.services,
-      required this.date,
-      required this.status,
+      this.appointmentID,
+      this.customerID,
+      this.barberID,
+      this.services,
+      this.date,
+      this.status,
       this.otherInfo
     }
   );
@@ -31,8 +29,7 @@ class AppointmentModel {
     'appointmentID': appointmentID,
     'customerID': customerID,
     'barberID': barberID,
-    'branchID': branchID,
-    'services': services.map((service) => service.toJson()).toList(),
+    'services': services?.map((service) => service.toJson()).toList(),
     'date': Timestamp.fromDate(date!),
     'status': status,
     'otherInfo': otherInfo
@@ -41,15 +38,26 @@ class AppointmentModel {
   static AppointmentModel fromJson(Map<String, dynamic> json) {
     final dataServices = json['services'] as List?;
     final listServices = List.castFrom<Object?, Map<String, Object?>>(dataServices!);
+    final dataOtherInfo = json['otherInfo'] as Map<String, Object?>?;
     return AppointmentModel(
       appointmentID: json['appointmentID'] as String,
       customerID: json['customerID'] as String,
       barberID: json['barberID'] as String,
-      branchID: json['branchID'] as String,
       services: listServices.map((raw) => ServiceModel.fromJson(raw)).toList(),
       date: (json['date'] as Timestamp).toDate(),
       status: json['status'] as String,
-      otherInfo: json['otherInfo'] as String
+      otherInfo: dataOtherInfo
     );
   }
+}
+
+abstract class AppointmentStatus {
+  static const String CANCELLED = "cancelled";
+  static const String COMPLETED = "completed";
+  static const String UPCOMING = "upcoming";
+}
+
+abstract class AppointmentOtherInfo {
+  static const String DISCOUNT = "discount";
+  static const String CANCEL_REASON = "cancelReason";
 }

@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_icon_class/font_awesome_icon_class.dart';
 import 'package:hairvibe/Contract/barber_screen_contract.dart';
+import 'package:hairvibe/Builders/WidgetBuilder/barber_item_detail_builder.dart';
 import 'package:hairvibe/Presenter/barber_screen_presenter.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/views/all_barber/barber_item_detail.dart';
+import 'package:hairvibe/views/booking/main_booking.dart';
 
 import '../../Models/user_model.dart';
 import '../../widgets/util_widgets.dart';
+import 'detail_barber.dart';
 
 class BarberScreen extends StatefulWidget {
   const BarberScreen({super.key});
@@ -22,6 +25,7 @@ class _BarberScreenState extends State<BarberScreen> implements BarberScreenCont
   bool isLoading = true;
 
   List<UserModel> _barberList = [];
+  Map<String, double> _ratings = {};
 
   @override
   void initState() {
@@ -37,7 +41,6 @@ class _BarberScreenState extends State<BarberScreen> implements BarberScreenCont
 
   Future<void> loadData() async {
     await _presenter?.getData();
-    _barberList = _presenter != null ? _presenter!.barberList : [];
   }
 
   @override
@@ -79,8 +82,18 @@ class _BarberScreenState extends State<BarberScreen> implements BarberScreenCont
                 shrinkWrap: true,
                 itemCount: _barberList.length,
                 itemBuilder: (context, index) {
+                  BarberItemDetailBuilder builder = BarberItemDetailBuilder();
                   UserModel barber = _barberList[index];
-                  return const BarBerItemDetail();
+                  builder.setBarber(barber);
+                  builder.setDescription("Barber");
+                  builder.setRating(_ratings[barber.userID] != null ? _ratings[barber.userID]!.toStringAsFixed(1) : "0.0");
+                  builder.setOnDetailPressed(() {
+                    _presenter?.handleDetailBarberPressed(barber);
+                  });
+                  builder.setOnBookPressed(() {
+                    _presenter?.handleBookBarberPressed(barber);
+                  });
+                  return builder.createWidget();
                 },
               ),
             ],
@@ -91,15 +104,21 @@ class _BarberScreenState extends State<BarberScreen> implements BarberScreenCont
   }
 
   @override
-  void onBarberPressed() {
-    // TODO: implement onBarberPressed
+  void onBookBarberPressed() {
+    Navigator.of(context).pushNamed(MainBooking.routeName);
   }
 
   @override
   void onLoadDataSucceed() {
-    // TODO: implement onLoadDataSucceed
     setState(() {
+      _barberList = _presenter != null ? _presenter!.barberList : [];
+      _ratings = _presenter != null ? _presenter!.ratings : {};
       isLoading = false;
     });
+  }
+
+  @override
+  void onDetailBarberPressed() {
+    Navigator.of(context).pushNamed(DetailBarber.routeName);
   }
 }

@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_icon_class/font_awesome_icon_class.dart';
+import 'package:hairvibe/Contract/all_service_screen_contract.dart';
+import 'package:hairvibe/Models/service_model.dart';
+import 'package:hairvibe/Presenter/all_service_screen_presenter.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
-import 'package:hairvibe/widgets/list_view/service_list_item.dart';
+import 'package:hairvibe/widgets/util_widgets.dart';
+
+import '../Builders/WidgetBuilder/service_list_item_builder.dart';
+import 'booking/main_booking.dart';
 
 class AllServiceScreen extends StatefulWidget {
   const AllServiceScreen({super.key});
@@ -12,8 +18,29 @@ class AllServiceScreen extends StatefulWidget {
   State<AllServiceScreen> createState() => _AllServiceScreenState();
 }
 
-class _AllServiceScreenState extends State<AllServiceScreen> {
-  final int _listServiceCount = 20;
+class _AllServiceScreenState extends State<AllServiceScreen> implements AllServiceScreenContract {
+  AllServiceScreenPresenter? _presenter;
+
+  List<ServiceModel> _serviceList = [];
+
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    _presenter = AllServiceScreenPresenter(this);
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    loadData();
+  }
+
+  Future<void> loadData() async {
+    await _presenter?.getData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +63,7 @@ class _AllServiceScreenState extends State<AllServiceScreen> {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        child: Container(
+        child: isLoading ? UtilWidgets.getLoadingWidget() : Container(
           padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,9 +78,14 @@ class _AllServiceScreenState extends State<AllServiceScreen> {
               ListView.builder(
                 physics: const ScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: _listServiceCount,
+                itemCount: _serviceList.length,
                 itemBuilder: (context, index) {
-                  return ServiceListItem();
+                  ServiceListItemBuilder builder = ServiceListItemBuilder();
+                  builder.setService(_serviceList[index]);
+                  builder.setOnPressed(() {
+                    _presenter!.handleServicePressed(builder.service!);
+                  });
+                  return builder.createWidget();
                 },
               ),
             ],
@@ -61,5 +93,18 @@ class _AllServiceScreenState extends State<AllServiceScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void onLoadDataSucceed() {
+    setState(() {
+      _serviceList = _presenter!.serviceList;
+      isLoading = false;
+    });
+  }
+
+  @override
+  void onServicePressed() {
+    Navigator.of(context).pushNamed(MainBooking.routeName);
   }
 }

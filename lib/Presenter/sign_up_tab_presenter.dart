@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hairvibe/Contract/sign_up_tab_contract.dart';
 import 'package:hairvibe/Models/user_model.dart';
 import 'package:hairvibe/Models/user_repo.dart';
-import 'package:hairvibe/facades/AuthenticatorFacade.dart';
+import 'package:hairvibe/facades/authenticator_facade.dart';
 import 'package:string_validator/string_validator.dart';
 
 class SignUpTabPresenter {

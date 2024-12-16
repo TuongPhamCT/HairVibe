@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hairvibe/Contract/appointment_tab_contract.dart';
+import 'package:hairvibe/Models/appointment_model.dart';
+import 'package:hairvibe/Presenter/appointment_tab_presenter.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/views/appoinment/cancelled_tab.dart';
@@ -6,6 +9,10 @@ import 'package:hairvibe/views/appoinment/completed_tab.dart';
 import 'package:hairvibe/views/appoinment/upcoming_tab.dart';
 import 'package:hairvibe/widgets/bottom_bar.dart';
 import 'package:hairvibe/widgets/noti_bell.dart';
+import 'package:hairvibe/widgets/util_widgets.dart';
+
+import '../booking/view_booking.dart';
+import 'cancel_appointment.dart';
 
 class AppointmentScreen extends StatefulWidget {
   const AppointmentScreen({super.key});
@@ -15,15 +22,34 @@ class AppointmentScreen extends StatefulWidget {
   State<AppointmentScreen> createState() => _AppointmentScreenState();
 }
 
-class _AppointmentScreenState extends State<AppointmentScreen> {
+class _AppointmentScreenState extends State<AppointmentScreen> implements AppointmentTabContract {
+  AppointmentTabPresenter? _presenter;
+
+  List<AppointmentModel> cancelledAppointments = [];
+  List<AppointmentModel> completedAppointments = [];
+  List<AppointmentModel> upcomingAppointments = [];
+
+  bool isLoading = true;
+
   final int _currentPageIndex = 1;
   final int _soLuongThongBao = 2;
-  final int _upcomingCount = 2;
-  final int _completedCount = 2;
-  final int _cancelledCount = 2;
-  final int _testUpcoming = 0;
-  final int _testCompleted = 0;
-  final int _testCancelled = 0;
+
+  @override
+  void initState() {
+    _presenter = AppointmentTabPresenter(this);
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    loadData();
+  }
+
+  Future<void> loadData() async {
+    await _presenter?.getData();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -60,16 +86,19 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
               ],
             ),
             Expanded(
-              child: TabBarView(
+              child: isLoading ? UtilWidgets.getLoadingWidget() : TabBarView(
                 children: [
                   UpcomingTab(
-                    soLuong: _upcomingCount,
+                    presenter: _presenter!,
+                    appointments: upcomingAppointments,
                   ),
                   CompletedTab(
-                    soLuong: _completedCount,
+                    presenter: _presenter!,
+                    appointments: completedAppointments,
                   ),
                   CancelledTab(
-                    soLuong: _cancelledCount,
+                    presenter: _presenter!,
+                    appointments: cancelledAppointments,
                   ),
                 ],
               ),
@@ -81,5 +110,40 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
         currentIndex: _currentPageIndex,
       ),
     );
+  }
+
+  @override
+  void onLoadDataSucceed() {
+    setState(() {
+      completedAppointments = _presenter!.completedAppointments;
+      cancelledAppointments = _presenter!.cancelledAppointments;
+      upcomingAppointments = _presenter!.upcomingAppointments;
+      isLoading = false;
+    });
+  }
+
+  @override
+  void onCancelPressed() {
+    Navigator.of(context).pushNamed(CancelAppointmentPage.routeName);
+  }
+
+  @override
+  void onRebookPressed() {
+    // TODO: implement onRebookPressed
+  }
+
+  @override
+  void onViewReceiptPressed() {
+    Navigator.of(context).pushNamed(ViewBooking.routeName);
+  }
+
+  @override
+  void onPopContext() {
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  @override
+  void onWaitingProgressBar() {
+    UtilWidgets.createLoadingWidget(context);
   }
 }

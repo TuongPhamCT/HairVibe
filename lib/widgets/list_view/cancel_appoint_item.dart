@@ -1,11 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
+import 'package:hairvibe/Utility.dart';
 import 'package:hairvibe/config/asset_helper.dart';
 import 'package:hairvibe/widgets/appoiment_button.dart';
+import 'package:hairvibe/widgets/util_widgets.dart';
 
 class CancelledAppointItem extends StatefulWidget {
-  const CancelledAppointItem({super.key});
+  final DateTime? date;
+  final String? barberName;
+  final String? serviceID;
+  final VoidCallback? onRebookPressed;
+
+  const CancelledAppointItem({
+    super.key,
+    this.date,
+    this.barberName,
+    this.serviceID,
+    this.onRebookPressed,
+  });
 
   @override
   State<CancelledAppointItem> createState() => _CancelledAppointItemState();
@@ -26,7 +39,7 @@ class _CancelledAppointItemState extends State<CancelledAppointItem> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'October 10, 2024 - 10:00 AM',
+            Utility.formatStringFromDateTime(widget.date),
             style: TextDecor.inter13Medi,
           ),
           Container(
@@ -56,14 +69,14 @@ class _CancelledAppointItemState extends State<CancelledAppointItem> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Duy',
+                    widget.barberName ?? "Barber Name",
                     style:
                         TextDecor.searchHintText.copyWith(color: Colors.black),
                   ),
                   const SizedBox(
                     height: 10,
                   ),
-                  Text('Service ID: 123456', style: TextDecor.inter10Medi),
+                  Text('Service ID: ${widget.serviceID}', style: TextDecor.inter10Medi),
                 ],
               ),
             ],
@@ -79,7 +92,7 @@ class _CancelledAppointItemState extends State<CancelledAppointItem> {
             height: 15,
           ),
           AppointmentButton(
-            onPressed: () {},
+            onPressed: widget.onRebookPressed,
             width: double.maxFinite,
             backgroundColor: Palette.primary,
             child: Text(
