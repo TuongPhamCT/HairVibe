@@ -5,6 +5,7 @@ class RatingModel {
   String? userID;
   String? barberID;
   int? rate;
+  DateTime? date;
   String? info;
 
   static String collectionName = 'Ratings';
@@ -14,6 +15,7 @@ class RatingModel {
       required this.ratingID,
       required this.userID,
       required this.barberID,
+      required this.date,
       required this.rate,
       this.info
     }
@@ -24,6 +26,7 @@ class RatingModel {
     'userID': userID,
     'barberID': barberID,
     'rate': rate,
+    'date': date,
     'info': info
   };
 
@@ -34,6 +37,7 @@ class RatingModel {
       userID: json['userID'] as String,
       barberID: json['barberID'] as String,
       rate: json['rate'] as int,
+      date: json['date'] as DateTime,
       info: json['info'] as String,
     );
   }

@@ -37,7 +37,7 @@ class UserRepository {
 
   Future<List<UserModel>> getAllBarbers() async {
     final QuerySnapshot querySnapshot = await _storage.collection(UserModel.collectionName)
-        .where('userType', isEqualTo: UserModel.BARBER).get();
+        .where('userType', isEqualTo: UserType.BARBER).get();
     final barbers = querySnapshot
         .docs
         .map((doc) => UserModel.fromJson(doc as Map<String, dynamic>))
