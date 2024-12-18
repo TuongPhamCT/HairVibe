@@ -68,4 +68,8 @@ abstract class Utility {
 
     return "$hour:$minute $period";
   }
+
+  static String getRatingDate(DateTime? dateTime) {
+    return "";
+  }
 }

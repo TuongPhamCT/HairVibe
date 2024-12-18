@@ -5,7 +5,18 @@ import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/config/asset_helper.dart';
 
 class ReviewItem extends StatelessWidget {
-  const ReviewItem({super.key});
+  final String? userName;
+  final String? date;
+  final double? rating;
+  final String? comment;
+
+  const ReviewItem({
+    super.key,
+    this.userName,
+    this.date,
+    this.rating,
+    this.comment
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -38,18 +49,18 @@ class ReviewItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Tuong',
+                    userName ?? "User",
                     style: TextDecor.forgotTitle,
                   ),
                   Text(
-                    '11/11/2024',
+                    date ?? "dd/MM/yyyy",
                     style: TextDecor.robo13SemiHint,
                   ),
                 ],
               ),
               Expanded(child: Container()),
               RatingBar.builder(
-                initialRating: 5,
+                initialRating: rating ?? 5,
                 minRating: 1,
                 direction: Axis.horizontal,
                 allowHalfRating: true,
@@ -67,7 +78,7 @@ class ReviewItem extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec purus feugiat, molestie ipsum et, ultricies metus. Donec nec nunc nec nunc.',
+            comment ?? "comment",
             style: TextDecor.inter14,
           ),
         ],

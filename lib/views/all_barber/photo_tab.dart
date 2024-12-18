@@ -48,7 +48,7 @@ class PhotosBarberTab extends StatelessWidget {
               ),
               const SizedBox(width: 10),
               Text(
-                "${urls.length}",
+                "(${urls.length})",
                 style: TextDecor.nameBarberBook.copyWith(
                   color: Palette.primary,
                 ),

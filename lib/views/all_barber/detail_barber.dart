@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_icon_class/font_awesome_icon_class.dart';
 import 'package:hairvibe/Contract/detail_barber_contract.dart';
+import 'package:hairvibe/Models/rating_model.dart';
 import 'package:hairvibe/Presenter/detail_barber_presenter.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/config/asset_helper.dart';
 import 'package:hairvibe/views/all_barber/photo_tab.dart';
 import 'package:hairvibe/views/all_barber/review_tab.dart';
+import 'package:hairvibe/widgets/util_widgets.dart';
 
 class DetailBarber extends StatefulWidget {
   const DetailBarber({super.key});
@@ -18,6 +20,7 @@ class DetailBarber extends StatefulWidget {
 
 class _DetailBarberState extends State<DetailBarber> implements DetailBarberContract {
   DetailBarberPresenter? _presenter;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -44,7 +47,7 @@ class _DetailBarberState extends State<DetailBarber> implements DetailBarberCont
             ),
           ),
         ),
-        body: Column(
+        body: isLoading ? UtilWidgets.getLoadingWidget() : Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
@@ -77,11 +80,11 @@ class _DetailBarberState extends State<DetailBarber> implements DetailBarberCont
                 Tab(text: 'PHOTOS'),
               ],
             ),
-            const Expanded(
+            Expanded(
               child: TabBarView(
                 children: [
-                  ReviewsTab(),
-                  PhotosBarberTab(),
+                  ReviewsTab(presenter: _presenter!),
+                  const PhotosBarberTab(),
                 ],
               ),
             ),
@@ -93,6 +96,8 @@ class _DetailBarberState extends State<DetailBarber> implements DetailBarberCont
 
   @override
   void onLoadDataSucceed() {
-    // TODO: implement onLoadDataSucceed
+    setState(() {
+      isLoading = false;
+    });
   }
 }
