@@ -49,6 +49,14 @@ class AppointmentModel {
       otherInfo: dataOtherInfo
     );
   }
+
+  Duration getDuration() {
+    int duration = 0;
+    for (ServiceModel service in services!) {
+      duration += service.duration!;
+    }
+    return Duration(hours: duration ~/ 60, minutes: duration % 60);
+  }
 }
 
 abstract class AppointmentStatus {

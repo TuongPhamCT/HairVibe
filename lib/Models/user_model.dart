@@ -45,6 +45,24 @@ class UserModel {
       info: dataInfo
     );
   }
+
+  List<String> getBarberImages() {
+    if (info!.containsKey(UserInfo.BARBER_IMAGES)) {
+      return info![UserInfo.BARBER_IMAGES] as List<String>;
+    }
+    return [];
+  }
+
+  List<String> getVoucherIDs() {
+    if (info!.containsKey(UserInfo.VOUCHERS)) {
+      return info![UserInfo.VOUCHERS] as List<String>;
+    }
+    return [];
+  }
+
+  void removeVoucherByID(String id) {
+    getVoucherIDs().removeWhere((voucherID) => voucherID == id);
+  }
 }
 
 abstract class UserType {
@@ -55,4 +73,5 @@ abstract class UserType {
 
 abstract class UserInfo {
   static const String BARBER_IMAGES = "barberImages";
+  static const String VOUCHERS = "vouchers";
 }

@@ -93,6 +93,18 @@ class AppointmentRepository {
     return appointments;
   }
 
+  Future<List<AppointmentModel>> getAppointmentsByUserIdAndDate(String id, DateTime date) async {
+    final QuerySnapshot querySnapshot = await _storage.collection(AppointmentModel.collectionName)
+        .where('customerID', isEqualTo: id)
+        .where('date', isEqualTo: date)
+        .get();
+    final appointments = querySnapshot
+        .docs
+        .map((doc) => AppointmentModel.fromJson(doc as Map<String, dynamic>))
+        .toList();
+    return appointments;
+  }
+
   Future<List<AppointmentModel>> getAppointmentsByBarberId(String id) async {
     final QuerySnapshot querySnapshot = await _storage.collection(AppointmentModel.collectionName)
         .where('barberID', isEqualTo: id).get();
@@ -101,5 +113,23 @@ class AppointmentRepository {
         .map((doc) => AppointmentModel.fromJson(doc as Map<String, dynamic>))
         .toList();
     return appointments;
+  }
+
+  Future<List<AppointmentModel>> getAppointmentsByUserIdAndBarberId(String userID, String barberID) async {
+    final QuerySnapshot querySnapshot = await _storage.collection(AppointmentModel.collectionName)
+        .where('userID', isEqualTo: userID)
+        .where('barberID', isEqualTo: barberID)
+        .get();
+    final appointments = querySnapshot
+        .docs
+        .map((doc) => AppointmentModel.fromJson(doc as Map<String, dynamic>))
+        .toList();
+    return appointments;
+  }
+
+  Future<String> generateAppointmentID(String barberID, String userID) async {
+    List<AppointmentModel> appointments = await getAppointmentsByUserIdAndBarberId(userID, barberID);
+    int count = appointments.length;
+    return "$barberID$userID${count.toString().padLeft(4, '0')}";
   }
 }

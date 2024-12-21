@@ -9,6 +9,7 @@ import 'package:hairvibe/views/all_barber/barber_item_detail.dart';
 import 'package:hairvibe/views/booking/main_booking.dart';
 
 import '../../Models/user_model.dart';
+import '../../Utility.dart';
 import '../../widgets/util_widgets.dart';
 import 'detail_barber.dart';
 
@@ -86,7 +87,7 @@ class _BarberScreenState extends State<BarberScreen> implements BarberScreenCont
                   UserModel barber = _barberList[index];
                   builder.setBarber(barber);
                   builder.setDescription("Barber");
-                  builder.setRating(_ratings[barber.userID] != null ? _ratings[barber.userID]!.toStringAsFixed(1) : "0.0");
+                  builder.setRating(Utility.formatRatingValue(_ratings[barber.userID]));
                   builder.setOnDetailPressed(() {
                     _presenter?.handleDetailBarberPressed(barber);
                   });

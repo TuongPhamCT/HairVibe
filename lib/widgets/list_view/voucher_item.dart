@@ -3,7 +3,17 @@ import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 
 class VoucherItem extends StatelessWidget {
-  const VoucherItem({super.key});
+  final String voucherName;
+  final String voucherCode;
+  final String discountRate;
+  final VoidCallback onPressed;
+  const VoucherItem({
+    super.key,
+    required this.voucherName,
+    required this.voucherCode,
+    required this.discountRate,
+    required this.onPressed
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,23 +32,23 @@ class VoucherItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Voucher Name',
+                voucherName,
                 style: TextDecor.homeTitle.copyWith(color: Colors.black),
               ),
               const SizedBox(height: 5),
               Text(
-                'Voucher Code',
+                voucherCode,
                 style: TextDecor.searchText,
               ),
               const SizedBox(height: 5),
               Text(
-                'Discount: 10%',
+                'Discount: $discountRate%',
                 style: TextDecor.inter16Bold.copyWith(color: Colors.green),
               ),
             ],
           ),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: onPressed,
             style: ElevatedButton.styleFrom(
               backgroundColor: Palette.primary,
               shape: RoundedRectangleBorder(

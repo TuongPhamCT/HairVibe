@@ -35,6 +35,15 @@ class UserRepository {
     return user;
   }
 
+  Future<List<UserModel>> getAllUsers() async {
+    final QuerySnapshot querySnapshot = await _storage.collection(UserModel.collectionName).get();
+    final users = querySnapshot
+        .docs
+        .map((doc) => UserModel.fromJson(doc as Map<String, dynamic>))
+        .toList();
+    return users;
+  }
+
   Future<List<UserModel>> getAllBarbers() async {
     final QuerySnapshot querySnapshot = await _storage.collection(UserModel.collectionName)
         .where('userType', isEqualTo: UserType.BARBER).get();
@@ -43,5 +52,11 @@ class UserRepository {
         .map((doc) => UserModel.fromJson(doc as Map<String, dynamic>))
         .toList();
     return barbers;
+  }
+
+  Future<String> generateUserID() async {
+    List<UserModel> users = await getAllUsers();
+    int count = users.length;
+    return count.toString().padLeft(5, '0');
   }
 }
