@@ -29,6 +29,16 @@ class _DetailBarberState extends State<DetailBarber> implements DetailBarberCont
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    loadData();
+  }
+
+  Future<void> loadData() async {
+    await _presenter?.getData();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return DefaultTabController(

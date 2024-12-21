@@ -1,11 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hairvibe/Builders/WidgetBuilder/book_barber_item_builder.dart';
+import 'package:hairvibe/Contract/main_booking_contract.dart';
+import 'package:hairvibe/Models/service_model.dart';
+import 'package:hairvibe/Models/user_model.dart';
+import 'package:hairvibe/Presenter/main_booking_presenter.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/views/booking/confirm_booking.dart';
 import 'package:hairvibe/widgets/list_view/book_barber_item.dart';
 import 'package:hairvibe/widgets/list_view/check_service_list_item.dart';
+import 'package:hairvibe/widgets/util_widgets.dart';
 import 'package:table_calendar/table_calendar.dart';
+
+import '../../Builders/WidgetBuilder/check_service_list_item_builder.dart';
+import '../../Utility.dart';
 
 class MainBooking extends StatefulWidget {
   const MainBooking({super.key});
@@ -15,32 +24,34 @@ class MainBooking extends StatefulWidget {
   State<MainBooking> createState() => _MainBookingState();
 }
 
-class _MainBookingState extends State<MainBooking> {
+class _MainBookingState extends State<MainBooking> implements MainBookingContract {
+  MainBookingPresenter? _presenter;
+
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
   final List<bool> _isSelected = List.generate(5, (_) => false);
+  int _selectedIndex = -1; // Chỉ mục của Barber được chọn (-1: không chọn)
+  String _totalCost = "00,000 VNĐ";
 
-  int _selectedIndex = -1; // Chỉ mục của item được chọn (-1: không chọn)
-  final List<String> _items = [
-    'Item 1',
-    'Item 2',
-    'Item 3',
-    'Item 4',
-    'Item 5'
-  ];
+  List<UserModel> barbers = [];
+  Map<String, double> ratings = {};
+  List<Map<String, dynamic>> services = [];
+  List<dynamic> times = [];
 
-  final List<Map<String, dynamic>> items = List.generate(
-    10,
-    (index) => {
-      'title': 'Item $index',
-      'isChecked': false,
-    },
-  );
+  @override
+  void initState() {
+    _presenter = MainBookingPresenter(this);
+    super.initState();
+  }
 
-  void updateCheckState(int index, bool isChecked) {
-    setState(() {
-      items[index]['isChecked'] = isChecked;
-    });
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    loadData();
+  }
+
+  Future<void> loadData() async {
+    await _presenter?.getData();
   }
 
   @override
@@ -57,6 +68,7 @@ class _MainBookingState extends State<MainBooking> {
             Expanded(
               child: InkWell(
                 onTap: () {
+                  _presenter!.handleBack();
                   Navigator.of(context).pop();
                 },
                 child: Text('Cancel', style: TextDecor.leadingForgot),
@@ -87,15 +99,19 @@ class _MainBookingState extends State<MainBooking> {
                   SizedBox(
                     height: 358,
                     child: ListView.builder(
-                      itemCount: items.length,
+                      itemCount: services.length,
                       itemBuilder: (context, index) {
-                        return CheckServiceListItem(
-                          title: items[index]['title'],
-                          isChecked: items[index]['isChecked'],
-                          onChanged: (bool newValue) {
-                            updateCheckState(index, newValue);
-                          },
+                        CheckServiceListItemBuilder builder = CheckServiceListItemBuilder();
+                        ServiceModel service = services[index]['serviceModel'];
+                        builder.setService(service);
+                        builder.setIsChecked(services[index]['isChecked']);
+                        builder.setOnChanged(
+                            (bool newValue) {
+                              _presenter?.handleSelectService(service, index, newValue);
+                              services[index]['isChecked'] = newValue;
+                            }
                         );
+                        return builder.createWidget();
                       },
                     ),
                   ),
@@ -121,10 +137,7 @@ class _MainBookingState extends State<MainBooking> {
                             return isSameDay(_selectedDay, day);
                           },
                           onDaySelected: (selectedDay, focusedDay) {
-                            setState(() {
-                              _selectedDay = selectedDay;
-                              _focusedDay = focusedDay;
-                            });
+                            _presenter!.handleSelectDate(selectedDay, focusedDay);
                           },
                           headerStyle: HeaderStyle(
                             titleTextStyle: TextDecor.titleCalendar,
@@ -172,7 +185,7 @@ class _MainBookingState extends State<MainBooking> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: List.generate(
-                            5,
+                            times.length,
                             (index) {
                               return ElevatedButton(
                                 style: ElevatedButton.styleFrom(
@@ -182,21 +195,20 @@ class _MainBookingState extends State<MainBooking> {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(25),
                                     side: BorderSide(
-                                      color: _isSelected[index]
+                                      color: times[index]['isChecked']
                                           ? Palette.primary
                                           : Palette.inactiveDayWeek,
                                     ),
                                   ),
                                 ),
                                 onPressed: () {
-                                  setState(() {
-                                    _isSelected[index] = !_isSelected[index];
-                                  });
+                                  _presenter!.handleSelectTime(index);
                                 },
                                 child: Text(
-                                  '${index * 3 + 7}:00',
+                                  '${(times[index]['time'] as TimeOfDay).hour.toString()}:'
+                                  '${(times[index]['time'] as TimeOfDay).minute.toString().padLeft(2, '0')}',
                                   style: TextDecor.timeWork.copyWith(
-                                    color: _isSelected[index]
+                                    color: times[index]['isChecked']
                                         ? Palette.primary
                                         : Palette.inactiveDayWeek,
                                   ),
@@ -222,18 +234,19 @@ class _MainBookingState extends State<MainBooking> {
                     height: 200,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: _items.length,
+                      itemCount: barbers.length,
                       itemBuilder: (context, index) {
-                        return BookBarberItem(
-                          title: _items[index],
-                          isSelected: index == _selectedIndex,
-                          onTap: () {
-                            setState(() {
-                              _selectedIndex =
-                                  index; // Cập nhật chỉ mục của item được chọn
-                            });
-                          },
+                        BookBarberItemBuilder builder = BookBarberItemBuilder();
+                        UserModel barber = barbers[index];
+                        builder.setBarber(barber);
+                        builder.setRating(Utility.formatRatingValue(ratings[barber.userID]));
+                        builder.setIsSelected(index == _selectedIndex);
+                        builder.setOnTap(
+                          () {
+                            _presenter!.handleSelectBarber(barber, index);
+                          }
                         );
+                        return builder.createWidget();
                       },
                     ),
                   ),
@@ -258,20 +271,20 @@ class _MainBookingState extends State<MainBooking> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '200k',
+                    _totalCost,
                     style: TextDecor.totalCost,
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pushNamed(ConfirmBooking.routeName);
+                    onPressed: () async {
+                      await _presenter!.handleNextPressed();
                     },
                     style: ButtonStyle(
-                      fixedSize: MaterialStateProperty.all<Size>(
+                      fixedSize: WidgetStateProperty.all<Size>(
                         const Size(125, 45),
                       ),
                       backgroundColor:
-                          MaterialStateProperty.all<Color>(Palette.primary),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          WidgetStateProperty.all<Color>(Palette.primary),
+                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -289,5 +302,73 @@ class _MainBookingState extends State<MainBooking> {
         ),
       ),
     );
+  }
+
+  @override
+  void onLoadDataSucceed() {
+    setState(() {
+      // services
+      services = _presenter!.services;
+
+      // barbers
+      ratings = _presenter!.ratings;
+      barbers = _presenter!.barbers;
+      if (barbers.isNotEmpty) {
+        _selectedIndex = 0;
+      }
+
+      // Time
+      times = _presenter!.times;
+    });
+  }
+
+  @override
+  void onNext() {
+    Navigator.of(context).pushNamed(ConfirmBooking.routeName);
+  }
+
+  @override
+  void onSelectBarber(int index) {
+    setState(() {
+      _selectedIndex = index;
+      _totalCost = _presenter!.getTotalCost();
+      times = _presenter!.times;
+    });
+  }
+
+  @override
+  void onSelectDate() {
+    setState(() {
+      _selectedDay = _presenter!.selectedDate!;
+      _focusedDay = _presenter!.focusedDate!;
+      times = _presenter!.times;
+    });
+  }
+
+  @override
+  void onSelectService() {
+    setState(() {
+      times = _presenter!.times;
+    });
+  }
+
+  @override
+  void onSelectTime() {
+    setState(() {});
+  }
+
+  @override
+  void onValidatingFailed(String message) {
+    UtilWidgets.createSnackBar(context, message);
+  }
+
+  @override
+  void onPopContext() {
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  @override
+  void onWaitingProgressBar() {
+    UtilWidgets.createLoadingWidget(context);
   }
 }

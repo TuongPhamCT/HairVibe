@@ -5,12 +5,16 @@ import 'package:hairvibe/Theme/text_decor.dart';
 class CheckServiceListItem extends StatelessWidget {
   final String title;
   final bool isChecked;
+  final String duration;
+  final String price;
   final ValueChanged<bool> onChanged;
 
   const CheckServiceListItem({
     super.key,
     required this.title,
     required this.isChecked,
+    required this.duration,
+    required this.price,
     required this.onChanged,
   });
 
@@ -51,7 +55,7 @@ class CheckServiceListItem extends StatelessWidget {
                       style: TextDecor.serviceListItemTitle,
                     ),
                     Text(
-                      '30 minutes',
+                      duration,
                       style: TextDecor.serviceListItemTime,
                     ),
                   ],
@@ -59,7 +63,7 @@ class CheckServiceListItem extends StatelessWidget {
               ],
             ),
             Text(
-              '10.000 VNĐ',
+              price,
               style: TextDecor.serviceListItemTitle,
             ),
           ],

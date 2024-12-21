@@ -7,11 +7,13 @@ class BookBarberItem extends StatelessWidget {
   final String title;
   final bool isSelected;
   final VoidCallback onTap;
+  final String rating;
   const BookBarberItem({
     super.key,
     required this.title,
     required this.isSelected,
     required this.onTap,
+    required this.rating
   });
 
   @override
@@ -62,7 +64,7 @@ class BookBarberItem extends StatelessWidget {
                   size: 20,
                 ),
                 Text(
-                  '4.5',
+                  rating,
                   style: TextDecor.searchHintText.copyWith(
                     color: Colors.white,
                   ),

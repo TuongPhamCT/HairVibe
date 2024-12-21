@@ -26,6 +26,12 @@ class AppointmentSingleton {
     this.appointment = appointment;
   }
 
+  void setDiscount(int discount) {
+    if (cacheData.containsKey(ViewBookingData.DISCOUNT)) {
+      cacheData[ViewBookingData.DISCOUNT] = discount as String;
+    }
+  }
+
   Future<void> loadViewBookingData() async {
     if (appointment == null) {
       cacheData = {};
@@ -48,8 +54,6 @@ class AppointmentSingleton {
       sum += service.price ?? 0;
     }
 
-    data[ViewBookingData.TOTAL_PRICE] = sum;
-
     if (appointment!.otherInfo != null) {
       Map<String, Object?> otherInfo = appointment!.otherInfo!;
       if (otherInfo.containsKey(AppointmentOtherInfo.DISCOUNT)) {
@@ -58,6 +62,8 @@ class AppointmentSingleton {
         data[ViewBookingData.DISCOUNT] = "0";
       }
     }
+
+    data[ViewBookingData.TOTAL_PRICE] = sum * data[ViewBookingData.DISCOUNT] / 100;
 
     cacheData = data;
   }

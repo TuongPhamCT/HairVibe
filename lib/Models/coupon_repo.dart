@@ -27,6 +27,14 @@ class CouponRepository {
 
   void deleteCouponById(String id) async => _storage.collection(CouponModel.collectionName).doc(id).delete();
 
+  Future<CouponModel> getCouponById(String id) async {
+    final DocumentReference<Map<String, dynamic>> collectionRef = _storage.collection(CouponModel.collectionName).doc(id);
+    DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await collectionRef.get();
+
+    final CouponModel user = CouponModel.fromJson(documentSnapshot.data() as Map<String, dynamic>);
+    return user;
+  }
+
   Future<List<CouponModel>> getAllCoupons(String id) async {
     final QuerySnapshot querySnapshot = await _storage.collection(CouponModel.collectionName).get();
     final coupons = querySnapshot
@@ -36,9 +44,9 @@ class CouponRepository {
     return coupons;
   }
 
-  Future<List<CouponModel>> getCouponsByUserId (String id) async {
+  Future<List<CouponModel>> getCouponsByIdList (List<String> couponIdList) async {
     final QuerySnapshot querySnapshot = await _storage.collection(CouponModel.collectionName)
-                                                      .where('customerID', isEqualTo: id).get();
+                                                      .where('couponID', whereIn: couponIdList).get();
     final coupons = querySnapshot
                           .docs
                           .map((doc) => CouponModel.fromJson(doc as Map<String, dynamic>))

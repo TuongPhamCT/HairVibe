@@ -1,3 +1,5 @@
+import 'package:hairvibe/Models/service_model.dart';
+
 import '../../Models/appointment_model.dart';
 
 class AppointmentModelBuilder {
@@ -35,6 +37,18 @@ class AppointmentModelBuilder {
 
   void setCancelReason(String reason) {
     _model.otherInfo?[AppointmentOtherInfo.CANCEL_REASON] = reason;
+  }
+
+  void setServices(List<ServiceModel> services) {
+    _model.services = services;
+  }
+
+  void addService(ServiceModel service) {
+    _model.services!.add(service);
+  }
+
+  void addServices(List<ServiceModel> services) {
+    _model.services!.addAll(services);
   }
 
   AppointmentModel build() {

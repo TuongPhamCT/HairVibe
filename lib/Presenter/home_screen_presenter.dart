@@ -3,6 +3,7 @@ import 'package:hairvibe/Models/rating_repo.dart';
 import 'package:hairvibe/Models/service_model.dart';
 import 'package:hairvibe/Models/service_repo.dart';
 import 'package:hairvibe/Models/user_repo.dart';
+import 'package:hairvibe/Singletons/booking_singleton.dart';
 
 import '../Models/user_model.dart';
 
@@ -13,6 +14,8 @@ class HomeScreenPresenter {
   final ServiceRepository _serviceRepo = ServiceRepository();
   final UserRepository _userRepo = UserRepository();
   final RatingRepository _ratingRepo = RatingRepository();
+
+  final BookingSingleton _bookingSingleton = BookingSingleton.getInstance();
 
   static const maxServiceLength = 4;
   static const maxBarberLength = 3;
@@ -34,10 +37,12 @@ class HomeScreenPresenter {
   }
 
   void handleServicePressed(ServiceModel model) {
+    _bookingSingleton.setCacheService(model);
     _view.onServicePressed();
   }
 
   void handleBarberPressed(UserModel model) {
+    _bookingSingleton.setCacheBarber(model);
     _view.onBarberPressed();
   }
 }

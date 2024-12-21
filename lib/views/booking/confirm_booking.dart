@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:hairvibe/Contract/confirm_booking_contract.dart';
+import 'package:hairvibe/Presenter/confirm_booking_presenter.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/views/booking/success_booking.dart';
 import 'package:hairvibe/views/booking/voucher_redeem.dart';
+
+import '../../Models/service_model.dart';
+import '../../Singletons/appointment_singleton.dart';
+import '../../Utility.dart';
+import '../../widgets/util_widgets.dart';
 
 class ConfirmBooking extends StatefulWidget {
   const ConfirmBooking({super.key});
@@ -12,12 +19,66 @@ class ConfirmBooking extends StatefulWidget {
   State<ConfirmBooking> createState() => _ConfirmBookingState();
 }
 
-class _ConfirmBookingState extends State<ConfirmBooking> {
+class _ConfirmBookingState extends State<ConfirmBooking> implements ConfirmBookingContract {
+  ConfirmBookingPresenter? _presenter;
+  final AppointmentSingleton _singleton = AppointmentSingleton.getInstance();
+
   bool _haveVoucher = false;
+
+  @override
+  void initState() {
+    _presenter = ConfirmBookingPresenter(this);
+    _haveVoucher = _presenter!.checkCacheVoucher();
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _presenter?.onChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
+    final Map<String, dynamic> data = _singleton.getViewBookingData();
+    List<ServiceModel> services = data[ViewBookingData.SERVICES] as List<ServiceModel>;
+    List<Widget> serviceNames = [];
+    List<Widget> servicePrices = [];
+
+    for (ServiceModel service in services) {
+      serviceNames.add(
+          Text(
+            service.name ?? "Service Name",
+            style: TextDecor.label2Appointment,
+          )
+      );
+      serviceNames.add(const SizedBox(height: 10));
+
+      servicePrices.add(
+          Text(
+            Utility.formatCurrency(service.price),
+            style: TextDecor.label2Appointment,
+          )
+      );
+      servicePrices.add(const SizedBox(height: 10));
+    }
+
+    serviceNames.add(
+      Text(
+        'Discount',
+        style: TextDecor.label2Appointment,
+      ),
+    );
+
+    servicePrices.add(
+      Text(
+        _haveVoucher ? "${data[ViewBookingData.DISCOUNT]}%" : "",
+        style: TextDecor.content1Appointment,
+      ),
+    );
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -95,27 +156,27 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Duy',
+                          data[ViewBookingData.NAME],
                           style: TextDecor.content1Appointment,
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          '0123456789',
+                          data[ViewBookingData.PHONE],
                           style: TextDecor.content1Appointment,
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          'October 10, 2021',
+                          data[ViewBookingData.BOOKING_DATE],
                           style: TextDecor.content1Appointment,
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          '10:00 AM',
+                          data[ViewBookingData.BOOKING_TIME],
                           style: TextDecor.content1Appointment,
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          'Duy',
+                          data[ViewBookingData.BARBER],
                           style: TextDecor.content1Appointment,
                         ),
                       ],
@@ -143,49 +204,14 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                         width: size.width * 0.35,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Haircut',
-                              style: TextDecor.label2Appointment,
-                            ),
-                            const SizedBox(height: 10),
-                            Text(
-                              'Hairwash',
-                              style: TextDecor.label2Appointment,
-                            ),
-                            const SizedBox(height: 10),
-                            Text(
-                              'Shaving',
-                              style: TextDecor.label2Appointment,
-                            ),
-                            const SizedBox(height: 10),
-                            Text(
-                              'Discount',
-                              style: TextDecor.label2Appointment,
-                            ),
-                          ],
+                          children: serviceNames,
                         ),
                       ),
                       SizedBox(
                         width: size.width * 0.35,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              '20k',
-                              style: TextDecor.content1Appointment,
-                            ),
-                            const SizedBox(height: 10),
-                            Text(
-                              '20k',
-                              style: TextDecor.content1Appointment,
-                            ),
-                            const SizedBox(height: 10),
-                            Text(
-                              '20k',
-                              style: TextDecor.content1Appointment,
-                            ),
-                          ],
+                          children: servicePrices,
                         ),
                       ),
                     ],
@@ -195,20 +221,19 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                     visible: !_haveVoucher,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.of(context)
-                            .pushNamed(VoucherRedeem.routeName);
+                        _presenter!.handleAddVoucherPressed();
                       },
                       style: ButtonStyle(
-                        padding: MaterialStateProperty.all<EdgeInsets>(
+                        padding: WidgetStateProperty.all<EdgeInsets>(
                           const EdgeInsets.all(0),
                         ),
-                        fixedSize: MaterialStateProperty.all<Size>(
+                        fixedSize: WidgetStateProperty.all<Size>(
                           const Size(270, 35),
                         ),
                         backgroundColor:
-                            MaterialStateProperty.all<Color>(Palette.primary),
+                            WidgetStateProperty.all<Color>(Palette.primary),
                         shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                            WidgetStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -247,9 +272,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                           Expanded(child: Container()),
                           InkWell(
                             onTap: () {
-                              setState(() {
-                                _haveVoucher = false;
-                              });
+                              _presenter!.handleRemoveVoucherPressed();
                             },
                             child: Text(
                               'Remove',
@@ -277,7 +300,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                         style: TextDecor.inter16Bold,
                       ),
                       Text(
-                        '60k',
+                        Utility.formatCurrency(data[ViewBookingData.TOTAL_PRICE]),
                         style: TextDecor.content1Appointment,
                       ),
                     ],
@@ -287,19 +310,19 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
             ),
             const SizedBox(height: 30),
             ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed(SuccessBooking.routeName);
+              onPressed: () async {
+                await _presenter!.handleConfirmBooking();
               },
               style: ButtonStyle(
-                padding: MaterialStateProperty.all<EdgeInsets>(
+                padding: WidgetStateProperty.all<EdgeInsets>(
                   const EdgeInsets.all(0),
                 ),
-                fixedSize: MaterialStateProperty.all<Size>(
+                fixedSize: WidgetStateProperty.all<Size>(
                   Size(size.width * 0.75, 45),
                 ),
                 backgroundColor:
-                    MaterialStateProperty.all<Color>(Palette.primary),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    WidgetStateProperty.all<Color>(Palette.primary),
+                shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -314,5 +337,41 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
         ),
       ),
     );
+  }
+
+  @override
+  void onAddVoucher() {
+    Navigator.of(context).pushNamed(VoucherRedeem.routeName);
+  }
+
+  @override
+  void onChangeDependencies(bool result) {
+    if (result) {
+      setState(() {
+        _haveVoucher = true;
+      });
+    }
+  }
+
+  @override
+  void onConfirmBooking() {
+    Navigator.of(context).pushNamed(SuccessBooking.routeName);
+  }
+
+  @override
+  void onRemoveVoucher() {
+    setState(() {
+      _haveVoucher = false;
+    });
+  }
+
+  @override
+  void onPopContext() {
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  @override
+  void onWaitingProgressBar() {
+    UtilWidgets.createLoadingWidget(context);
   }
 }
