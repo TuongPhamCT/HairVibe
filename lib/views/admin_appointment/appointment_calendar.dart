@@ -3,8 +3,11 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/widgets/noti_bell.dart';
+import 'package:hairvibe/widgets/admin_bottom_bar.dart';
 
 class AdminAppointmentPage extends StatefulWidget {
+  const AdminAppointmentPage({super.key});
+  static const routeName = 'admin_appointment';
   @override
   _AdminAppointmentPageState createState() => _AdminAppointmentPageState();
 }
@@ -13,6 +16,7 @@ class _AdminAppointmentPageState extends State<AdminAppointmentPage> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   List<String> _appointments = []; // No appointments initially
+  final int _currentPageIndex = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +26,7 @@ class _AdminAppointmentPageState extends State<AdminAppointmentPage> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
+        automaticallyImplyLeading: false,
         title: Text(
           'APPOINTMENT',
           style: TextDecor.homeTitle,
@@ -107,37 +112,7 @@ class _AdminAppointmentPageState extends State<AdminAppointmentPage> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.black,
-        selectedItemColor: Palette.primary,
-        unselectedItemColor: Colors.white,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'Booking',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.email),
-            label: 'Messages',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-          BottomNavigationBarItem(
-            icon: CircleAvatar(
-              backgroundColor: Palette.primary,
-              child: Text('D', style: TextStyle(color: Colors.black)),
-            ),
-            label: 'Menu',
-          ),
-        ],
-      ),
+      bottomNavigationBar: AdminBottomBar(currentIndex: _currentPageIndex),
     );
   }
 }

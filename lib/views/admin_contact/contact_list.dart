@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/config/asset_helper.dart';
+import 'package:hairvibe/widgets/admin_bottom_bar.dart';
 
 class AdminContactListPage extends StatefulWidget {
+  const AdminContactListPage({super.key});
+  static const String routeName = 'admin_contact';
+
   @override
   _AdminContactListPageState createState() => _AdminContactListPageState();
 }
@@ -11,6 +15,7 @@ class AdminContactListPage extends StatefulWidget {
 class _AdminContactListPageState extends State<AdminContactListPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final int _currentPageIndex = 2;
   String userData = '''
 A|John Doe
 B|Alice Smith
@@ -39,6 +44,7 @@ B|Barber Anna
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
+        automaticallyImplyLeading: false,
         title: TabBar(
           controller: _tabController,
           indicatorColor: Palette.primary,
@@ -97,26 +103,7 @@ B|Barber Anna
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.black,
-        selectedItemColor: Palette.primary,
-        unselectedItemColor: Colors.white,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today), label: 'Booking'),
-          BottomNavigationBarItem(icon: Icon(Icons.email), label: 'Contact'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-          BottomNavigationBarItem(
-            icon: CircleAvatar(
-              backgroundColor: Palette.primary,
-              child: Text('D', style: TextStyle(color: Colors.black)),
-            ),
-            label: 'Menu',
-          ),
-        ],
-      ),
+      bottomNavigationBar: AdminBottomBar(currentIndex: _currentPageIndex),
     );
   }
 

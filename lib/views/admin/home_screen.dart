@@ -3,8 +3,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/widgets/noti_bell.dart';
+import 'package:hairvibe/widgets/admin_bottom_bar.dart';
 
 class AdminHomeScreen extends StatefulWidget {
+  const AdminHomeScreen({super.key});
+  static const routeName = 'admin_home';
   @override
   _AdminHomeScreenState createState() => _AdminHomeScreenState();
 }
@@ -15,6 +18,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   int customerCount = 4;
   int serviceCount = 4;
   final int _soLuongThongBao = 2;
+  final int _currentPageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +28,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
+        automaticallyImplyLeading: false,
         title: Text('HOME', style: TextDecor.homeTitle),
         centerTitle: true,
         actions: [
@@ -84,36 +89,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.black,
-        selectedItemColor: Palette.primary,
-        unselectedItemColor: Colors.white,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'Booking',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.email),
-            label: 'Messages',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-          BottomNavigationBarItem(
-            icon: CircleAvatar(
-              backgroundColor: Palette.primary,
-              child: Text('D', style: TextStyle(color: Colors.black)),
-            ),
-            label: 'Menu',
-          ),
-        ],
+      bottomNavigationBar: AdminBottomBar(
+        currentIndex: _currentPageIndex,
       ),
     );
   }
@@ -170,7 +147,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
           Text(title,
               style: TextDecor.robo16Semi.copyWith(color: Colors.white)),
           const SizedBox(height: 8),
-          Text('$count',  
+          Text('$count',
               style: TextDecor.inter13Medi.copyWith(color: Colors.white)),
         ],
       ),

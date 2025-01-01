@@ -3,17 +3,20 @@ import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/config/asset_helper.dart';
 import 'package:hairvibe/views/admin_management/add_service.dart';
+import 'package:hairvibe/widgets/admin_bottom_bar.dart';
 
-class WatchCommentPage extends StatefulWidget {
-  const WatchCommentPage({super.key});
+class AdminCommentPage extends StatefulWidget {
+  const AdminCommentPage({super.key});
+  static const String routeName = 'admin_comment';
 
   @override
-  _WatchCommentPageState createState() => _WatchCommentPageState();
+  _AdminCommentPageState createState() => _AdminCommentPageState();
 }
 
-class _WatchCommentPageState extends State<WatchCommentPage>
+class _AdminCommentPageState extends State<AdminCommentPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final int _currentPageIndex = 3;
 
   @override
   void initState() {
@@ -33,10 +36,15 @@ class _WatchCommentPageState extends State<WatchCommentPage>
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Palette.primary),
-          onPressed: () => Navigator.of(context).pop(),
+        automaticallyImplyLeading: false,
+        title: Text(
+          'COMMENTS',
+          style: TextStyle(color: Colors.white, fontSize: 18),
         ),
+        centerTitle: true,
+        actions: [
+          // Add any actions if needed
+        ],
       ),
       body: Column(
         children: [
@@ -90,26 +98,7 @@ class _WatchCommentPageState extends State<WatchCommentPage>
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.black,
-        selectedItemColor: Palette.primary,
-        unselectedItemColor: Colors.white,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today), label: 'Booking'),
-          BottomNavigationBarItem(icon: Icon(Icons.email), label: 'Messages'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-          BottomNavigationBarItem(
-            icon: CircleAvatar(
-              backgroundColor: Palette.primary,
-              child: Text('D', style: TextStyle(color: Colors.black)),
-            ),
-            label: 'Menu',
-          ),
-        ],
-      ),
+      bottomNavigationBar: AdminBottomBar(currentIndex: _currentPageIndex),
     );
   }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/config/asset_helper.dart';
+import 'package:hairvibe/widgets/barber_bottom_bar.dart';
 
 class BarberContactList extends StatefulWidget {
   @override
@@ -62,26 +63,7 @@ B|Alice Smith
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.black,
-        selectedItemColor: Palette.primary,
-        unselectedItemColor: Colors.white,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today), label: 'Booking'),
-          BottomNavigationBarItem(icon: Icon(Icons.email), label: 'Contact'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-          BottomNavigationBarItem(
-            icon: CircleAvatar(
-              backgroundColor: Palette.primary,
-              child: Text('D', style: TextStyle(color: Colors.black)),
-            ),
-            label: 'Menu',
-          ),
-        ],
-      ),
+      bottomNavigationBar: BarberBottomNavigationBar(),
     );
   }
 

@@ -23,6 +23,11 @@ import 'package:hairvibe/views/splash_screen.dart';
 import 'package:hairvibe/views/voucher/redeem_voucher.dart';
 import 'package:hairvibe/views/voucher/voucher_page.dart';
 
+import 'package:hairvibe/views/admin/home_screen.dart';
+import 'package:hairvibe/views/admin_appointment/appointment_calendar.dart';
+import 'package:hairvibe/views/admin_contact/contact_list.dart';
+import 'package:hairvibe/views/admin_management/comment.dart';
+
 final Map<String, WidgetBuilder> routes = {
   SplashScreen.routeName: (context) => const SplashScreen(),
   AuthScreen.routeName: (context) => const AuthScreen(),
@@ -55,4 +60,10 @@ final Map<String, WidgetBuilder> routes = {
   EditAccount.routeName: (context) => const EditAccount(),
 
   NotificationsPage.routeName: (context) => const NotificationsPage(),
+
+  // Admin
+  AdminHomeScreen.routeName: (context) => const AdminHomeScreen(),
+  AdminAppointmentPage.routeName: (context) => const AdminAppointmentPage(),
+  AdminContactListPage.routeName: (context) => const AdminContactListPage(),
+  AdminCommentPage.routeName: (context) => const AdminCommentPage(),
 };

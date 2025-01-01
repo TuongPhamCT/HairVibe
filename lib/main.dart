@@ -6,7 +6,6 @@ import 'package:hairvibe/config/firebase_options.dart';
 import 'package:hairvibe/router.dart';
 import 'package:hairvibe/views/auth_screen.dart';
 
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -23,7 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Hair Vibe',
-      home: const AuthScreen(),     
+      home: const AuthScreen(),
       debugShowCheckedModeBanner: false,
       routes: routes,
     );

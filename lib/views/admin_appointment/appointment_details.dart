@@ -25,6 +25,7 @@ class _AdminAppointmentDetailPageState
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
+        automaticallyImplyLeading: false,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Palette.primary),
           onPressed: () {

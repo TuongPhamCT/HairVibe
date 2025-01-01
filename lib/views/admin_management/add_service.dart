@@ -5,6 +5,7 @@ import 'package:hairvibe/views/admin_management/comment.dart';
 
 class AddServicePage extends StatefulWidget {
   const AddServicePage({super.key});
+  static const String routeName = 'admin_add_service';
 
   @override
   _AddServicePageState createState() => _AddServicePageState();
@@ -24,11 +25,12 @@ class _AddServicePageState extends State<AddServicePage> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
+        automaticallyImplyLeading: false,
         leadingWidth: 100,
         leading: TextButton(
           onPressed: () {
             Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => WatchCommentPage()),
+              MaterialPageRoute(builder: (context) => AdminCommentPage()),
             );
           },
           child: Text(
