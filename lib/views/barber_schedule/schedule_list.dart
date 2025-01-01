@@ -9,7 +9,7 @@ class ScheduleListScreen extends StatefulWidget {
 
 class _ScheduleListScreenState extends State<ScheduleListScreen> {
   final List<Map<String, dynamic>> workingHours = [
-    {'day': 'Monday', 'enabled': true, 'time': '9am - 6pm'},
+    {'day': 'Monday', 'enabled': true, 'time': '8am - 6pm'},
     {'day': 'Tuesday', 'enabled': true, 'time': '9am - 6pm'},
     {'day': 'Wednesday', 'enabled': true, 'time': '9am - 6pm'},
     {'day': 'Thursday', 'enabled': true, 'time': '9am - 6pm'},
