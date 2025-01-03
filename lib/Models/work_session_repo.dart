@@ -17,12 +17,17 @@ class WorkSessionRepository {
   void deleteWorkSessionById(String id) async => _storage.collection(WorkSessionModel.collectionName).doc(id).delete();
 
   Future<List<WorkSessionModel>> getWorkSessionsByBarberId(String id) async {
-    final QuerySnapshot querySnapshot = await _storage.collection(WorkSessionModel.collectionName)
-        .where('barberID', isEqualTo: id).get();
-    final leaves = querySnapshot
-        .docs
-        .map((doc) => WorkSessionModel.fromJson(doc as Map<String, dynamic>))
-        .toList();
-    return leaves;
+    try {
+      final QuerySnapshot querySnapshot = await _storage.collection(WorkSessionModel.collectionName)
+          .where('barberID', isEqualTo: id).get();
+      final sessions = querySnapshot
+          .docs
+          .map((doc) => WorkSessionModel.fromJson(doc as Map<String, dynamic>))
+          .toList();
+      return sessions;
+    } catch (e) {
+      print(e);
+      return [];
+    }
   }
 }

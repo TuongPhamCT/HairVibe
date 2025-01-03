@@ -38,7 +38,7 @@ class _RatingBarberPageState extends State<RatingBarberPage> {
         ),
         centerTitle: true,
         actions: [
-          NotificationBell(soLuongThongBao: _soLuongThongBao),
+          NotificationBell(notificationCount: _soLuongThongBao),
         ],
       ),
       body: SingleChildScrollView(

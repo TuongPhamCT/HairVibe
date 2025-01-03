@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hairvibe/Contract/admin_contact_list_contract.dart';
+import 'package:hairvibe/Models/user_model.dart';
+import 'package:hairvibe/Presenter/admin_contact_list_presenter.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/config/asset_helper.dart';
@@ -9,25 +12,23 @@ class AdminContactListPage extends StatefulWidget {
   static const String routeName = 'admin_contact';
 
   @override
-  _AdminContactListPageState createState() => _AdminContactListPageState();
+  AdminContactListPageState createState() => AdminContactListPageState();
 }
 
-class _AdminContactListPageState extends State<AdminContactListPage>
-    with SingleTickerProviderStateMixin {
+class AdminContactListPageState extends State<AdminContactListPage> with SingleTickerProviderStateMixin
+  implements AdminContactListPageContract {
+  AdminContactListPagePresenter? _presenter;
   late TabController _tabController;
   final int _currentPageIndex = 2;
-  String userData = '''
-A|John Doe
-B|Alice Smith
-''';
 
-  String barberData = '''
-A|Barber Joe
-B|Barber Anna
-''';
+  bool isLoading = true;
+
+  List<ContactListData> userData = [];
+  List<ContactListData> barberData = [];
 
   @override
   void initState() {
+    _presenter = AdminContactListPagePresenter(this);
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
   }
@@ -37,6 +38,18 @@ B|Barber Anna
     _tabController.dispose();
     super.dispose();
   }
+
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    loadData();
+  }
+
+  Future<void> loadData() async {
+    await _presenter?.getData();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +61,7 @@ B|Barber Anna
         title: TabBar(
           controller: _tabController,
           indicatorColor: Palette.primary,
-          tabs: [
+          tabs: const [
             Tab(text: 'USER'),
             Tab(text: 'BARBER'),
           ],
@@ -66,8 +79,8 @@ B|Barber Anna
                   child: TextField(
                     decoration: InputDecoration(
                       hintText: 'Search',
-                      hintStyle: TextStyle(color: Colors.grey),
-                      prefixIcon: Icon(Icons.search, color: Colors.grey),
+                      hintStyle: const TextStyle(color: Colors.grey),
+                      prefixIcon: const Icon(Icons.search, color: Colors.grey),
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
@@ -77,11 +90,11 @@ B|Barber Anna
                     ),
                   ),
                 ),
-                SizedBox(width: 14),
+                const SizedBox(width: 14),
                 IconButton(
-                  icon: CircleAvatar(
+                  icon: const CircleAvatar(
                     backgroundColor: Palette.primary,
-                    child: Icon(Icons.filter_alt, color: Colors.black),
+                    child: Icon(Icons.search, color: Colors.black),
                   ),
                   onPressed: () {
                     // Filter action
@@ -107,19 +120,15 @@ B|Barber Anna
     );
   }
 
-  Widget _buildList(String data) {
-    List<String> lines = data.trim().split('\n');
-    Map<String, List<Map<String, String>>> groupedData = {};
+  Widget _buildList(List<ContactListData> userList) {
+    Map<String, List<ContactListData>> groupedData = {};
 
-    for (String line in lines) {
-      List<String> parts = line.split('|');
-      String group = parts[0];
-      String name = parts[1];
-
-      if (!groupedData.containsKey(group)) {
-        groupedData[group] = [];
+    for (ContactListData data in userList) {
+      String header = data.user.name![0].toUpperCase();
+      if (groupedData.containsKey(header) == false) {
+        groupedData[header] = [];
       }
-      groupedData[group]!.add({'name': name});
+      groupedData[header]!.add(data);
     }
 
     return ListView(
@@ -137,19 +146,66 @@ B|Barber Anna
               return Padding(
                 padding: const EdgeInsets.fromLTRB(24.0, 0, 16.0, 0),
                 child: ListTile(
+                  onTap: item.onPress,
                   leading: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(AssetHelper.logo,
-                        width: 50, height: 50, fit: BoxFit.cover),
+                    child: item.user.image == null || item.user.image!.isEmpty ?
+                      Image.asset(AssetHelper.logo, width: 50, height: 50, fit: BoxFit.cover)
+                      :
+                      Image.network(item.user.image!, width: 50, height: 50, fit: BoxFit.cover)
+                    ,
                   ),
-                  title: Text(item['name']!,
+                  title: Text(item.user.name!,
                       style: TextDecor.homeTitle.copyWith(color: Colors.white)),
                 ),
               );
-            }).toList(),
+            }),
           ],
         );
       }).toList(),
     );
   }
+
+  @override
+  void onLoadDataSucceeded() {
+    setState(() {
+      userData = _presenter!.customers.map(
+        (element) => ContactListData(user: element, onPress: () {})
+      ).toList();
+      barberData = _presenter!.barbers.map(
+        (element) => ContactListData(user: element, onPress: () {_presenter!.handleBarberPressed(element);})
+      ).toList();
+    });
+  }
+
+  @override
+  void onSelectBarber() {
+    //Navigator.of(context).pushNamed();
+  }
+
+  @override
+  void onSearch(List<UserModel> customerResults, List<UserModel> barberResults) {
+    setState(() {
+      userData = customerResults.map(
+              (element) => ContactListData(user: element, onPress: () {})
+      ).toList();
+
+      barberData = barberResults.map(
+              (element) =>  ContactListData(
+              user: element,
+              onPress: () {_presenter!.handleBarberPressed(element);}
+          )
+      ).toList();
+    });
+  }
+}
+
+class ContactListData {
+  final UserModel user;
+  final VoidCallback onPress;
+
+  ContactListData({
+    required this.user,
+    required this.onPress
+  });
 }

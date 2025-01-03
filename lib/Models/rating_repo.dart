@@ -30,22 +30,32 @@ class RatingRepository {
   }
 
   Future<List<RatingModel>> getAllRatings(String id) async {
-    final QuerySnapshot querySnapshot = await _storage.collection(RatingModel.collectionName).get();
-    final ratings = querySnapshot
-        .docs
-        .map((doc) => RatingModel.fromJson(doc as Map<String, dynamic>))
-        .toList();
-    return ratings;
+    try {
+      final QuerySnapshot querySnapshot = await _storage.collection(RatingModel.collectionName).get();
+      final ratings = querySnapshot
+          .docs
+          .map((doc) => RatingModel.fromJson(doc as Map<String, dynamic>))
+          .toList();
+      return ratings;
+    } catch (e) {
+      print(e);
+      return [];
+    }
   }
 
   Future<List<RatingModel>> getRatingsByBarberId(String id) async {
-    final QuerySnapshot querySnapshot = await _storage.collection(RatingModel.collectionName)
-        .where('barberID', isEqualTo: id).get();
-    final ratings = querySnapshot
-        .docs
-        .map((doc) => RatingModel.fromJson(doc as Map<String, dynamic>))
-        .toList();
-    return ratings;
+    try {
+      final QuerySnapshot querySnapshot = await _storage.collection(RatingModel.collectionName)
+          .where('barberID', isEqualTo: id).get();
+      final ratings = querySnapshot
+          .docs
+          .map((doc) => RatingModel.fromJson(doc as Map<String, dynamic>))
+          .toList();
+      return ratings;
+    } catch (e) {
+      print(e);
+      return [];
+    }
   }
 
   Future<double> calculateRatingOfBarber(String id) async {

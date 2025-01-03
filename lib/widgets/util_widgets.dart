@@ -56,6 +56,35 @@ abstract class UtilWidgets {
     );
   }
 
+  static void createYesNoDialog({
+    required BuildContext context,
+    required String title,
+    required String content,
+    required VoidCallback onAccept,
+    required VoidCallback onCancel
+  }) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: [
+            TextButton(
+              onPressed: onAccept,
+              child: const Text('OK'),
+            ),
+            TextButton(
+              onPressed: onCancel,
+              child: const Text('Cancel'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   static void createSnackBar(BuildContext context, String content){
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

@@ -4,8 +4,8 @@ import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/views/notification/notification_page.dart';
 
 class NotificationBell extends StatelessWidget {
-  final int soLuongThongBao;
-  const NotificationBell({super.key, required this.soLuongThongBao});
+  final int notificationCount;
+  const NotificationBell({super.key, required this.notificationCount});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class NotificationBell extends StatelessWidget {
               size: 27,
             ),
           ),
-          if (soLuongThongBao > 0)
+          if (notificationCount > 0)
             Container(
               height: 16,
               width: 16,
@@ -37,7 +37,7 @@ class NotificationBell extends StatelessWidget {
               ),
               child: Center(
                 child: Text(
-                  '$soLuongThongBao',
+                  '$notificationCount',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 11,
