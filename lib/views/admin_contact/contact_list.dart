@@ -6,6 +6,7 @@ import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/config/asset_helper.dart';
 import 'package:hairvibe/widgets/admin_bottom_bar.dart';
+import 'package:hairvibe/views/admin_contact/add_barber.dart';
 
 class AdminContactListPage extends StatefulWidget {
   const AdminContactListPage({super.key});
@@ -15,8 +16,9 @@ class AdminContactListPage extends StatefulWidget {
   AdminContactListPageState createState() => AdminContactListPageState();
 }
 
-class AdminContactListPageState extends State<AdminContactListPage> with SingleTickerProviderStateMixin
-  implements AdminContactListPageContract {
+class AdminContactListPageState extends State<AdminContactListPage>
+    with SingleTickerProviderStateMixin
+    implements AdminContactListPageContract {
   AdminContactListPagePresenter? _presenter;
   late TabController _tabController;
   final int _currentPageIndex = 2;
@@ -28,9 +30,17 @@ class AdminContactListPageState extends State<AdminContactListPage> with SingleT
 
   @override
   void initState() {
-    _presenter = AdminContactListPagePresenter(this);
     super.initState();
+    _presenter = AdminContactListPagePresenter(this);
     _tabController = TabController(length: 2, vsync: this);
+
+    // Add a listener to update the UI when the tab changes
+    _tabController.addListener(() {
+      setState(() {
+        // Debug print to check the current tab index
+        print('Current Tab Index: ${_tabController.index}');
+      });
+    });
   }
 
   @override
@@ -38,7 +48,6 @@ class AdminContactListPageState extends State<AdminContactListPage> with SingleT
     _tabController.dispose();
     super.dispose();
   }
-
 
   @override
   void didChangeDependencies() {
@@ -49,7 +58,6 @@ class AdminContactListPageState extends State<AdminContactListPage> with SingleT
   Future<void> loadData() async {
     await _presenter?.getData();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -117,6 +125,18 @@ class AdminContactListPageState extends State<AdminContactListPage> with SingleT
         ],
       ),
       bottomNavigationBar: AdminBottomBar(currentIndex: _currentPageIndex),
+      floatingActionButton: _tabController.index == 1
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddBarberScreen()),
+                );
+              },
+              backgroundColor: Palette.primary,
+              child: Icon(Icons.add, color: Colors.black),
+            )
+          : null,
     );
   }
 
@@ -149,11 +169,11 @@ class AdminContactListPageState extends State<AdminContactListPage> with SingleT
                   onTap: item.onPress,
                   leading: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: item.user.image == null || item.user.image!.isEmpty ?
-                      Image.asset(AssetHelper.logo, width: 50, height: 50, fit: BoxFit.cover)
-                      :
-                      Image.network(item.user.image!, width: 50, height: 50, fit: BoxFit.cover)
-                    ,
+                    child: item.user.image == null || item.user.image!.isEmpty
+                        ? Image.asset(AssetHelper.logo,
+                            width: 50, height: 50, fit: BoxFit.cover)
+                        : Image.network(item.user.image!,
+                            width: 50, height: 50, fit: BoxFit.cover),
                   ),
                   title: Text(item.user.name!,
                       style: TextDecor.homeTitle.copyWith(color: Colors.white)),
@@ -169,12 +189,16 @@ class AdminContactListPageState extends State<AdminContactListPage> with SingleT
   @override
   void onLoadDataSucceeded() {
     setState(() {
-      userData = _presenter!.customers.map(
-        (element) => ContactListData(user: element, onPress: () {})
-      ).toList();
-      barberData = _presenter!.barbers.map(
-        (element) => ContactListData(user: element, onPress: () {_presenter!.handleBarberPressed(element);})
-      ).toList();
+      userData = _presenter!.customers
+          .map((element) => ContactListData(user: element, onPress: () {}))
+          .toList();
+      barberData = _presenter!.barbers
+          .map((element) => ContactListData(
+              user: element,
+              onPress: () {
+                _presenter!.handleBarberPressed(element);
+              }))
+          .toList();
     });
   }
 
@@ -184,18 +208,20 @@ class AdminContactListPageState extends State<AdminContactListPage> with SingleT
   }
 
   @override
-  void onSearch(List<UserModel> customerResults, List<UserModel> barberResults) {
+  void onSearch(
+      List<UserModel> customerResults, List<UserModel> barberResults) {
     setState(() {
-      userData = customerResults.map(
-              (element) => ContactListData(user: element, onPress: () {})
-      ).toList();
+      userData = customerResults
+          .map((element) => ContactListData(user: element, onPress: () {}))
+          .toList();
 
-      barberData = barberResults.map(
-              (element) =>  ContactListData(
+      barberData = barberResults
+          .map((element) => ContactListData(
               user: element,
-              onPress: () {_presenter!.handleBarberPressed(element);}
-          )
-      ).toList();
+              onPress: () {
+                _presenter!.handleBarberPressed(element);
+              }))
+          .toList();
     });
   }
 }
@@ -204,8 +230,5 @@ class ContactListData {
   final UserModel user;
   final VoidCallback onPress;
 
-  ContactListData({
-    required this.user,
-    required this.onPress
-  });
+  ContactListData({required this.user, required this.onPress});
 }
