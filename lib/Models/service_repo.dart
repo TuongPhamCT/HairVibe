@@ -32,11 +32,21 @@ class ServiceRepository {
   void deleteServiceById(String id) async => _storage.collection(ServiceModel.collectionName).doc(id).delete();
 
   Future<List<ServiceModel>> getAllServices() async {
-    final QuerySnapshot querySnapshot = await _storage.collection(ServiceModel.collectionName).get();
-    final ratings = querySnapshot
-        .docs
-        .map((doc) => ServiceModel.fromJson(doc as Map<String, dynamic>))
-        .toList();
-    return ratings;
+    try {
+      final QuerySnapshot querySnapshot = await _storage.collection(ServiceModel.collectionName).get();
+      final ratings = querySnapshot
+          .docs
+          .map((doc) => ServiceModel.fromJson(doc as Map<String, dynamic>))
+          .toList();
+      return ratings;
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
+  Future<int> getServicesCount() async {
+    final List<ServiceModel> services = await getAllServices();
+    return services.length;
   }
 }

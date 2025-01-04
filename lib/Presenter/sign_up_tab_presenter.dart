@@ -94,7 +94,8 @@ class SignUpTabPresenter {
           email: email,
           name: name,
           phoneNumber: phone,
-          userType: UserType.CUSTOMER);
+          userType: UserType.CUSTOMER
+      );
       _userRepo.addUserToFirestore(model);
       _view.onSignUpSucceeded();
     } else if (result == null) {

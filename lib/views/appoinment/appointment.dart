@@ -63,7 +63,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> implements Appoin
         ),
         centerTitle: true,
         actions: [
-          NotificationBell(soLuongThongBao: _soLuongThongBao),
+          NotificationBell(notificationCount: _soLuongThongBao),
         ],
       ),
       body: DefaultTabController(

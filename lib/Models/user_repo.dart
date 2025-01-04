@@ -36,27 +36,62 @@ class UserRepository {
   }
 
   Future<List<UserModel>> getAllUsers() async {
-    final QuerySnapshot querySnapshot = await _storage.collection(UserModel.collectionName).get();
-    final users = querySnapshot
-        .docs
-        .map((doc) => UserModel.fromJson(doc as Map<String, dynamic>))
-        .toList();
-    return users;
+    try {
+      final QuerySnapshot querySnapshot = await _storage.collection(UserModel.collectionName).get();
+      final users = querySnapshot
+          .docs
+          .map((doc) => UserModel.fromJson(doc as Map<String, dynamic>))
+          .toList();
+      return users;
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
+  Future<List<UserModel>> getAllCustomers() async {
+    try {
+      final QuerySnapshot querySnapshot = await _storage.collection(UserModel.collectionName)
+          .where('userType', isEqualTo: UserType.CUSTOMER).get();
+      final customers = querySnapshot
+          .docs
+          .map((doc) => UserModel.fromJson(doc as Map<String, dynamic>))
+          .toList();
+      return customers;
+    } catch (e) {
+      print(e);
+      return [];
+    }
   }
 
   Future<List<UserModel>> getAllBarbers() async {
-    final QuerySnapshot querySnapshot = await _storage.collection(UserModel.collectionName)
-        .where('userType', isEqualTo: UserType.BARBER).get();
-    final barbers = querySnapshot
-        .docs
-        .map((doc) => UserModel.fromJson(doc as Map<String, dynamic>))
-        .toList();
-    return barbers;
+    try {
+      final QuerySnapshot querySnapshot = await _storage.collection(UserModel.collectionName)
+          .where('userType', isEqualTo: UserType.BARBER).get();
+      final barbers = querySnapshot
+          .docs
+          .map((doc) => UserModel.fromJson(doc as Map<String, dynamic>))
+          .toList();
+      return barbers;
+    } catch (e) {
+      print(e);
+      return [];
+    }
   }
 
-  Future<String> generateUserID() async {
-    List<UserModel> users = await getAllUsers();
-    int count = users.length;
-    return count.toString().padLeft(5, '0');
+  Future<int> getBarbersCount() async {
+    final List<UserModel> users = await getAllBarbers();
+    return users.length;
   }
+
+  Future<int> getCustomersCount() async {
+    final List<UserModel> users = await getAllCustomers();
+    return users.length;
+  }
+
+  // Future<String> generateUserID() async {
+  //   List<UserModel> users = await getAllUsers();
+  //   int count = users.length;
+  //   return count.toString().padLeft(5, '0');
+  // }
 }

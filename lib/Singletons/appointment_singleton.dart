@@ -22,6 +22,11 @@ class AppointmentSingleton {
 
   Map<String, dynamic> cacheData = {};
 
+  void reset() {
+    appointment = null;
+    cacheData.clear();
+  }
+
   void setAppointment(AppointmentModel appointment) {
     this.appointment = appointment;
   }
@@ -48,6 +53,7 @@ class AppointmentSingleton {
     data[ViewBookingData.BOOKING_TIME] = Utility.formatTimeFromDateTime(appointment!.date);
     data[ViewBookingData.SERVICES] = appointment!.services;
     data[ViewBookingData.BARBER] = barber.name;
+    data[ViewBookingData.CUSTOMER_AVATAR] = customer.image;
 
     int sum = 0;
     for (ServiceModel service in appointment!.services!) {
@@ -71,6 +77,41 @@ class AppointmentSingleton {
   Map<String, dynamic> getViewBookingData() {
     return cacheData;
   }
+
+  String getCustomerName() {
+    if (cacheData.containsKey(ViewBookingData.NAME)) {
+      return cacheData[ViewBookingData.NAME];
+    }
+    return "Customer Name";
+  }
+
+  String getCustomerAvatarUrl() {
+    if (cacheData.containsKey(ViewBookingData.CUSTOMER_AVATAR)) {
+      return cacheData[ViewBookingData.CUSTOMER_AVATAR];
+    }
+    return "";
+  }
+
+  String getAppointmentDate() {
+    if (cacheData.containsKey(ViewBookingData.BOOKING_DATE)) {
+      return cacheData[ViewBookingData.BOOKING_DATE];
+    }
+    return "dd/mm/yyyy";
+  }
+
+  String getAppointmentTime() {
+    if (cacheData.containsKey(ViewBookingData.BOOKING_TIME)) {
+      return cacheData[ViewBookingData.BOOKING_TIME];
+    }
+    return "dd/mm/yyyy";
+  }
+
+  List<ServiceModel> getServices() {
+    if (cacheData.containsKey(ViewBookingData.SERVICES)) {
+      return cacheData[ViewBookingData.SERVICES];
+    }
+    return [];
+  }
 }
 
 abstract class ViewBookingData {
@@ -82,4 +123,5 @@ abstract class ViewBookingData {
   static const SERVICES = "services";
   static const TOTAL_PRICE = "totalPrices";
   static const DISCOUNT = "discount";
+  static const CUSTOMER_AVATAR = "customerAvatarUrl";
 }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_icon_class/font_awesome_icon_class.dart';
+import 'package:hairvibe/Singletons/notification_singleton.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/facades/authenticator_facade.dart';
+import 'package:hairvibe/observers/notification_subcriber.dart';
 import 'package:hairvibe/views/account/about_us.dart';
 import 'package:hairvibe/views/account/edit_account.dart';
 import 'package:hairvibe/views/auth_screen.dart';
@@ -17,11 +19,18 @@ class AccountPage extends StatefulWidget {
   State<AccountPage> createState() => _AccountPageState();
 }
 
-class _AccountPageState extends State<AccountPage> {
-  AuthenticatorFacade _auth = AuthenticatorFacade();
+class _AccountPageState extends State<AccountPage> implements NotificationSubscriber {
+  final AuthenticatorFacade _auth = AuthenticatorFacade();
+  final NotificationSingleton _notificationSingleton = NotificationSingleton.getInstance();
 
   int _currentPageIndex = 3;
-  int _soLuongThongBao = 2;
+  int _notificationCount = 2;
+
+  @override
+  void dispose() {
+    _notificationSingleton.unsubscribe(this);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +44,7 @@ class _AccountPageState extends State<AccountPage> {
         ),
         centerTitle: true,
         actions: [
-          NotificationBell(soLuongThongBao: _soLuongThongBao),
+          NotificationBell(notificationCount: _notificationCount),
         ],
       ),
       body: Padding(
@@ -79,6 +88,7 @@ class _AccountPageState extends State<AccountPage> {
             const SizedBox(height: 40),
             InkWell(
               onTap: () async {
+                _notificationSingleton.dispose();
                 await _auth.signOut();
                 if (context.mounted) {
                   Navigator.of(context).pushNamed(AuthScreen.routeName);
@@ -104,5 +114,12 @@ class _AccountPageState extends State<AccountPage> {
         currentIndex: _currentPageIndex,
       ),
     );
+  }
+
+  @override
+  void updateNotification() {
+    setState(() {
+      _notificationCount = _notificationSingleton.getUnreadCount();
+    });
   }
 }

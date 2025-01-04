@@ -27,30 +27,45 @@ class CouponRepository {
 
   void deleteCouponById(String id) async => _storage.collection(CouponModel.collectionName).doc(id).delete();
 
-  Future<CouponModel> getCouponById(String id) async {
-    final DocumentReference<Map<String, dynamic>> collectionRef = _storage.collection(CouponModel.collectionName).doc(id);
-    DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await collectionRef.get();
+  Future<CouponModel?> getCouponById(String id) async {
+    try {
+      final DocumentReference<Map<String, dynamic>> collectionRef = _storage.collection(CouponModel.collectionName).doc(id);
+      DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await collectionRef.get();
 
-    final CouponModel user = CouponModel.fromJson(documentSnapshot.data() as Map<String, dynamic>);
-    return user;
+      final CouponModel coupon = CouponModel.fromJson(documentSnapshot.data() as Map<String, dynamic>);
+      return coupon;
+    } catch (e) {
+      print(e);
+      return null;
+    }
   }
 
   Future<List<CouponModel>> getAllCoupons(String id) async {
-    final QuerySnapshot querySnapshot = await _storage.collection(CouponModel.collectionName).get();
-    final coupons = querySnapshot
-        .docs
-        .map((doc) => CouponModel.fromJson(doc as Map<String, dynamic>))
-        .toList();
-    return coupons;
+    try {
+      final QuerySnapshot querySnapshot = await _storage.collection(CouponModel.collectionName).get();
+      final coupons = querySnapshot
+          .docs
+          .map((doc) => CouponModel.fromJson(doc as Map<String, dynamic>))
+          .toList();
+      return coupons;
+    } catch (e) {
+      print(e);
+      return [];
+    }
   }
 
   Future<List<CouponModel>> getCouponsByIdList (List<String> couponIdList) async {
-    final QuerySnapshot querySnapshot = await _storage.collection(CouponModel.collectionName)
-                                                      .where('couponID', whereIn: couponIdList).get();
-    final coupons = querySnapshot
-                          .docs
-                          .map((doc) => CouponModel.fromJson(doc as Map<String, dynamic>))
-                          .toList();
-    return coupons;
+    try {
+      final QuerySnapshot querySnapshot = await _storage.collection(CouponModel.collectionName)
+          .where('couponID', whereIn: couponIdList).get();
+      final coupons = querySnapshot
+          .docs
+          .map((doc) => CouponModel.fromJson(doc as Map<String, dynamic>))
+          .toList();
+      return coupons;
+    } catch (e) {
+      print(e);
+      return [];
+    }
   }
 }

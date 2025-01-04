@@ -1,24 +1,63 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hairvibe/Contract/admin_home_screen_contract.dart';
+import 'package:hairvibe/Presenter/admin_home_screen_presenter.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
+import 'package:hairvibe/Utility.dart';
+import 'package:hairvibe/observers/notification_subcriber.dart';
 import 'package:hairvibe/widgets/noti_bell.dart';
 import 'package:hairvibe/widgets/admin_bottom_bar.dart';
+
+import '../../Singletons/notification_singleton.dart';
 
 class AdminHomeScreen extends StatefulWidget {
   const AdminHomeScreen({super.key});
   static const routeName = 'admin_home';
   @override
-  _AdminHomeScreenState createState() => _AdminHomeScreenState();
+  AdminHomeScreenState createState() => AdminHomeScreenState();
 }
 
-class _AdminHomeScreenState extends State<AdminHomeScreen> {
+class AdminHomeScreenState extends State<AdminHomeScreen> implements AdminHomeScreenContract, NotificationSubscriber {
+  final NotificationSingleton _notificationSingleton = NotificationSingleton.getInstance();
+  AdminHomeScreenPresenter? _presenter;
+
   int appointmentCount = 0;
   int barberCount = 4;
   int customerCount = 4;
   int serviceCount = 4;
-  final int _soLuongThongBao = 2;
+  double bookedHours = 0;
+  String completedAppointments = "";
+  int _notificationCount = 0;
   final int _currentPageIndex = 0;
+  List<double> appointmentColumnsHeight = [];
+  List<double> bookHoursColumnsHeight = [];
+
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    _presenter = AdminHomeScreenPresenter(this);
+    _notificationSingleton.subscribe(this);
+    _notificationCount = _notificationSingleton.getUnreadCount();
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    loadData();
+  }
+
+  Future<void> loadData() async {
+    await _presenter?.getData();
+  }
+
+  @override
+  void dispose() {
+    _notificationSingleton.unsubscribe(this);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +71,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         title: Text('HOME', style: TextDecor.homeTitle),
         centerTitle: true,
         actions: [
-          NotificationBell(soLuongThongBao: _soLuongThongBao),
+          NotificationBell(notificationCount: _notificationCount),
         ],
       ),
       body: SingleChildScrollView(
@@ -67,8 +106,9 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                   Expanded(
                     child: _buildCard(
                       title: 'COMPLETED APPOINTMENT',
-                      content: 'No completed appointments.',
+                      content: completedAppointments,
                       lineColor: Colors.blue,
+                      columnsHeight: bookHoursColumnsHeight,
                     ),
                   ),
                 ],
@@ -79,8 +119,9 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                   Expanded(
                     child: _buildCard(
                       title: 'HOURS BOOKED',
-                      content: 'No completed appointments.',
+                      content: "$bookedHours hours",
                       lineColor: Palette.primary,
+                      columnsHeight: bookHoursColumnsHeight,
                     ),
                   ),
                 ],
@@ -96,7 +137,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   }
 
   Widget _buildCard(
-      {required String title, required String content, Color? lineColor}) {
+      {required String title, required String content, List<double>? columnsHeight, Color? lineColor}) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -120,13 +161,24 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
               padding: const EdgeInsets.only(top: 8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: List.generate(
                     7,
-                    (index) => Container(
+                    (index) => Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
                           width: 20,
-                          height: 2,
+                          height: columnsHeight![index],
                           color: lineColor,
-                        )),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(AdminHomeScreenPresenter.dayOfWeeks[index],
+                            style: TextDecor.inter13Medi.copyWith(color: Colors.white)),
+                      ],
+                    ),
+                ),
               ),
             ),
         ],
@@ -152,5 +204,66 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         ],
       ),
     );
+  }
+
+  @override
+  void onLoadDataSucceeded() {
+    int completedAppointmentsCount = _presenter!.getTotalCompletedAppointmentsCount();
+    double bookedHoursCount = _presenter!.getTotalBookedHoursCount();
+
+    // Calculate Columns height
+    const double highestColumns = 40;
+
+    appointmentColumnsHeight = List.generate(7, (index) => 2);
+    bookHoursColumnsHeight = List.generate(7, (index) => 2);
+
+    int maxAppointmentIndex = 0;
+    int maxBookedHoursIndex = 0;
+    for (int i = 0; i < 7; i++) {
+      appointmentColumnsHeight[i] = _presenter!.getCompletedAppointmentsCount(
+          dayOfWeeks: AdminHomeScreenPresenter.dayOfWeeks[i]
+      ) as double;
+
+      bookHoursColumnsHeight[i] = _presenter!.getBookedHourCount(
+          dayOfWeeks: AdminHomeScreenPresenter.dayOfWeeks[i]
+      );
+
+      if (appointmentColumnsHeight[i] > appointmentColumnsHeight[maxAppointmentIndex]) {
+        maxAppointmentIndex = i;
+      }
+
+      if (bookHoursColumnsHeight[i] > bookHoursColumnsHeight[maxBookedHoursIndex]) {
+        maxBookedHoursIndex = i;
+      }
+    }
+
+    double highestAppointmentHeight = appointmentColumnsHeight[maxAppointmentIndex];
+    double highestBookedHoursHeight = bookHoursColumnsHeight[maxBookedHoursIndex];
+
+    for (int i = 0; i < 7; i++) {
+      appointmentColumnsHeight[i] = appointmentColumnsHeight[i] / highestAppointmentHeight * highestColumns;
+      bookHoursColumnsHeight[i] = bookHoursColumnsHeight[i] / highestBookedHoursHeight * highestColumns;
+    }
+
+    setState(() {
+      serviceCount = _presenter!.servicesCount;
+      appointmentCount = _presenter!.todayAppointmentCount;
+      customerCount = _presenter!.customerCount;
+      barberCount = _presenter!.barberCount;
+      bookedHours = Utility.roundDouble(bookedHoursCount, 1);
+      if (completedAppointmentsCount > 0) {
+        completedAppointments = "$completedAppointmentsCount";
+      } else {
+        completedAppointments = 'No completed appointments.';
+      }
+      isLoading = false;
+    });
+  }
+
+  @override
+  void updateNotification() {
+    setState(() {
+      _notificationCount = _notificationSingleton.getUnreadCount();
+    });
   }
 }

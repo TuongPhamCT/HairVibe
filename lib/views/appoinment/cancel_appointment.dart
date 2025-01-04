@@ -74,7 +74,7 @@ class _CancelAppointmentPageState extends State<CancelAppointmentPage> implement
         ),
         centerTitle: true,
         actions: [
-          NotificationBell(soLuongThongBao: _soLuongThongBao),
+          NotificationBell(notificationCount: _soLuongThongBao),
         ],
       ),
       body: SingleChildScrollView(

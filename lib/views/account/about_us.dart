@@ -32,7 +32,7 @@ class AboutUs extends StatelessWidget {
         ),
         centerTitle: true,
         actions: [
-          NotificationBell(soLuongThongBao: _soLuongThongBao),
+          NotificationBell(notificationCount: _soLuongThongBao),
         ],
       ),
       body: Center(

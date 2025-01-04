@@ -68,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> implements HomeScreenContract {
         ),
         centerTitle: true,
         actions: [
-          NotificationBell(soLuongThongBao: _soLuongThongBao),
+          NotificationBell(notificationCount: _soLuongThongBao),
         ],
       ),
       body: SingleChildScrollView(

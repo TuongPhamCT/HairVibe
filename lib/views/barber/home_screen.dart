@@ -26,7 +26,7 @@ class _BarberHomeScreenState extends State<BarberHomeScreen> {
         title: Text('HOME', style: TextDecor.homeTitle),
         centerTitle: true,
         actions: [
-          NotificationBell(soLuongThongBao: _soLuongThongBao),
+          NotificationBell(notificationCount: _soLuongThongBao),
         ],
       ),
       body: SingleChildScrollView(

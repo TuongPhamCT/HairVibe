@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:hairvibe/Models/notice_model.dart';
+import 'package:hairvibe/Models/notice_repo.dart';
 
 abstract class Utility {
 
   static String formatDurationFromSeconds (int? seconds) {
     if (seconds == null){
-      return "-:-";
+      return "--";
     }
 
-    final int minutes = seconds ~/ 60;
-    final int remainingSeconds = seconds % 60;
+    final int hours = seconds ~/ 3600;
+    final int minutes = (seconds % 3600) ~/60;
 
-    final String minutesStr = minutes.toString().padLeft(2, '0');
-    final String secondsStr = remainingSeconds.toString().padLeft(2, '0');
+    // final String hoursStr = minutes.toString().padLeft(2, '0');
+    // final String minutesStr = minutes.toString().padLeft(2, '0');
 
-    return "$minutesStr:$secondsStr";
+    if (hours == 0) {
+      return "$minutes minutes";
+    }
+    return "{$hours}h ${minutes}m";
   }
 
   static String formatCurrency(int? amount) {
@@ -21,8 +26,9 @@ abstract class Utility {
       return "00,000";
     }
 
-    return amount.toStringAsFixed(2).replaceAllMapped(
+    String value = amount.toStringAsFixed(2).replaceAllMapped(
         RegExp(r'\B(?=(\d{3})+(?!\d))'), (match) => ',');
+    return "$value\$";
   }
 
   static String formatStringFromDateTime(DateTime? dateTime) {
@@ -103,6 +109,16 @@ abstract class Utility {
     return DateTime(date.year, date.month, date.day, time.hour, time.minute, 0, 0, 0);
   }
 
+  static bool isSameDate(DateTime? date1, DateTime? date2) {
+    if (date1 == null || date2 == null) {
+      return false;
+    }
+    return
+        date1.year == date2.year
+        && date1.month == date2.month
+        && date1.day == date2.day;
+  }
+
   static bool isScheduleConflicted(
     TimeOfDay startTime1, Duration duration1,
     TimeOfDay startTime2, Duration duration2
@@ -116,5 +132,27 @@ abstract class Utility {
       return false;
     }
     return true;
+  }
+
+  static List<DateTime> getCurrentWeekDates() {
+    // Lấy ngày hiện tại
+    DateTime now = DateTime.now();
+
+    // Xác định ngày đầu tuần (Monday)
+    int currentWeekday = now.weekday; // Thứ hiện tại (1 = Monday, 7 = Sunday)
+    DateTime startOfWeek = now.subtract(Duration(days: currentWeekday - 1));
+
+    // Tạo danh sách các ngày trong tuần
+    List<DateTime> weekDates = List.generate(7, (index) {
+      DateTime date = startOfWeek.add(Duration(days: index));
+      // Đảm bảo chỉ giữ year, month, day, và reset giờ, phút, giây
+      return DateTime(date.year, date.month, date.day);
+    });
+
+    return weekDates;
+  }
+
+  static roundDouble(double value, int decimals) {
+    return double.parse(value.toStringAsFixed(decimals));
   }
 }

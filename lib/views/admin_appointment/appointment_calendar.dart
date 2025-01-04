@@ -1,22 +1,61 @@
 import 'package:flutter/material.dart';
+import 'package:hairvibe/Models/appointment_model.dart';
+import 'package:hairvibe/Presenter/admin_appointment_presenter.dart';
+import 'package:hairvibe/Singletons/notification_singleton.dart';
+import 'package:hairvibe/Utility.dart';
+import 'package:hairvibe/observers/notification_subcriber.dart';
+import 'package:hairvibe/views/admin_appointment/appointment_details.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/widgets/noti_bell.dart';
 import 'package:hairvibe/widgets/admin_bottom_bar.dart';
+
+import '../../Contract/admin_appointment_contract.dart';
+import '../../widgets/util_widgets.dart';
 
 class AdminAppointmentPage extends StatefulWidget {
   const AdminAppointmentPage({super.key});
   static const routeName = 'admin_appointment';
   @override
-  _AdminAppointmentPageState createState() => _AdminAppointmentPageState();
+  AdminAppointmentPageState createState() => AdminAppointmentPageState();
 }
 
-class _AdminAppointmentPageState extends State<AdminAppointmentPage> {
+class AdminAppointmentPageState extends State<AdminAppointmentPage>
+    implements AdminAppointmentPageContract, NotificationSubscriber {
+  AdminAppointmentPagePresenter? _presenter;
+  final NotificationSingleton _notificationSingleton = NotificationSingleton.getInstance();
+
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  List<String> _appointments = []; // No appointments initially
+  List<AppointmentModel> _appointments = []; // No appointments initially
   final int _currentPageIndex = 1;
+  int _notificationCount = 0;
+
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    _presenter = AdminAppointmentPagePresenter(this);
+    _notificationSingleton.subscribe(this);
+    _notificationCount = _notificationSingleton.getUnreadCount();
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    loadData();
+  }
+
+  Future<void> loadData() async {
+    await _presenter?.getData();
+  }
+
+  @override
+  void dispose() {
+    _notificationSingleton.unsubscribe(this);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +72,7 @@ class _AdminAppointmentPageState extends State<AdminAppointmentPage> {
         ),
         centerTitle: true,
         actions: [
-          NotificationBell(soLuongThongBao: 3),
+          NotificationBell(notificationCount: _notificationCount),
         ],
       ),
       body: SingleChildScrollView(
@@ -56,7 +95,7 @@ class _AdminAppointmentPageState extends State<AdminAppointmentPage> {
                     _focusedDay = focusedDay;
                   });
                 },
-                calendarStyle: CalendarStyle(
+                calendarStyle: const CalendarStyle(
                   todayDecoration: BoxDecoration(
                     color: Colors.lightBlue,
                     shape: BoxShape.circle,
@@ -67,52 +106,107 @@ class _AdminAppointmentPageState extends State<AdminAppointmentPage> {
                 headerStyle: HeaderStyle(
                   titleTextStyle: TextDecor.titleCalendar,
                   formatButtonVisible: false,
-                  leftChevronIcon: Icon(Icons.arrow_back, color: Colors.white),
+                  leftChevronIcon: const Icon(Icons.arrow_back, color: Colors.white),
                   rightChevronIcon:
                       Icon(Icons.arrow_forward, color: Colors.white),
                 ),
-                daysOfWeekStyle: DaysOfWeekStyle(
+                daysOfWeekStyle: const DaysOfWeekStyle(
                   weekdayStyle: TextStyle(color: Colors.white),
                   weekendStyle: TextStyle(color: Colors.white),
                 ),
               ),
             ),
-            // if (_appointments.isNotEmpty)
-            //   Container(
-            //     margin: const EdgeInsets.all(16),
-            //     padding: const EdgeInsets.all(16),
-            //     decoration: BoxDecoration(
-            //       color: Colors.grey[800],
-            //       borderRadius: BorderRadius.circular(8),
-            //     ),
-            //     child: Column(
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       children: _appointments.map((appointment) {
-            //         return Column(
-            //           crossAxisAlignment: CrossAxisAlignment.start,
-            //           children: [
-            //             Text('12pm', style: TextStyle(color: Colors.white)),
-            //             SizedBox(height: 8),
-            //             Container(
-            //               height: 50,
-            //               color: Colors.blue,
-            //               child: Center(
-            //                 child: Text(
-            //                   appointment,
-            //                   style: TextStyle(color: Colors.white),
-            //                 ),
-            //               ),
-            //             ),
-            //             SizedBox(height: 8),
-            //           ],
-            //         );
-            //       }).toList(),
-            //     ),
-            //   ),
+            if (_appointments.isNotEmpty)
+              Container(
+                margin: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.grey[800],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: _appointments.map((appointment) {
+                    return GestureDetector(
+                      onTap: () {
+                        _presenter!.handleSelectAppointment(appointment);
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                              Utility.formatTimeFromDateTime(appointment.date),
+                              style: const TextStyle(color: Colors.white)
+                          ),
+                          const SizedBox(height: 8),
+                          Container(
+                            height: 50,
+                            color: Colors.blue,
+                            child: Center(
+                              child: Text(
+                                appointment.customerID ?? "Customer Name",
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+              )
+            else if (isLoading)
+              Container(
+                margin: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                color: Colors.grey[800],
+                borderRadius: BorderRadius.circular(8),
+                ),
+                child: UtilWidgets.getLoadingWidget(),
+              )
           ],
         ),
       ),
       bottomNavigationBar: AdminBottomBar(currentIndex: _currentPageIndex),
     );
+  }
+
+  @override
+  void onLoadDataSucceeded() {
+    setState(() {
+      isLoading = false;
+      _appointments = _presenter!.appointments;
+    });
+  }
+
+  @override
+  void onSelectAppointment() {
+    Navigator.of(context).pushNamed(AdminAppointmentDetailPage.routeName);
+  }
+
+  @override
+  void onPopContext() {
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  @override
+  void onWaitingProgressBar() {
+    UtilWidgets.createLoadingWidget(context);
+  }
+
+  @override
+  void onSelectDate() {
+    setState(() {
+      isLoading = true;
+    });
+  }
+
+  @override
+  void updateNotification() {
+    setState(() {
+      _notificationCount = _notificationSingleton.getUnreadCount();
+    });
   }
 }
