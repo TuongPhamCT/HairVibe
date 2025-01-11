@@ -18,20 +18,22 @@ class AdminHomeScreen extends StatefulWidget {
   AdminHomeScreenState createState() => AdminHomeScreenState();
 }
 
-class AdminHomeScreenState extends State<AdminHomeScreen> implements AdminHomeScreenContract, NotificationSubscriber {
-  final NotificationSingleton _notificationSingleton = NotificationSingleton.getInstance();
+class AdminHomeScreenState extends State<AdminHomeScreen>
+    implements AdminHomeScreenContract, NotificationSubscriber {
+  final NotificationSingleton _notificationSingleton =
+      NotificationSingleton.getInstance();
   AdminHomeScreenPresenter? _presenter;
 
   int appointmentCount = 0;
   int barberCount = 4;
   int customerCount = 4;
   int serviceCount = 4;
-  double bookedHours = 0;
+  double bookedHours = 0.0;
   String completedAppointments = "";
   int _notificationCount = 0;
   final int _currentPageIndex = 0;
-  List<double> appointmentColumnsHeight = [];
-  List<double> bookHoursColumnsHeight = [];
+  List<double> appointmentColumnsHeight = List.filled(7, 0.0);
+  List<double> bookHoursColumnsHeight = List.filled(7, 0.0);
 
   bool isLoading = true;
 
@@ -51,6 +53,20 @@ class AdminHomeScreenState extends State<AdminHomeScreen> implements AdminHomeSc
 
   Future<void> loadData() async {
     await _presenter?.getData();
+    setState(() {
+      // Populate columnsHeight with actual data
+      for (int i = 0; i < 7; i++) {
+        appointmentColumnsHeight[i] = _presenter!
+            .getCompletedAppointmentsCount(
+                dayOfWeeks: AdminHomeScreenPresenter.dayOfWeeks[i])
+            .toDouble();
+
+        bookHoursColumnsHeight[i] = _presenter!
+            .getBookedHourCount(
+                dayOfWeeks: AdminHomeScreenPresenter.dayOfWeeks[i])
+            .toDouble();
+      }
+    });
   }
 
   @override
@@ -137,7 +153,10 @@ class AdminHomeScreenState extends State<AdminHomeScreen> implements AdminHomeSc
   }
 
   Widget _buildCard(
-      {required String title, required String content, List<double>? columnsHeight, Color? lineColor}) {
+      {required String title,
+      required String content,
+      List<double>? columnsHeight,
+      Color? lineColor}) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -163,21 +182,22 @@ class AdminHomeScreenState extends State<AdminHomeScreen> implements AdminHomeSc
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: List.generate(
-                    7,
-                    (index) => Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 20,
-                          height: columnsHeight![index],
-                          color: lineColor,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(AdminHomeScreenPresenter.dayOfWeeks[index],
-                            style: TextDecor.inter13Medi.copyWith(color: Colors.white)),
-                      ],
-                    ),
+                  7,
+                  (index) => Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 20,
+                        height: columnsHeight![index],
+                        color: lineColor,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(AdminHomeScreenPresenter.dayOfWeeks[index],
+                          style: TextDecor.inter13Medi
+                              .copyWith(color: Colors.white)),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -208,7 +228,8 @@ class AdminHomeScreenState extends State<AdminHomeScreen> implements AdminHomeSc
 
   @override
   void onLoadDataSucceeded() {
-    int completedAppointmentsCount = _presenter!.getTotalCompletedAppointmentsCount();
+    int completedAppointmentsCount =
+        _presenter!.getTotalCompletedAppointmentsCount();
     double bookedHoursCount = _presenter!.getTotalBookedHoursCount();
 
     // Calculate Columns height
@@ -220,29 +241,38 @@ class AdminHomeScreenState extends State<AdminHomeScreen> implements AdminHomeSc
     int maxAppointmentIndex = 0;
     int maxBookedHoursIndex = 0;
     for (int i = 0; i < 7; i++) {
-      appointmentColumnsHeight[i] = _presenter!.getCompletedAppointmentsCount(
-          dayOfWeeks: AdminHomeScreenPresenter.dayOfWeeks[i]
-      ) as double;
+      appointmentColumnsHeight[i] = _presenter!
+          .getCompletedAppointmentsCount(
+              dayOfWeeks: AdminHomeScreenPresenter.dayOfWeeks[i])
+          .toDouble();
 
-      bookHoursColumnsHeight[i] = _presenter!.getBookedHourCount(
-          dayOfWeeks: AdminHomeScreenPresenter.dayOfWeeks[i]
-      );
+      bookHoursColumnsHeight[i] = _presenter!
+          .getBookedHourCount(
+              dayOfWeeks: AdminHomeScreenPresenter.dayOfWeeks[i])
+          .toDouble();
 
-      if (appointmentColumnsHeight[i] > appointmentColumnsHeight[maxAppointmentIndex]) {
+      if (appointmentColumnsHeight[i] >
+          appointmentColumnsHeight[maxAppointmentIndex]) {
         maxAppointmentIndex = i;
       }
 
-      if (bookHoursColumnsHeight[i] > bookHoursColumnsHeight[maxBookedHoursIndex]) {
+      if (bookHoursColumnsHeight[i] >
+          bookHoursColumnsHeight[maxBookedHoursIndex]) {
         maxBookedHoursIndex = i;
       }
     }
 
-    double highestAppointmentHeight = appointmentColumnsHeight[maxAppointmentIndex];
-    double highestBookedHoursHeight = bookHoursColumnsHeight[maxBookedHoursIndex];
+    double highestAppointmentHeight =
+        appointmentColumnsHeight[maxAppointmentIndex];
+    double highestBookedHoursHeight =
+        bookHoursColumnsHeight[maxBookedHoursIndex];
 
     for (int i = 0; i < 7; i++) {
-      appointmentColumnsHeight[i] = appointmentColumnsHeight[i] / highestAppointmentHeight * highestColumns;
-      bookHoursColumnsHeight[i] = bookHoursColumnsHeight[i] / highestBookedHoursHeight * highestColumns;
+      appointmentColumnsHeight[i] = appointmentColumnsHeight[i] /
+          highestAppointmentHeight *
+          highestColumns;
+      bookHoursColumnsHeight[i] =
+          bookHoursColumnsHeight[i] / highestBookedHoursHeight * highestColumns;
     }
 
     setState(() {

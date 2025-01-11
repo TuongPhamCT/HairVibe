@@ -4,16 +4,76 @@ import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/widgets/noti_bell.dart';
 import 'package:hairvibe/widgets/barber_bottom_bar.dart';
+import 'package:hairvibe/Contract/barber_home_screen_contract.dart';
+import 'package:hairvibe/observers/notification_subcriber.dart';
+import 'package:hairvibe/Presenter/barber_home_screen_presenter.dart';
+import 'package:hairvibe/Utility.dart';
+
+import '../../Singletons/notification_singleton.dart';
 
 class BarberHomeScreen extends StatefulWidget {
+  const BarberHomeScreen({super.key});
+  static const routeName = 'barber_home';
   @override
   _BarberHomeScreenState createState() => _BarberHomeScreenState();
 }
 
-class _BarberHomeScreenState extends State<BarberHomeScreen> {
-  int appointmentCount = 0;
+class _BarberHomeScreenState extends State<BarberHomeScreen>
+    implements BarberHomeScreenContract, NotificationSubscriber {
+  final NotificationSingleton _notificationSingleton =
+      NotificationSingleton.getInstance();
+  BarberHomeScreenPresenter? _presenter;
 
-  final int _soLuongThongBao = 2;
+  int appointmentCount = 0;
+  int customerCount = 4;
+  int serviceCount = 4;
+  double bookedHours = 0.0;
+  String completedAppointments = "";
+  int _notificationCount = 0;
+  final int _currentPageIndex = 0;
+  List<double> appointmentColumnsHeight = List.filled(7, 0.0);
+  List<double> bookHoursColumnsHeight = List.filled(7, 0.0);
+
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    _presenter = BarberHomeScreenPresenter(this);
+    _notificationSingleton.subscribe(this);
+    _notificationCount = _notificationSingleton.getUnreadCount();
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    loadData();
+  }
+
+  Future<void> loadData() async {
+    await _presenter?.getData();
+    setState(() {
+      // Populate columnsHeight with actual data
+      for (int i = 0; i < 7; i++) {
+        appointmentColumnsHeight[i] = _presenter!
+            .getCompletedAppointmentsCount(
+                dayOfWeeks: BarberHomeScreenPresenter.dayOfWeeks[i])
+            .toDouble();
+
+        bookHoursColumnsHeight[i] = _presenter!
+            .getBookedHourCount(
+                dayOfWeeks: BarberHomeScreenPresenter.dayOfWeeks[i])
+            .toDouble();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _notificationSingleton.unsubscribe(this);
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +86,7 @@ class _BarberHomeScreenState extends State<BarberHomeScreen> {
         title: Text('HOME', style: TextDecor.homeTitle),
         centerTitle: true,
         actions: [
-          NotificationBell(notificationCount: _soLuongThongBao),
+          NotificationBell(notificationCount: _notificationCount),
         ],
       ),
       body: SingleChildScrollView(
@@ -53,8 +113,9 @@ class _BarberHomeScreenState extends State<BarberHomeScreen> {
                   Expanded(
                     child: _buildCard(
                       title: 'COMPLETED APPOINTMENT',
-                      content: 'No completed appointments.',
+                      content: completedAppointments,
                       lineColor: Colors.blue,
+                      columnsHeight: bookHoursColumnsHeight,
                     ),
                   ),
                 ],
@@ -67,6 +128,7 @@ class _BarberHomeScreenState extends State<BarberHomeScreen> {
                       title: 'HOURS BOOKED',
                       content: 'No completed appointments.',
                       lineColor: Palette.primary,
+                      columnsHeight: bookHoursColumnsHeight,
                     ),
                   ),
                 ],
@@ -75,12 +137,17 @@ class _BarberHomeScreenState extends State<BarberHomeScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: BarberBottomNavigationBar(),
+      bottomNavigationBar: BarberBottomNavigationBar(
+        currentIndex: _currentPageIndex,
+      ),
     );
   }
 
   Widget _buildCard(
-      {required String title, required String content, Color? lineColor}) {
+      {required String title,
+      required String content,
+      List<double>? columnsHeight,
+      Color? lineColor}) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -104,13 +171,25 @@ class _BarberHomeScreenState extends State<BarberHomeScreen> {
               padding: const EdgeInsets.only(top: 8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: List.generate(
-                    7,
-                    (index) => Container(
-                          width: 20,
-                          height: 2,
-                          color: lineColor,
-                        )),
+                  7,
+                  (index) => Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 20,
+                        height: columnsHeight![index],
+                        color: lineColor,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(BarberHomeScreenPresenter.dayOfWeeks[index],
+                          style: TextDecor.inter13Medi
+                              .copyWith(color: Colors.white)),
+                    ],
+                  ),
+                ),
               ),
             ),
         ],
@@ -118,7 +197,7 @@ class _BarberHomeScreenState extends State<BarberHomeScreen> {
     );
   }
 
-  Widget _buildSummaryCard(String title, int count) {
+   Widget _buildSummaryCard(String title, int count) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 4),
       padding: const EdgeInsets.all(16),
@@ -137,4 +216,75 @@ class _BarberHomeScreenState extends State<BarberHomeScreen> {
       ),
     );
   }
+
+  @override
+  void onLoadDataSucceeded() {
+    int completedAppointmentsCount =
+        _presenter!.getTotalCompletedAppointmentsCount();
+    double bookedHoursCount = _presenter!.getTotalBookedHoursCount();
+
+    // Calculate Columns height
+    const double highestColumns = 40;
+
+    appointmentColumnsHeight = List.generate(7, (index) => 2);
+    bookHoursColumnsHeight = List.generate(7, (index) => 2);
+
+    int maxAppointmentIndex = 0;
+    int maxBookedHoursIndex = 0;
+    for (int i = 0; i < 7; i++) {
+      appointmentColumnsHeight[i] = _presenter!
+          .getCompletedAppointmentsCount(
+              dayOfWeeks: BarberHomeScreenPresenter.dayOfWeeks[i])
+          .toDouble();
+
+      bookHoursColumnsHeight[i] = _presenter!
+          .getBookedHourCount(
+              dayOfWeeks: BarberHomeScreenPresenter.dayOfWeeks[i])
+          .toDouble();
+
+      if (appointmentColumnsHeight[i] >
+          appointmentColumnsHeight[maxAppointmentIndex]) {
+        maxAppointmentIndex = i;
+      }
+
+      if (bookHoursColumnsHeight[i] >
+          bookHoursColumnsHeight[maxBookedHoursIndex]) {
+        maxBookedHoursIndex = i;
+      }
+    }
+
+    double highestAppointmentHeight =
+        appointmentColumnsHeight[maxAppointmentIndex];
+    double highestBookedHoursHeight =
+        bookHoursColumnsHeight[maxBookedHoursIndex];
+
+    for (int i = 0; i < 7; i++) {
+      appointmentColumnsHeight[i] = appointmentColumnsHeight[i] /
+          highestAppointmentHeight *
+          highestColumns;
+      bookHoursColumnsHeight[i] =
+          bookHoursColumnsHeight[i] / highestBookedHoursHeight * highestColumns;
+    }
+
+    setState(() {
+      serviceCount = _presenter!.servicesCount;
+      appointmentCount = _presenter!.todayAppointmentCount;
+      customerCount = _presenter!.customerCount;
+      bookedHours = Utility.roundDouble(bookedHoursCount, 1);
+      if (completedAppointmentsCount > 0) {
+        completedAppointments = "$completedAppointmentsCount";
+      } else {
+        completedAppointments = 'No completed appointments.';
+      }
+      isLoading = false;
+    });
+  }
+
+  @override
+  void updateNotification() {
+    setState(() {
+      _notificationCount = _notificationSingleton.getUnreadCount();
+    });
+  }
 }
+
