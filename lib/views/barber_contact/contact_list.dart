@@ -5,11 +5,14 @@ import 'package:hairvibe/config/asset_helper.dart';
 import 'package:hairvibe/widgets/barber_bottom_bar.dart';
 
 class BarberContactList extends StatefulWidget {
+  const BarberContactList({super.key});
+  static const routeName = 'barber_contact';
   @override
   _BarberContactListState createState() => _BarberContactListState();
 }
 
 class _BarberContactListState extends State<BarberContactList> {
+  final int _currentPageIndex = 2;
   String userData = '''
 A|John Doe
 B|Alice Smith
@@ -63,7 +66,8 @@ B|Alice Smith
           ),
         ],
       ),
-      bottomNavigationBar: BarberBottomNavigationBar(),
+      bottomNavigationBar:
+          BarberBottomNavigationBar(currentIndex: _currentPageIndex),
     );
   }
 

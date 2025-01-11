@@ -5,6 +5,9 @@ import 'package:hairvibe/component/dependency_injection.dart';
 import 'package:hairvibe/config/firebase_options.dart';
 import 'package:hairvibe/router.dart';
 import 'package:hairvibe/views/auth_screen.dart';
+import 'package:hairvibe/views/admin/home_screen.dart';
+import 'package:hairvibe/views/admin_contact/contact_list.dart';
+import 'package:hairvibe/views/barber/home_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +25,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Hair Vibe',
-      home: const AuthScreen(),
+      home: const BarberHomeScreen(),
+      //home: const AdminContactListPage(),
       debugShowCheckedModeBanner: false,
       routes: routes,
     );
