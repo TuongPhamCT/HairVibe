@@ -5,7 +5,9 @@ import 'package:hairvibe/views/admin_appointment/appointment_calendar.dart';
 import 'package:hairvibe/views/admin/home_screen.dart';
 import 'package:hairvibe/views/admin_contact/contact_list.dart';
 import 'package:hairvibe/views/admin_management/comment.dart';
+import 'package:hairvibe/views/barber_appointment/appointment_calendar.dart';
 import 'package:hairvibe/views/barber_contact/contact_list.dart';
+import 'package:hairvibe/views/barber_details/barber_profile.dart';
 // Import necessary pages for navigation
 
 class BarberBottomNavigationBar extends StatefulWidget {
@@ -31,14 +33,14 @@ class _BarberBottomNavigationBarState extends State<BarberBottomNavigationBar> {
     switch (routeName) {
       case BarberHomeScreen.routeName:
         return BarberHomeScreen();
-      case AdminAppointmentPage.routeName:
-        return AdminAppointmentPage();
+      case BarberAppointmentPage.routeName:
+        return BarberAppointmentPage();
       case BarberContactList.routeName:
         return BarberContactList();
-      case AdminCommentPage.routeName:
-        return AdminCommentPage();
+      case BarberProfilePage.routeName:
+        return BarberProfilePage();
       default:
-        return AdminHomeScreen(); // Default page
+        return BarberHomeScreen(); // Default page
     }
   }
 
@@ -62,13 +64,13 @@ class _BarberBottomNavigationBarState extends State<BarberBottomNavigationBar> {
               break;
             case 1:
               _navigateWithoutAnimation(
-                  context, AdminAppointmentPage.routeName);
+                  context, BarberAppointmentPage.routeName);
               break;
             case 2:
               _navigateWithoutAnimation(context, BarberContactList.routeName);
               break;
             case 3:
-              _navigateWithoutAnimation(context, AdminCommentPage.routeName);
+              _navigateWithoutAnimation(context, BarberProfilePage.routeName);
               break;
             case 4:
               // Add logic for the fifth item if needed

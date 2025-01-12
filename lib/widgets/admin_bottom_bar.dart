@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_icon_class/font_awesome_icon_class.dart';
 import 'package:hairvibe/Theme/palette.dart';
-import 'package:hairvibe/views/account/account_page.dart';
 import 'package:hairvibe/views/admin_appointment/appointment_calendar.dart';
 import 'package:hairvibe/views/admin/home_screen.dart';
 import 'package:hairvibe/views/admin_contact/contact_list.dart';
@@ -69,9 +68,6 @@ class _AdminBottomBarState extends State<AdminBottomBar> {
             case 3:
               _navigateWithoutAnimation(context, AdminCommentPage.routeName);
               break;
-            case 4:
-              // Add logic for the fifth item if needed
-              break;
           }
         },
         backgroundColor: Colors.black,
@@ -105,6 +101,6 @@ class _AdminBottomBarState extends State<AdminBottomBar> {
           ),
         ],
       ),
-    );  
+    );
   }
 }
