@@ -3,20 +3,50 @@ import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/config/asset_helper.dart';
 import 'package:hairvibe/widgets/barber_bottom_bar.dart';
+import 'package:hairvibe/Contract/barber_contact_list_contract.dart';
+import 'package:hairvibe/Presenter/barber_contact_list_presenter.dart';
+import 'package:hairvibe/Models/user_model.dart';
 
 class BarberContactList extends StatefulWidget {
   const BarberContactList({super.key});
   static const routeName = 'barber_contact';
+
   @override
-  _BarberContactListState createState() => _BarberContactListState();
+  BarberContactListState createState() => BarberContactListState();
 }
 
-class _BarberContactListState extends State<BarberContactList> {
+class BarberContactListState extends State<BarberContactList>
+    with SingleTickerProviderStateMixin
+    implements BarberContactListPageContract {
+  BarberContactListPagePresenter? _presenter;
+  //late TabController _tabController;
   final int _currentPageIndex = 2;
-  String userData = '''
-A|John Doe
-B|Alice Smith
-''';
+
+  bool isLoading = true;
+
+  List<ContactListData> userData = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _presenter = BarberContactListPagePresenter(this);
+  }
+
+  @override
+  void dispose() {
+    //_tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    loadData();
+  }
+
+  Future<void> loadData() async {
+    await _presenter?.getData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,19 +101,15 @@ B|Alice Smith
     );
   }
 
-  Widget _buildList(String data) {
-    List<String> lines = data.trim().split('\n');
-    Map<String, List<Map<String, String>>> groupedData = {};
+  Widget _buildList(List<ContactListData> userList) {
+    Map<String, List<ContactListData>> groupedData = {};
 
-    for (String line in lines) {
-      List<String> parts = line.split('|');
-      String group = parts[0];
-      String name = parts[1];
-
-      if (!groupedData.containsKey(group)) {
-        groupedData[group] = [];
+    for (ContactListData data in userList) {
+      String header = data.user.name![0].toUpperCase();
+      if (groupedData.containsKey(header) == false) {
+        groupedData[header] = [];
       }
-      groupedData[group]!.add({'name': name});
+      groupedData[header]!.add(data);
     }
 
     return ListView(
@@ -101,12 +127,16 @@ B|Alice Smith
               return Padding(
                 padding: const EdgeInsets.fromLTRB(24.0, 0, 16.0, 0),
                 child: ListTile(
+                  onTap: item.onPress,
                   leading: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(AssetHelper.logo,
-                        width: 50, height: 50, fit: BoxFit.cover),
+                    child: item.user.image == null || item.user.image!.isEmpty
+                        ? Image.asset(AssetHelper.logo,
+                            width: 50, height: 50, fit: BoxFit.cover)
+                        : Image.network(item.user.image!,
+                            width: 50, height: 50, fit: BoxFit.cover),
                   ),
-                  title: Text(item['name']!,
+                  title: Text(item.user.name!,
                       style: TextDecor.homeTitle.copyWith(color: Colors.white)),
                 ),
               );
@@ -116,4 +146,29 @@ B|Alice Smith
       }).toList(),
     );
   }
+
+  @override
+  void onLoadDataSucceeded() {
+    setState(() {
+      userData = _presenter!.customers
+          .map((element) => ContactListData(user: element, onPress: () {}))
+          .toList();
+    });
+  }
+
+  @override
+  void onSearch(List<UserModel> customerResults) {
+    setState(() {
+      userData = customerResults
+          .map((element) => ContactListData(user: element, onPress: () {}))
+          .toList();
+    });
+  }
+}
+
+class ContactListData {
+  final UserModel user;
+  final VoidCallback onPress;
+
+  ContactListData({required this.user, required this.onPress});
 }
