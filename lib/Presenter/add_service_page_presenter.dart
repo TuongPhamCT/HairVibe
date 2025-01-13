@@ -9,12 +9,12 @@ class AddServicePagePresenter {
 
   final ServiceRepository _serviceRepo = ServiceRepository();
 
-  void handleCreateService({
+  Future<void> handleCreateService({
     required String name,
     required String price,
     required String duration,
     required String description
-  }) {
+  }) async {
     if (name.isEmpty
       || price.isEmpty
       || duration.isEmpty
@@ -40,5 +40,13 @@ class AddServicePagePresenter {
       duration: int.parse(duration),
       info: description
     );
+
+    if (await _serviceRepo.addServiceToFirestore(service) != "") {
+      _view.onPopContext();
+      _view.onCreateSucceeded();
+    } else {
+      _view.onPopContext();
+      _view.onCreateFailed("Something was wrong. Please try again.");
+    }
   }
 }
