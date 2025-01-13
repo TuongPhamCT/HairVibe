@@ -43,7 +43,7 @@ class AppointmentModel {
       appointmentID: json['appointmentID'] as String,
       customerID: json['customerID'] as String,
       barberID: json['barberID'] as String,
-      services: listServices.map((raw) => ServiceModel.fromJson(raw)).toList(),
+      services: listServices.map((raw) => ServiceModel.fromJson("", raw)).toList(),
       date: (json['date'] as Timestamp).toDate(),
       status: json['status'] as String,
       otherInfo: dataOtherInfo
