@@ -20,26 +20,28 @@ class BarberProfilePage extends StatefulWidget {
   State<BarberProfilePage> createState() => _BarberProfilePageState();
 }
 
-class _BarberProfilePageState extends State<BarberProfilePage> {
+class _BarberProfilePageState extends State<BarberProfilePage> implements DetailBarberContract {
+  DetailBarberPresenter? _presenter;
   bool isLoading = true;
   String barberName = 'Barber Name';
   String barberAvatarUrl = 'https://example.com/default_avatar.jpg';
+  String barberBackground = 'https://example.com/default_avatar.jpg';
   final int _currentPageIndex = 1;
 
   @override
   void initState() {
+    _presenter = DetailBarberPresenter(this);
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     loadData();
   }
 
   Future<void> loadData() async {
-    // Simulate data fetching
-    await Future.delayed(Duration(seconds: 2));
-    setState(() {
-      isLoading = false;
-      barberName = 'John Doe'; // Example data
-      barberAvatarUrl = 'https://example.com/avatar.jpg'; // Example data
-    });
+    await _presenter?.getData();
   }
 
   @override
@@ -81,10 +83,10 @@ class _BarberProfilePageState extends State<BarberProfilePage> {
                         height: MediaQuery.of(context).size.height * 0.25,
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          image: DecorationImage(
-                            image: NetworkImage(barberAvatarUrl),
-                            fit: BoxFit.cover,
-                          ),
+                          // image: DecorationImage(
+                          //   image: NetworkImage(barberAvatarUrl),
+                          //   fit: BoxFit.cover,
+                          // ),
                         ),
                       ),
                       Positioned(
@@ -92,7 +94,7 @@ class _BarberProfilePageState extends State<BarberProfilePage> {
                         left: MediaQuery.of(context).size.width / 2 - 40,
                         child: CircleAvatar(
                           radius: 40,
-                          backgroundImage: AssetImage(AssetHelper.logo),
+                          backgroundImage: NetworkImage(barberAvatarUrl),
                         ),
                       ),
                     ],
@@ -117,9 +119,9 @@ class _BarberProfilePageState extends State<BarberProfilePage> {
                   Expanded(
                     child: TabBarView(
                       children: [
-                        BarberInfoTab(),
-                        BarberReviewTab(ratings: [], users: {}),
-                        BarberPhotoTab(),
+                        BarberInfoTab(presenter: _presenter!, workingHours: _presenter!.getWorkingHours()),
+                        BarberReviewTab(ratings: _presenter!.ratings, users: _presenter!.users),
+                        BarberPhotoTab(urls: _presenter!.getBarberImages()),
                         // Update as needed
                       ],
                     ),
@@ -130,5 +132,14 @@ class _BarberProfilePageState extends State<BarberProfilePage> {
             BarberBottomNavigationBar(currentIndex: _currentPageIndex),
       ),
     );
+  }
+
+  @override
+  void onLoadDataSucceed() {
+    setState(() {
+      isLoading = false;
+      barberName = _presenter!.getBarberName(); // Example data
+      barberAvatarUrl = _presenter!.getBarberAvatarUrl(); // Example data
+    });
   }
 }

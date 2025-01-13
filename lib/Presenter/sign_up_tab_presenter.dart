@@ -79,13 +79,14 @@ class SignUpTabPresenter {
     // Sign Up email
     _view.onWaitingProgressBar();
     bool? result = await _auth.checkIfEmailExists(email);
-    _view.onPopContext();
 
     if (result == true) {
+      _view.onPopContext();
       _view.onEmailAlreadyInUse();
     } else if (result == false) {
       UserCredential? userData = await _auth.signUpWithEmailAndPassword(email, password);
       if (userData == null){
+        _view.onPopContext();
         _view.onSignUpFailed();
         return;
       }
@@ -96,9 +97,11 @@ class SignUpTabPresenter {
           phoneNumber: phone,
           userType: UserType.CUSTOMER
       );
-      _userRepo.addUserToFirestore(model);
+      await _userRepo.addUserToFirestore(model);
+      _view.onPopContext();
       _view.onSignUpSucceeded();
     } else if (result == null) {
+      _view.onPopContext();
       _view.onSignUpFailed();
     }
     return;

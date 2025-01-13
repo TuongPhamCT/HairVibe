@@ -41,7 +41,7 @@ class NotificationSingleton {
 
   Future<void> _updateNotificationsFromFireStore(QuerySnapshot<Map<String, dynamic>> snapshot) async {
     print('Received new data from Firestore (${snapshot.docs})');
-    final noticeList = snapshot.docs.map((doc) => NoticeModel.fromJson(doc.data())).toList();
+    final noticeList = snapshot.docs.map((doc) => NoticeModel.fromJson(doc.id, doc.data())).toList();
 
     if (notifications.length == noticeList.length) {
       print('No change');

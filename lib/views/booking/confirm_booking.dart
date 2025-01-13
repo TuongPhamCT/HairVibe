@@ -224,16 +224,16 @@ class _ConfirmBookingState extends State<ConfirmBooking> implements ConfirmBooki
                         _presenter!.handleAddVoucherPressed();
                       },
                       style: ButtonStyle(
-                        padding: WidgetStateProperty.all<EdgeInsets>(
+                        padding: MaterialStateProperty.all<EdgeInsets>(
                           const EdgeInsets.all(0),
                         ),
-                        fixedSize: WidgetStateProperty.all<Size>(
+                        fixedSize: MaterialStateProperty.all<Size>(
                           const Size(270, 35),
                         ),
                         backgroundColor:
-                            WidgetStateProperty.all<Color>(Palette.primary),
+                            MaterialStateProperty.all<Color>(Palette.primary),
                         shape:
-                            WidgetStateProperty.all<RoundedRectangleBorder>(
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -314,15 +314,15 @@ class _ConfirmBookingState extends State<ConfirmBooking> implements ConfirmBooki
                 await _presenter!.handleConfirmBooking();
               },
               style: ButtonStyle(
-                padding: WidgetStateProperty.all<EdgeInsets>(
+                padding: MaterialStateProperty.all<EdgeInsets>(
                   const EdgeInsets.all(0),
                 ),
-                fixedSize: WidgetStateProperty.all<Size>(
+                fixedSize: MaterialStateProperty.all<Size>(
                   Size(size.width * 0.75, 45),
                 ),
                 backgroundColor:
-                    WidgetStateProperty.all<Color>(Palette.primary),
-                shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                    MaterialStateProperty.all<Color>(Palette.primary),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),

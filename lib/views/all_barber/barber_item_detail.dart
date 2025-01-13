@@ -180,11 +180,11 @@ class _BarberItemDetailState extends State<BarberItemDetail> {
                 ElevatedButton(
                   onPressed: widget.onBookPressed,
                   style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.all(Palette.primary),
-                    padding: WidgetStateProperty.all(
+                    backgroundColor: MaterialStateProperty.all(Palette.primary),
+                    padding: MaterialStateProperty.all(
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                     ),
-                    shape: WidgetStateProperty.all(
+                    shape: MaterialStateProperty.all(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),

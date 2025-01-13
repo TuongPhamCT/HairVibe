@@ -46,7 +46,7 @@ class AppointmentRepository {
       final QuerySnapshot querySnapshot = await _storage.collection(AppointmentModel.collectionName).get();
       final appointments = querySnapshot
           .docs
-          .map((doc) => AppointmentModel.fromJson(doc as Map<String, dynamic>))
+          .map((doc) => AppointmentModel.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
       return appointments;
     } catch (e) {
@@ -64,7 +64,7 @@ class AppointmentRepository {
           .get();
       final appointments = querySnapshot
           .docs
-          .map((doc) => AppointmentModel.fromJson(doc as Map<String, dynamic>))
+          .map((doc) => AppointmentModel.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
       return appointments;
     } catch (e) {
@@ -82,7 +82,7 @@ class AppointmentRepository {
           .get();
       final appointments = querySnapshot
           .docs
-          .map((doc) => AppointmentModel.fromJson(doc as Map<String, dynamic>))
+          .map((doc) => AppointmentModel.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
       return appointments;
     } catch (e) {
@@ -100,7 +100,7 @@ class AppointmentRepository {
           .get();
       final appointments = querySnapshot
           .docs
-          .map((doc) => AppointmentModel.fromJson(doc as Map<String, dynamic>))
+          .map((doc) => AppointmentModel.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
       return appointments;
     } catch (e) {
@@ -115,7 +115,7 @@ class AppointmentRepository {
           .where('customerID', isEqualTo: id).get();
       final appointments = querySnapshot
           .docs
-          .map((doc) => AppointmentModel.fromJson(doc as Map<String, dynamic>))
+          .map((doc) => AppointmentModel.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
       return appointments;
     } catch (e) {
@@ -130,7 +130,7 @@ class AppointmentRepository {
           .get();
       final appointments = querySnapshot
           .docs
-          .map((doc) => AppointmentModel.fromJson(doc as Map<String, dynamic>))
+          .map((doc) => AppointmentModel.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
       final List<AppointmentModel> result =
         appointments.where((appointment) => Utility.isSameDate(appointment.date, date)).toList();
@@ -148,7 +148,7 @@ class AppointmentRepository {
           .get();
       final appointments = querySnapshot
           .docs
-          .map((doc) => AppointmentModel.fromJson(doc as Map<String, dynamic>))
+          .map((doc) => AppointmentModel.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
       final List<AppointmentModel> result =
         appointments.where((appointment) => Utility.isSameDate(appointment.date, date)).toList();
@@ -165,7 +165,7 @@ class AppointmentRepository {
           .where('barberID', isEqualTo: id).get();
       final appointments = querySnapshot
           .docs
-          .map((doc) => AppointmentModel.fromJson(doc as Map<String, dynamic>))
+          .map((doc) => AppointmentModel.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
       return appointments;
     } catch (e) {
@@ -182,7 +182,7 @@ class AppointmentRepository {
           .get();
       final appointments = querySnapshot
           .docs
-          .map((doc) => AppointmentModel.fromJson(doc as Map<String, dynamic>))
+          .map((doc) => AppointmentModel.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
       return appointments;
     } catch (e) {

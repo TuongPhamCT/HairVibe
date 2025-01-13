@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_icon_class/font_awesome_icon_class.dart';
 import 'package:hairvibe/Singletons/notification_singleton.dart';
+import 'package:hairvibe/Singletons/user_singleton.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/facades/authenticator_facade.dart';
@@ -88,8 +89,9 @@ class _AccountPageState extends State<AccountPage> implements NotificationSubscr
             const SizedBox(height: 40),
             InkWell(
               onTap: () async {
-                _notificationSingleton.dispose();
+                UserSingleton userSingleton = UserSingleton.getInstance();
                 await _auth.signOut();
+                await userSingleton.handleActionsAfterLogOut();
                 if (context.mounted) {
                   Navigator.of(context).pushNamed(AuthScreen.routeName);
                 }

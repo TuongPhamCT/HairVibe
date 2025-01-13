@@ -155,4 +155,9 @@ abstract class Utility {
   static roundDouble(double value, int decimals) {
     return double.parse(value.toStringAsFixed(decimals));
   }
+
+  static String getDayOfWeekText(int index) {
+    final daysOfWeek = ["0", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    return daysOfWeek[index];
+  }
 }

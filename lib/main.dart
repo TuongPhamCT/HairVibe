@@ -8,6 +8,7 @@ import 'package:hairvibe/views/auth_screen.dart';
 import 'package:hairvibe/views/admin/home_screen.dart';
 import 'package:hairvibe/views/admin_contact/contact_list.dart';
 import 'package:hairvibe/views/barber/home_screen.dart';
+import 'package:hairvibe/views/splash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Hair Vibe',
-      home: const BarberHomeScreen(),
+      home: const SplashScreen(),
       //home: const AdminContactListPage(),
       debugShowCheckedModeBanner: false,
       routes: routes,

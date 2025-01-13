@@ -279,12 +279,12 @@ class _MainBookingState extends State<MainBooking> implements MainBookingContrac
                       await _presenter!.handleNextPressed();
                     },
                     style: ButtonStyle(
-                      fixedSize: WidgetStateProperty.all<Size>(
+                      fixedSize: MaterialStateProperty.all<Size>(
                         const Size(125, 45),
                       ),
                       backgroundColor:
-                          WidgetStateProperty.all<Color>(Palette.primary),
-                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                          MaterialStateProperty.all<Color>(Palette.primary),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),

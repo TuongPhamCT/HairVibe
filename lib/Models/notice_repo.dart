@@ -31,7 +31,7 @@ class NoticeRepository {
       final QuerySnapshot querySnapshot = await _storage.collection(NoticeModel.collectionName).get();
       final users = querySnapshot
           .docs
-          .map((doc) => NoticeModel.fromJson(doc as Map<String, dynamic>))
+          .map((doc) => NoticeModel.fromJson(doc.id, doc.data() as Map<String, dynamic>))
           .toList();
       return users;
     } catch (e) {
@@ -50,7 +50,7 @@ class NoticeRepository {
           .get();
       final notices = querySnapshot
           .docs
-          .map((doc) => NoticeModel.fromJson(doc as Map<String, dynamic>))
+          .map((doc) => NoticeModel.fromJson(doc.id, doc.data() as Map<String, dynamic>))
           .toList();
       return notices;
     } catch (e) {
@@ -69,7 +69,7 @@ class NoticeRepository {
           .get();
       final notices = querySnapshot
           .docs
-          .map((doc) => NoticeModel.fromJson(doc as Map<String, dynamic>))
+          .map((doc) => NoticeModel.fromJson(doc.id, doc.data() as Map<String, dynamic>))
           .toList();
       return notices.length;
     } catch (e) {
