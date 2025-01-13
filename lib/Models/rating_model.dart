@@ -1,10 +1,9 @@
 class RatingModel {
 
-  //String? key;
   String? ratingID;
   String? userID;
   String? barberID;
-  int? rate;
+  double? rate;
   DateTime? date;
   String? info;
 
@@ -12,7 +11,7 @@ class RatingModel {
 
   RatingModel(
     {
-      required this.ratingID,
+      this.ratingID,
       required this.userID,
       required this.barberID,
       required this.date,
@@ -22,7 +21,6 @@ class RatingModel {
   );
 
   Map<String, dynamic> toJson() => {
-    'ratingID': ratingID,
     'userID': userID,
     'barberID': barberID,
     'rate': rate,
@@ -30,13 +28,12 @@ class RatingModel {
     'info': info
   };
 
-  static RatingModel fromJson(Map<String, dynamic> json) {
+  static RatingModel fromJson(String key, Map<String, dynamic> json) {
     return RatingModel(
-      //key: key,
-      ratingID: json['ratingID'] as String,
+      ratingID: key,
       userID: json['userID'] as String,
       barberID: json['barberID'] as String,
-      rate: json['rate'] as int,
+      rate: json['rate'] as double,
       date: json['date'] as DateTime,
       info: json['info'] as String,
     );

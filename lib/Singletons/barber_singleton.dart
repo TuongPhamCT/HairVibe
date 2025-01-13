@@ -9,6 +9,7 @@ class BarberSingleton {
   }
 
   UserModel? barber;
+  bool navigateFromOtherPage = false;
 
   void setBarber(UserModel barber) {
     this.barber = barber;

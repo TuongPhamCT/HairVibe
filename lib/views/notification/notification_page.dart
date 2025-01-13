@@ -1,9 +1,13 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_icon_class/font_awesome_icon_class.dart';
+import 'package:hairvibe/Singletons/notification_singleton.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
+import 'package:hairvibe/Utility.dart';
 import 'package:hairvibe/config/asset_helper.dart';
+import 'package:hairvibe/observers/notification_subcriber.dart';
+
+import '../../Models/notice_model.dart';
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
@@ -13,17 +17,33 @@ class NotificationsPage extends StatefulWidget {
   State<NotificationsPage> createState() => _NotificationsPageState();
 }
 
-class _NotificationsPageState extends State<NotificationsPage> {
-  final Map<String, List<String>> notifications = {
-    // comment để thử nghiệm khi không có thông báo:
-    '01/12/2024': [
-      'Noti 1 dasdfasdfa dsf adfadsfasdf adf asddfjaadjasflksdfasdljk asdfadsafasfas asdfdsfweffasd fads fasfdfas dfsfd asdfa sfsfsadfas sdafdasdfaafdsf',
-      'Noti 2',
-      'Noti 3'
-    ],
-    '30/11/2024': ['Noti 1'],
-    '29/11/2024': ['Noti 1', 'Noti 2', 'Noti 3', 'Noti 4'],
-  };
+class _NotificationsPageState extends State<NotificationsPage> implements NotificationSubscriber {
+  final Map<String, List<String>> notifications = {};
+
+  @override
+  void initState() {
+    NotificationSingleton singleton = NotificationSingleton.getInstance();
+    singleton.subscribe(this);
+    singleton.notifications.sort((element1, element2) => element1.date!.compareTo(element2.date!));
+
+    for (NoticeModel model in singleton.notifications) {
+      String date = Utility.formatDateFromDateTime(model.date);
+      if (notifications.containsKey(date) == false) {
+        notifications[date] = [];
+      }
+      notifications[date]?.add(model.content ?? "");
+    }
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    NotificationSingleton singleton = NotificationSingleton.getInstance();
+    singleton.unsubscribe(this);
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -89,5 +109,22 @@ class _NotificationsPageState extends State<NotificationsPage> {
               }).toList(),
             ),
     );
+  }
+
+  @override
+  void updateNotification() {
+    NotificationSingleton singleton = NotificationSingleton.getInstance();
+    singleton.notifications.sort((element1, element2) => element1.date!.compareTo(element2.date!));
+
+    notifications.clear();
+    for (NoticeModel model in singleton.notifications) {
+      String date = Utility.formatDateFromDateTime(model.date);
+      if (notifications.containsKey(date) == false) {
+        notifications[date] = [];
+      }
+      notifications[date]?.add(model.content ?? "");
+    }
+
+    setState(() {});
   }
 }

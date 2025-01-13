@@ -1,27 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:hairvibe/Contract/admin_comment_page_contract.dart';
+import 'package:hairvibe/Presenter/admin_comment_page_presenter.dart';
+import 'package:hairvibe/Singletons/barber_singleton.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/config/asset_helper.dart';
 import 'package:hairvibe/views/admin_management/add_service.dart';
 import 'package:hairvibe/widgets/admin_bottom_bar.dart';
 
+import '../../Builders/WidgetBuilder/service_list_item_builder.dart';
+import '../../Models/rating_model.dart';
+import '../../Models/user_model.dart';
+import '../../widgets/util_widgets.dart';
+
 class AdminCommentPage extends StatefulWidget {
   const AdminCommentPage({super.key});
   static const String routeName = 'admin_comment';
 
   @override
-  _AdminCommentPageState createState() => _AdminCommentPageState();
+  AdminCommentPageState createState() => AdminCommentPageState();
 }
 
-class _AdminCommentPageState extends State<AdminCommentPage>
-    with SingleTickerProviderStateMixin {
+class AdminCommentPageState extends State<AdminCommentPage>
+    with SingleTickerProviderStateMixin implements AdminCommentPageContract {
+  AdminCommentPagePresenter? _presenter;
   late TabController _tabController;
   final int _currentPageIndex = 3;
+  bool isLoading = true;
+  String barberName = "";
 
   @override
   void initState() {
+    _presenter = AdminCommentPagePresenter(this);
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    loadData();
+  }
+
+  Future<void> loadData() async {
+    await _presenter?.getData();
   }
 
   @override
@@ -37,16 +60,14 @@ class _AdminCommentPageState extends State<AdminCommentPage>
       appBar: AppBar(
         backgroundColor: Colors.black,
         automaticallyImplyLeading: false,
-        title: Text(
+        title: const Text(
           'COMMENTS',
           style: TextStyle(color: Colors.white, fontSize: 18),
         ),
         centerTitle: true,
-        actions: [
-          // Add any actions if needed
-        ],
+        actions: const [],
       ),
-      body: Column(
+      body: isLoading ? UtilWidgets.getLoadingWidget() : Column(
         children: [
           Stack(
             clipBehavior: Clip.none,
@@ -54,7 +75,7 @@ class _AdminCommentPageState extends State<AdminCommentPage>
               Container(
                 width: double.infinity,
                 height: MediaQuery.of(context).size.height * 0.25,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.white,
                   image: DecorationImage(
                     image: AssetImage(AssetHelper.logo),
@@ -65,7 +86,7 @@ class _AdminCommentPageState extends State<AdminCommentPage>
               Positioned(
                 bottom: -40,
                 left: MediaQuery.of(context).size.width / 2 - 40,
-                child: CircleAvatar(
+                child: const CircleAvatar(
                   radius: 40,
                   backgroundImage: AssetImage(AssetHelper.logo),
                 ),
@@ -74,7 +95,7 @@ class _AdminCommentPageState extends State<AdminCommentPage>
           ),
           const SizedBox(height: 50),
           Text(
-            'Barber Name',
+            barberName,
             style: TextDecor.homeTitle.copyWith(color: Colors.white),
           ),
           TabBar(
@@ -103,53 +124,102 @@ class _AdminCommentPageState extends State<AdminCommentPage>
   }
 
   Widget _buildReviews() {
+    if (_presenter!.ratings.isEmpty) {
+      return const Center(
+        child: Text(
+          'There is no review',
+          style: TextStyle(color: Colors.white, fontSize: 18),
+        ),
+      );
+    }
+
     return ListView.builder(
-      itemCount: 3, // Example count
+      itemCount: _presenter!.ratings.length, // Example count
       itemBuilder: (context, index) {
+        RatingModel rating = _presenter!.ratings[index];
+        UserModel user = _presenter!.users[rating.userID!]!;
         return ListTile(
-          leading: CircleAvatar(
+          leading: const CircleAvatar(
             backgroundColor: Colors.grey,
           ),
-          title: Text('Reviewer $index',
+          title: Text(user.name ?? "Reviewer $index",
               style: TextDecor.homeTitle.copyWith(color: Colors.white)),
-          subtitle: Text('This is a review text for reviewer $index.',
-              style: TextStyle(color: Colors.white)),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: List.generate(
-                5, (starIndex) => Icon(Icons.star, color: Palette.primary)),
-          ),
+          subtitle: Text(rating.info.toString(),
+              style: const TextStyle(color: Colors.white)),
+          trailing: RatingBar.builder(
+              initialRating: rating.rate ?? 1,
+              minRating: 1,
+              direction: Axis.horizontal,
+              allowHalfRating: true,
+              itemCount: 5,
+              itemSize: 45,
+              itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+              itemBuilder: (context, _) => const Icon(
+                Icons.star,
+                color: Colors.amber,
+              ),
+              ignoreGestures: true,
+              onRatingUpdate: (double value) {  },
+            ),
         );
       },
     );
   }
 
   Widget _buildServices() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            'There is no service',
-            style: TextStyle(color: Colors.white, fontSize: 18),
-          ),
-          const SizedBox(height: 10),
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => AddServicePage()),
-              );
-            },
-            child: Text(
-              'ADD SERVICE',
-              style: TextStyle(
-                  color: Palette.primary,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold),
+    if (_presenter!.services.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'There is no service',
+              style: TextStyle(color: Colors.white, fontSize: 18),
             ),
-          ),
-        ],
-      ),
+            const SizedBox(height: 10),
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushNamed(AddServicePage.routeName);
+              },
+              child: const Text(
+                'ADD SERVICE',
+                style: TextStyle(
+                    color: Palette.primary,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return ListView.builder(
+      physics: const ScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: _presenter!.services.length,
+      itemBuilder: (context, index) {
+        ServiceListItemBuilder builder = ServiceListItemBuilder();
+        builder.setService(_presenter!.services[index]);
+        builder.setOnPressed(() {});
+        return builder.createWidget();
+      },
     );
+  }
+
+  @override
+  void onLoadDataSucceeded() {
+    if (mounted == false) {
+      return;
+    }
+    setState(() {
+      BarberSingleton singleton = BarberSingleton.getInstance();
+      if (singleton.navigateFromOtherPage) {
+        singleton.navigateFromOtherPage = false;
+        _tabController.animateTo(1, duration: const Duration(milliseconds: 0));
+      }
+      barberName = _presenter!.getUserName();
+      isLoading = false;
+    });
   }
 }

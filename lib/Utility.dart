@@ -160,4 +160,8 @@ abstract class Utility {
     final daysOfWeek = ["0", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
     return daysOfWeek[index];
   }
+
+  static Future<void> waitDuration(int milliseconds) async {
+    await Future.delayed(Duration(milliseconds: milliseconds));
+  }
 }

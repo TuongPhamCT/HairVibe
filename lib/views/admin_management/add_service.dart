@@ -1,21 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:hairvibe/Presenter/add_service_page_presenter.dart';
+import 'package:hairvibe/Presenter/admin_comment_page_presenter.dart';
+import 'package:hairvibe/Singletons/barber_singleton.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
+import 'package:hairvibe/Utility.dart';
 import 'package:hairvibe/views/admin_management/comment.dart';
+import 'package:hairvibe/widgets/util_widgets.dart';
+
+import '../../Contract/add_service_page_contract.dart';
 
 class AddServicePage extends StatefulWidget {
-  const AddServicePage({super.key});
+  const AddServicePage({
+    super.key,
+  });
   static const String routeName = 'admin_add_service';
 
   @override
-  _AddServicePageState createState() => _AddServicePageState();
+  AddServicePageState createState() => AddServicePageState();
 }
 
-class _AddServicePageState extends State<AddServicePage> {
+class AddServicePageState extends State<AddServicePage> implements AddServicePageContract {
+  AddServicePagePresenter? _presenter;
+
   final TextEditingController nameController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController durationController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
+
+  @override
+  void initState() {
+    _presenter = AddServicePagePresenter(this);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +46,7 @@ class _AddServicePageState extends State<AddServicePage> {
         leadingWidth: 100,
         leading: TextButton(
           onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => AdminCommentPage()),
-            );
+            onBack();
           },
           child: Text(
             'CANCEL',
@@ -46,7 +61,12 @@ class _AddServicePageState extends State<AddServicePage> {
         actions: [
           TextButton(
             onPressed: () {
-              // Save action
+              _presenter?.handleCreateService(
+                  name: nameController.text.trim(),
+                  price: priceController.text.trim(),
+                  duration: durationController.text.trim(),
+                  description: descriptionController.text.trim()
+              );
             },
             child: Text(
               'SAVE',
@@ -62,7 +82,7 @@ class _AddServicePageState extends State<AddServicePage> {
             _buildTextField(nameController, 'Name'),
             _buildTextField(priceController, 'Price',
                 keyboardType: TextInputType.number),
-            _buildTextField(durationController, 'Duration'),
+            _buildDurationPicker(),
             _buildTextField(descriptionController, 'Description', maxLines: 3),
           ],
         ),
@@ -92,5 +112,89 @@ class _AddServicePageState extends State<AddServicePage> {
         ),
       ),
     );
+  }
+
+  Widget _buildDurationPicker() {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.grey[850],
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: TextField(
+        controller: durationController,
+        keyboardType: TextInputType.text,
+        onTapOutside: (event) {
+          FocusScope.of(context).unfocus();
+        },
+        readOnly: true,
+        onTap: _showDurationPicker,
+        style: TextDecor.serviceListItemTitle.copyWith(color: Colors.white),
+        decoration: InputDecoration(
+          hintText: "Duration (minutes)",
+          hintStyle: TextDecor.serviceListItemTime.copyWith(color: Colors.grey),
+          border: InputBorder.none,
+          contentPadding:
+          const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        ),
+      ),
+    );
+  }
+
+  void _showDurationPicker() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return ListView.builder(
+          itemCount: 5,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text("${(index + 1) * 30} minutes"),
+              onTap: () {
+                setState(() {
+                  durationController.text = "${(index + 1) * 30}";
+                });
+                Navigator.pop(context); // Đóng bottom sheet
+              },
+            );
+          }
+        );
+      },
+    );
+  }
+
+  @override
+  void onCreateFailed(String message) {
+    UtilWidgets.createSnackBar(context, message);
+  }
+
+  @override
+  void onCreateSucceeded() {
+    UtilWidgets.createDialog(
+        context,
+        UtilWidgets.NOTIFICATION,
+        "Add new service successfully!",
+        () {
+          Navigator.of(context, rootNavigator: true).pop();
+          onBack();
+        }
+    );
+  }
+
+  @override
+  void onBack() {
+    BarberSingleton singleton = BarberSingleton.getInstance();
+    singleton.navigateFromOtherPage = true;
+    Navigator.of(context).pushNamed(AdminCommentPage.routeName);
+  }
+
+  @override
+  void onPopContext() {
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  @override
+  void onWaitingProgressBar() {
+    UtilWidgets.createLoadingWidget(context);
   }
 }

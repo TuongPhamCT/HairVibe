@@ -54,23 +54,6 @@ class AdminHomeScreenState extends State<AdminHomeScreen>
 
   Future<void> loadData() async {
     await _presenter?.getData();
-    // if (!context.mounted) {
-    //   return;
-    // }
-    // setState(() {
-    //   // Populate columnsHeight with actual data
-    //   for (int i = 0; i < 7; i++) {
-    //     appointmentColumnsHeight[i] = _presenter!
-    //         .getCompletedAppointmentsCount(
-    //             dayOfWeeks: AdminHomeScreenPresenter.dayOfWeeks[i])
-    //         .toDouble();
-    //
-    //     bookHoursColumnsHeight[i] = _presenter!
-    //         .getBookedHourCount(
-    //             dayOfWeeks: AdminHomeScreenPresenter.dayOfWeeks[i])
-    //         .toDouble();
-    //   }
-    // });
   }
 
   @override

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hairvibe/views/account/about_us.dart';
 import 'package:hairvibe/views/account/account_page.dart';
 import 'package:hairvibe/views/account/edit_account.dart';
+import 'package:hairvibe/views/admin_management/add_service.dart';
 import 'package:hairvibe/views/all_barber/barber.dart';
 import 'package:hairvibe/views/all_barber/detail_barber.dart';
 import 'package:hairvibe/views/all_barber/rating_barber.dart';
@@ -66,4 +67,5 @@ final Map<String, WidgetBuilder> routes = {
   AdminAppointmentPage.routeName: (context) => const AdminAppointmentPage(),
   AdminContactListPage.routeName: (context) => const AdminContactListPage(),
   AdminCommentPage.routeName: (context) => const AdminCommentPage(),
+  AddServicePage.routeName: (context) => const AddServicePage(),
 };
