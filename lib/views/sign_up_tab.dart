@@ -136,7 +136,7 @@ class _SignUpTabState extends State<SignUpTab> implements SignUpTabContract {
         "Sign up successfully!",
         () {
           Navigator.of(context, rootNavigator: true).pop();
-          _tabController?.animateTo(2);
+          _tabController?.animateTo(1);
         }
     );
   }

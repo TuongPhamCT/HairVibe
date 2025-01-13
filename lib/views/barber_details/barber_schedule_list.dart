@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:hairvibe/Presenter/detail_barber_presenter.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 
+import '../../Contract/schedule_list_screen_contract.dart';
+
 class ScheduleListScreen extends StatefulWidget {
+  final DetailBarberPresenter presenter;
+  const ScheduleListScreen({
+    super.key,
+    required this.presenter
+  });
+
   @override
-  _ScheduleListScreenState createState() => _ScheduleListScreenState();
+  ScheduleListScreenState createState() => ScheduleListScreenState();
 }
 
-class _ScheduleListScreenState extends State<ScheduleListScreen> {
+class ScheduleListScreenState extends State<ScheduleListScreen> implements ScheduleListScreenContract {
   final List<Map<String, dynamic>> workingHours = [
     {'day': 'Monday', 'enabled': true, 'time': '8am - 6pm'},
     {'day': 'Tuesday', 'enabled': true, 'time': '9am - 6pm'},
@@ -27,6 +36,16 @@ class _ScheduleListScreenState extends State<ScheduleListScreen> {
     {'day': 'Saturday', 'enabled': false, 'time': '9am - 6pm'},
     {'day': 'Sunday', 'enabled': false, 'time': '9am - 6pm'},
   ];
+
+  @override
+  void initState() {
+    final List<bool> initToggles = widget.presenter.getWorkSessionToggles();
+    for (int i = 0; i < 7; i++) {
+      workingHours[i]['enabled'] = initToggles[i];
+    }
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,9 +76,9 @@ class _ScheduleListScreenState extends State<ScheduleListScreen> {
         children: [
           _buildSectionTitle('Working hours'),
           ..._buildScheduleList(workingHours),
-          SizedBox(height: 20),
-          _buildSectionTitle('Break hours'),
-          ..._buildScheduleList(breakHours),
+          // SizedBox(height: 20),
+          // _buildSectionTitle('Break hours'),
+          // ..._buildScheduleList(breakHours),
         ],
       ),
     );
@@ -102,5 +121,15 @@ class _ScheduleListScreenState extends State<ScheduleListScreen> {
         ),
       );
     }).toList();
+  }
+
+  @override
+  void onSaveFailed() {
+    // TODO: implement onSaveFailed
+  }
+
+  @override
+  void onSaveSucceeded() {
+    // TODO: implement onSaveSucceeded
   }
 }

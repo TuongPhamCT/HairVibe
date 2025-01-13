@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hairvibe/Contract/sign_in_tab_contract.dart';
 import 'package:hairvibe/Presenter/sign_in_tab_presenter.dart';
+import 'package:hairvibe/Strategy/LoginStrategy/login_navigator_strategy.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/views/forgot_pass_screen.dart';
@@ -93,7 +94,8 @@ class _SignInTabState extends State<SignInTab> implements SignInTabContract {
 
   @override
   void onLoginSucceeded() {
-    Navigator.of(context).pushNamed(HomeScreen.routeName);
+    LoginNavigatorStrategy navigator = _presenter!.getLoginNavigatorStrategy();
+    navigator.execute(context);
   }
 
   @override

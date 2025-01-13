@@ -202,15 +202,15 @@ class ViewBooking extends StatelessWidget {
                 Navigator.of(context).pushNamed(HomeScreen.routeName);
               },
               style: ButtonStyle(
-                padding: WidgetStateProperty.all<EdgeInsets>(
+                padding: MaterialStateProperty.all<EdgeInsets>(
                   const EdgeInsets.all(0),
                 ),
-                fixedSize: WidgetStateProperty.all<Size>(
+                fixedSize: MaterialStateProperty.all<Size>(
                   Size(size.width * 0.75, 45),
                 ),
                 backgroundColor:
-                    WidgetStateProperty.all<Color>(Palette.primary),
-                shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                    MaterialStateProperty.all<Color>(Palette.primary),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),

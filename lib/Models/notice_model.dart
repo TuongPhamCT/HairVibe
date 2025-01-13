@@ -9,7 +9,7 @@ class NoticeModel {
 
   NoticeModel(
       {
-        required this.noticeID,
+        this.noticeID,
         required this.receiverID,
         required this.date,
         required this.content,
@@ -18,16 +18,15 @@ class NoticeModel {
     );
 
   Map<String, dynamic> toJson() => {
-    'noticeID': noticeID,
     'receiverID': receiverID,
     'title': date,
     'content': content,
     'isRead': isRead,
   };
 
-  static NoticeModel fromJson(Map<String, dynamic> json) {
+  static NoticeModel fromJson(String key, Map<String, dynamic> json) {
     return NoticeModel(
-      noticeID: json['noticeID'] as String,
+      noticeID: key,
       receiverID: json['receiverID'] as String,
       date: json['date'] as DateTime,
       content: json['content'] as String,

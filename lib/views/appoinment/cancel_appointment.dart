@@ -41,7 +41,7 @@ class _CancelAppointmentPageState extends State<CancelAppointmentPage> implement
   Widget build(BuildContext context) {
     List<Widget> widgets = choices.entries.map((entry) {
       return RadioListTile<String>(
-        fillColor: WidgetStateColor.resolveWith((states) => Colors.white),
+        fillColor: MaterialStateColor.resolveWith((states) => Colors.white),
         contentPadding: const EdgeInsets.all(0),
         title:
         Text(entry.value, style: TextDecor.robo16Semi),

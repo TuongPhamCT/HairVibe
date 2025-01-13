@@ -21,9 +21,7 @@ class AdminAppointmentPagePresenter {
   Future<void> handleChangeDate(DateTime date) async {
     _view.onSelectDate();
     selectedDate = date;
-    _view.onWaitingProgressBar();
     appointments = await _appointmentRepo.getAppointmentsByDate(selectedDate);
-    _view.onPopContext();
     _view.onLoadDataSucceeded();
   }
 

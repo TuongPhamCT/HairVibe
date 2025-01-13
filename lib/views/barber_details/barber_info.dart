@@ -1,23 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:hairvibe/Presenter/detail_barber_presenter.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/views/barber_details/barber_schedule_list.dart';
 
 class BarberInfoTab extends StatelessWidget {
-  const BarberInfoTab({super.key});
+  final DetailBarberPresenter presenter;
+  final List<Map<String, String>> workingHours;
+  const BarberInfoTab({
+    super.key,
+    required this.presenter,
+    required this.workingHours,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, String>> workingHours = [
-      {'day': 'Monday', 'hours': '9am - 6pm'},
-      {'day': 'Tuesday', 'hours': '9am - 6pm'},
-      {'day': 'Wednesday', 'hours': '9am - 6pm'},
-      {'day': 'Thursday', 'hours': '9am - 6pm'},
-      {'day': 'Friday', 'hours': '9am - 6pm'},
-      {'day': 'Saturday', 'hours': '9am - 6pm'},
-      {'day': 'Sunday', 'hours': 'Closed'},
-    ];
-
     final double horizontalPadding = MediaQuery.of(context).size.width * 0.05;
     final double verticalPadding = MediaQuery.of(context).size.height * 0.02;
 
@@ -42,7 +39,7 @@ class BarberInfoTab extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ScheduleListScreen(),
+                        builder: (context) => ScheduleListScreen(presenter: presenter),
                       ),
                     );
                   },

@@ -4,15 +4,15 @@ import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/config/asset_helper.dart';
 
 class BarberPhotoTab extends StatelessWidget {
-  const BarberPhotoTab({super.key});
+  final List<String> urls;
+
+  const BarberPhotoTab({
+    super.key,
+    required this.urls
+  });
 
   @override
   Widget build(BuildContext context) {
-    List<String> urls = [
-      'https://example.com/image1.jpg',
-      'https://example.com/image2.jpg',
-      // Add more URLs as needed
-    ];
 
     List<Widget> widgets = urls.map((url) {
       return ClipRRect(

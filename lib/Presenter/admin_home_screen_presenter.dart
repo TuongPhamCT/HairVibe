@@ -24,7 +24,7 @@ class AdminHomeScreenPresenter {
   Future<void> getData() async {
     servicesCount = await _serviceRepo.getServicesCount();
     customerCount = await _userRepo.getCustomersCount();
-    barberCount = await _userRepo.getCustomersCount();
+    barberCount = await _userRepo.getBarbersCount();
 
     for (int i = 0; i < 7; i++) {
       List<AppointmentModel> appointmentList = await _appointmentRepo.getAppointmentsByDate(dateOfWeeks[i]);

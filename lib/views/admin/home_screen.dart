@@ -8,6 +8,7 @@ import 'package:hairvibe/Utility.dart';
 import 'package:hairvibe/observers/notification_subcriber.dart';
 import 'package:hairvibe/widgets/noti_bell.dart';
 import 'package:hairvibe/widgets/admin_bottom_bar.dart';
+import 'package:hairvibe/widgets/util_widgets.dart';
 
 import '../../Singletons/notification_singleton.dart';
 
@@ -53,20 +54,23 @@ class AdminHomeScreenState extends State<AdminHomeScreen>
 
   Future<void> loadData() async {
     await _presenter?.getData();
-    setState(() {
-      // Populate columnsHeight with actual data
-      for (int i = 0; i < 7; i++) {
-        appointmentColumnsHeight[i] = _presenter!
-            .getCompletedAppointmentsCount(
-                dayOfWeeks: AdminHomeScreenPresenter.dayOfWeeks[i])
-            .toDouble();
-
-        bookHoursColumnsHeight[i] = _presenter!
-            .getBookedHourCount(
-                dayOfWeeks: AdminHomeScreenPresenter.dayOfWeeks[i])
-            .toDouble();
-      }
-    });
+    // if (!context.mounted) {
+    //   return;
+    // }
+    // setState(() {
+    //   // Populate columnsHeight with actual data
+    //   for (int i = 0; i < 7; i++) {
+    //     appointmentColumnsHeight[i] = _presenter!
+    //         .getCompletedAppointmentsCount(
+    //             dayOfWeeks: AdminHomeScreenPresenter.dayOfWeeks[i])
+    //         .toDouble();
+    //
+    //     bookHoursColumnsHeight[i] = _presenter!
+    //         .getBookedHourCount(
+    //             dayOfWeeks: AdminHomeScreenPresenter.dayOfWeeks[i])
+    //         .toDouble();
+    //   }
+    // });
   }
 
   @override
@@ -90,7 +94,7 @@ class AdminHomeScreenState extends State<AdminHomeScreen>
           NotificationBell(notificationCount: _notificationCount),
         ],
       ),
-      body: SingleChildScrollView(
+      body: isLoading ? UtilWidgets.getLoadingWidget() : SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Column(
@@ -268,11 +272,26 @@ class AdminHomeScreenState extends State<AdminHomeScreen>
         bookHoursColumnsHeight[maxBookedHoursIndex];
 
     for (int i = 0; i < 7; i++) {
-      appointmentColumnsHeight[i] = appointmentColumnsHeight[i] /
-          highestAppointmentHeight *
-          highestColumns;
-      bookHoursColumnsHeight[i] =
-          bookHoursColumnsHeight[i] / highestBookedHoursHeight * highestColumns;
+      if (highestAppointmentHeight > 0) {
+        appointmentColumnsHeight[i] = appointmentColumnsHeight[i] /
+            highestAppointmentHeight *
+            highestColumns + 2;
+      } else {
+        appointmentColumnsHeight[i] == 2;
+      }
+
+      if (highestBookedHoursHeight > 0) {
+        bookHoursColumnsHeight[i] = bookHoursColumnsHeight[i] /
+                highestBookedHoursHeight *
+                highestColumns + 2;
+      } else {
+        bookHoursColumnsHeight[i] = 2;
+      }
+
+    }
+
+    if (!mounted) {
+      return;
     }
 
     setState(() {

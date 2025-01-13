@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hairvibe/Contract/sign_in_tab_contract.dart';
 import 'package:hairvibe/Models/user_repo.dart';
-import 'package:hairvibe/Singletons/notification_singleton.dart';
+import 'package:hairvibe/Singletons/user_singleton.dart';
+import 'package:hairvibe/Strategy/LoginStrategy/login_navigator_strategy.dart';
 import 'package:hairvibe/facades/authenticator_facade.dart';
 
 import '../Models/user_model.dart';
@@ -12,14 +13,18 @@ class SignInTabPresenter {
   SignInTabPresenter(this._view);
   final AuthenticatorFacade _auth = AuthenticatorFacade();
   final UserRepository _userRepo = UserRepository();
+  final UserSingleton _userSingleton = UserSingleton.getInstance();
 
   Future<void> login(String email, String password) async {
     try {
       _view.onWaitingProgressBar();
-      await _auth.signInWithEmailAndPassword(email, password);
-      //UserCredential userCredential = await _auth.signInWithEmailAndPassword(email, password);
-      //UserModel userData = await _userRepo.getUserById(userCredential.user!.uid);
+      //await _auth.signInWithEmailAndPassword(email, password);
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(email, password);
+      UserModel userData = await _userRepo.getUserById(userCredential.user!.uid);
+      _userSingleton.setCurrentUser(userData);
+      await _userSingleton.handleActionsAfterLogin();
       //_prefService.saveUserData(userData);
+
     } on FirebaseAuthException catch (e) {
       _view.onPopContext();
       if (e.code == 'user-not-found' || e.code == 'wrong-password') {
@@ -28,12 +33,21 @@ class SignInTabPresenter {
         _view.onLoginFailed();
       }
     } catch (e) {
+      _view.onPopContext();
       _view.onLoginFailed();
       return;
     }
     _view.onPopContext();
-    NotificationSingleton singleton = NotificationSingleton.getInstance();
-    singleton.initialize();
     _view.onLoginSucceeded();
+  }
+
+  LoginNavigatorStrategy getLoginNavigatorStrategy() {
+    if (_userSingleton.currentUserIsCustomer()) {
+      return CustomerLoginNavigatorStrategy();
+    } else if (_userSingleton.currentUserIsBarber()) {
+      return BarberLoginNavigatorStrategy();
+    } else {
+      return AdminLoginNavigatorStrategy();
+    }
   }
 }

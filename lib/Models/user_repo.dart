@@ -6,7 +6,7 @@ class UserRepository {
   final FirebaseFirestore _storage = FirebaseFirestore.instance;
   //final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  void addUserToFirestore(UserModel user) async {
+  Future<void> addUserToFirestore(UserModel user) async {
     try {
       DocumentReference docRef = _storage.collection(UserModel.collectionName).doc(user.userID);
       await docRef.set(user.toJson()).whenComplete(()
@@ -40,7 +40,7 @@ class UserRepository {
       final QuerySnapshot querySnapshot = await _storage.collection(UserModel.collectionName).get();
       final users = querySnapshot
           .docs
-          .map((doc) => UserModel.fromJson(doc as Map<String, dynamic>))
+          .map((doc) => UserModel.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
       return users;
     } catch (e) {
@@ -55,7 +55,7 @@ class UserRepository {
           .where('userType', isEqualTo: UserType.CUSTOMER).get();
       final customers = querySnapshot
           .docs
-          .map((doc) => UserModel.fromJson(doc as Map<String, dynamic>))
+          .map((doc) => UserModel.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
       return customers;
     } catch (e) {
@@ -70,7 +70,7 @@ class UserRepository {
           .where('userType', isEqualTo: UserType.BARBER).get();
       final barbers = querySnapshot
           .docs
-          .map((doc) => UserModel.fromJson(doc as Map<String, dynamic>))
+          .map((doc) => UserModel.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
       return barbers;
     } catch (e) {

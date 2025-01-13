@@ -7,6 +7,7 @@ import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/config/asset_helper.dart';
 import 'package:hairvibe/widgets/admin_bottom_bar.dart';
 import 'package:hairvibe/views/admin_contact/add_barber.dart';
+import 'package:hairvibe/widgets/util_widgets.dart';
 
 class AdminContactListPage extends StatefulWidget {
   const AdminContactListPage({super.key});
@@ -22,11 +23,14 @@ class AdminContactListPageState extends State<AdminContactListPage>
   AdminContactListPagePresenter? _presenter;
   late TabController _tabController;
   final int _currentPageIndex = 2;
-
+  final TextEditingController _searchController = TextEditingController();
   bool isLoading = true;
+  bool firstEnter = true;
+  bool isSearching = false;
 
   List<ContactListData> userData = [];
   List<ContactListData> barberData = [];
+
 
   @override
   void initState() {
@@ -52,7 +56,10 @@ class AdminContactListPageState extends State<AdminContactListPage>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    loadData();
+    if (firstEnter) {
+      loadData();
+      firstEnter = false;
+    }
   }
 
   Future<void> loadData() async {
@@ -77,7 +84,7 @@ class AdminContactListPageState extends State<AdminContactListPage>
           unselectedLabelColor: Colors.white.withOpacity(0.6),
         ),
       ),
-      body: Column(
+      body: isLoading ? UtilWidgets.getLoadingWidget() : Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -85,6 +92,14 @@ class AdminContactListPageState extends State<AdminContactListPage>
               children: [
                 Expanded(
                   child: TextField(
+                    controller: _searchController,
+                    onTapOutside: (event) {
+                      FocusScope.of(context).unfocus();
+                    },
+                    onSubmitted: (text) {
+                      isSearching = true;
+                      _presenter?.handleSearch(text.trim());
+                    },
                     decoration: InputDecoration(
                       hintText: 'Search',
                       hintStyle: const TextStyle(color: Colors.grey),
@@ -99,15 +114,18 @@ class AdminContactListPageState extends State<AdminContactListPage>
                   ),
                 ),
                 const SizedBox(width: 14),
-                IconButton(
-                  icon: const CircleAvatar(
-                    backgroundColor: Palette.primary,
-                    child: Icon(Icons.search, color: Colors.black),
+                if (isSearching)
+                  IconButton(
+                    icon: const CircleAvatar(
+                      backgroundColor: Palette.primary,
+                      child: Icon(Icons.backspace_rounded, color: Colors.black),
+                    ),
+                    onPressed: () {
+                      _searchController.clear();
+                      isSearching = false;
+                      _presenter?.handleSearch("");
+                    },
                   ),
-                  onPressed: () {
-                    // Filter action
-                  },
-                ),
               ],
             ),
           ),
@@ -199,6 +217,7 @@ class AdminContactListPageState extends State<AdminContactListPage>
                 _presenter!.handleBarberPressed(element);
               }))
           .toList();
+      isLoading = false;
     });
   }
 

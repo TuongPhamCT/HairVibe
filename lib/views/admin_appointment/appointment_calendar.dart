@@ -93,6 +93,7 @@ class AdminAppointmentPageState extends State<AdminAppointmentPage>
                   setState(() {
                     _selectedDay = selectedDay;
                     _focusedDay = focusedDay;
+                    _presenter?.handleChangeDate(selectedDay);
                   });
                 },
                 calendarStyle: const CalendarStyle(
@@ -158,10 +159,12 @@ class AdminAppointmentPageState extends State<AdminAppointmentPage>
               )
             else if (isLoading)
               Container(
+                width: size.width,
+                height: size.height * 0.3,
                 margin: const EdgeInsets.all(16),
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                color: Colors.grey[800],
+                color: Colors.transparent,
                 borderRadius: BorderRadius.circular(8),
                 ),
                 child: UtilWidgets.getLoadingWidget(),
@@ -175,6 +178,9 @@ class AdminAppointmentPageState extends State<AdminAppointmentPage>
 
   @override
   void onLoadDataSucceeded() {
+    if (!mounted) {
+      return;
+    }
     setState(() {
       isLoading = false;
       _appointments = _presenter!.appointments;

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class UserModel {
 
   String? userID;
@@ -28,12 +30,12 @@ class UserModel {
     'name': name,
     'phoneNumber': phoneNumber,
     'userType': userType,
-    'image': image,
-    'info': info
+    'image': image ?? "",
+    'info': info != null ? jsonEncode(info) : {}
   };
 
   static UserModel fromJson(Map<String, dynamic> json) {
-    final dataInfo = json['otherInfo'] as Map<String, Object?>?;
+    final dataInfo = jsonDecode(json['info']) as Map<String, Object?>?;
 
     return UserModel(
       userID: json['userID'] as String,
