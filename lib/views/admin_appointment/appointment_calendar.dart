@@ -8,9 +8,9 @@ import 'package:hairvibe/views/admin_appointment/appointment_details.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/widgets/noti_bell.dart';
-import 'package:hairvibe/widgets/admin_bottom_bar.dart';
-
 import '../../Contract/admin_appointment_contract.dart';
+import '../../Singletons/user_singleton.dart';
+import '../../Strategy/BottomBarStrategy/bottom_bar_strategy.dart';
 import '../../widgets/util_widgets.dart';
 
 class AdminAppointmentPage extends StatefulWidget {
@@ -28,16 +28,18 @@ class AdminAppointmentPageState extends State<AdminAppointmentPage>
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   List<AppointmentModel> _appointments = []; // No appointments initially
-  final int _currentPageIndex = 1;
   int _notificationCount = 0;
 
   bool isLoading = true;
+
+  BottomBarRenderStrategy? bottomBarRenderStrategy;
 
   @override
   void initState() {
     _presenter = AdminAppointmentPagePresenter(this);
     _notificationSingleton.subscribe(this);
     _notificationCount = _notificationSingleton.getUnreadCount();
+    bottomBarRenderStrategy = UserSingleton.getInstance().getBottomBarRenderStrategy(1);
     super.initState();
   }
 
@@ -172,7 +174,7 @@ class AdminAppointmentPageState extends State<AdminAppointmentPage>
           ],
         ),
       ),
-      bottomNavigationBar: AdminBottomBar(currentIndex: _currentPageIndex),
+      bottomNavigationBar: bottomBarRenderStrategy?.render(),
     );
   }
 

@@ -46,6 +46,7 @@ class MainBookingPresenter {
   List<LeaveModel> currentBarberLeaves = [];
   List<AppointmentModel> currentBarberAppointments = [];
   List<dynamic> times = [];
+  int cacheTimeCheckIndex = -1;
 
   UserModel? selectedBarber;
   DateTime? selectedDate;
@@ -68,6 +69,11 @@ class MainBookingPresenter {
 
     if (storedService == null) {
       services.first['isChecked'] = true;
+      totalDuration += serviceList.first.duration!;
+      totalCost += serviceList.first.price!;
+    } else {
+      totalDuration += storedService.duration!;
+      totalCost += storedService.price!;
     }
 
     barbers = await _userRepo.getAllBarbers();
@@ -111,23 +117,32 @@ class MainBookingPresenter {
   }
 
   Future<void> handleSelectBarber(UserModel barber, int index) async {
+    _view.onWaitingProgressBar();
     selectedBarber = barber;
-    currentBarberAppointments = await _appointmentRepo.getAppointmentsByUserIdAndDate(barber.userID!, selectedDate!);
+    currentBarberAppointments = await _appointmentRepo.getAppointmentsByBarberIdAndDate(barber.userID!, selectedDate!);
     currentBarberLeaves = await _leaveRepo.getLeavesByBarberId(barber.userID!);
     await _loadWorkSessions();
     _generateTimeList();
+    _view.onPopContext();
     _view.onSelectBarber(index);
   }
 
   Future<void> handleSelectDate(DateTime selectedDate, DateTime focusedDate) async {
     this.selectedDate = selectedDate;
     this.focusedDate = focusedDate;
+    cacheTimeCheckIndex = -1;
     _generateTimeList();
     _view.onSelectDate();
   }
 
   void handleSelectTime(int index) {
-    times[index]['isChecked'] = ! times[index]['isChecked'];
+    if (cacheTimeCheckIndex >= 0) {
+      times[cacheTimeCheckIndex]['isChecked'] = false;
+    }
+    if (cacheTimeCheckIndex != index) {
+      times[index]['isChecked'] = ! times[index]['isChecked'];
+      cacheTimeCheckIndex = index;
+    }
     _view.onSelectTime();
   }
 
@@ -145,14 +160,18 @@ class MainBookingPresenter {
     }
 
     TimeOfDay time = const TimeOfDay(hour: 0, minute: 0);
+    bool isSelectedTime = false;
     for (Map<String, dynamic> timeStamp in times) {
       if (timeStamp['isChecked']) {
-        time = timeStamp['isChecked'];
+        isSelectedTime = true;
+        time = timeStamp['time'];
         break;
-      } else {
-        _view.onValidatingFailed("Please select a time for your appointment");
-        return;
       }
+    }
+
+    if (isSelectedTime == false) {
+      _view.onValidatingFailed("Please select a time for your appointment");
+      return;
     }
 
     _bookingSingleton.reset();
@@ -192,7 +211,13 @@ class MainBookingPresenter {
   }
 
   void _generateTimeList() {
+    if (totalDuration == 0 || currentBarberWorkSessions.contains(selectedDate!.weekday) == false) {
+      times.clear();
+      return;
+    }
+
     List<TimeOfDay> timeList = [];
+
     int start = Utility.convertTimeOfDayToInt(workSessionStart);
     int end = Utility.convertTimeOfDayToInt(workSessionEnd) - totalDuration;
 

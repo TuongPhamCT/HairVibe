@@ -69,7 +69,8 @@ class AppointmentSingleton {
       }
     }
 
-    data[ViewBookingData.TOTAL_PRICE] = sum * data[ViewBookingData.DISCOUNT] / 100;
+    data[ViewBookingData.TOTAL_PRICE]
+      = (sum * ( 100 - (data[ViewBookingData.DISCOUNT] ?? 0 ))) ~/ 100;
 
     cacheData = data;
   }

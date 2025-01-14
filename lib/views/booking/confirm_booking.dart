@@ -65,19 +65,21 @@ class _ConfirmBookingState extends State<ConfirmBooking> implements ConfirmBooki
       servicePrices.add(const SizedBox(height: 10));
     }
 
-    serviceNames.add(
-      Text(
-        'Discount',
-        style: TextDecor.label2Appointment,
-      ),
-    );
+    if (data.containsKey(ViewBookingData.DISCOUNT) && data[ViewBookingData.DISCOUNT] != null) {
+      serviceNames.add(
+        Text(
+          'Discount',
+          style: TextDecor.label2Appointment,
+        ),
+      );
 
-    servicePrices.add(
-      Text(
-        _haveVoucher ? "${data[ViewBookingData.DISCOUNT]}%" : "",
-        style: TextDecor.content1Appointment,
-      ),
-    );
+      servicePrices.add(
+        Text(
+          _haveVoucher ? "${data[ViewBookingData.DISCOUNT]}%" : "",
+          style: TextDecor.content1Appointment,
+        ),
+      ); 
+    }
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -348,7 +350,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> implements ConfirmBooki
   void onChangeDependencies(bool result) {
     if (result) {
       setState(() {
-        _haveVoucher = true;
+        _haveVoucher = result;
       });
     }
   }

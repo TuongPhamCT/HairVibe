@@ -12,6 +12,7 @@ import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/Utility.dart';
 import 'package:hairvibe/commands/home_screen/home_screen_press_service_command.dart';
+import 'package:hairvibe/observers/notification_subcriber.dart';
 import 'package:hairvibe/views/all_barber/barber.dart';
 import 'package:hairvibe/views/all_service.dart';
 import 'package:hairvibe/views/booking/main_booking.dart';
@@ -32,7 +33,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> implements HomeScreenContract {
+class _HomeScreenState extends State<HomeScreen> implements HomeScreenContract, NotificationSubscriber {
   HomeScreenPresenter? _presenter;
   bool isLoading = true;
 
@@ -40,12 +41,16 @@ class _HomeScreenState extends State<HomeScreen> implements HomeScreenContract {
   List<ServiceModel> _serviceList = [];
   Map<String, double> _ratings = {};
 
+  int _notificationCount = 0;
   final int _currentPageIndex = 0;
   final CustomizedWidgetBuilderDirector director = CustomizedWidgetBuilderDirector();
+  final NotificationSingleton notificationSingleton = NotificationSingleton.getInstance();
 
   @override
   void initState() {
     _presenter = HomeScreenPresenter(this);
+    notificationSingleton.subscribe(this);
+    _notificationCount = notificationSingleton.getUnreadCount();
     super.initState();
   }
 
@@ -60,6 +65,12 @@ class _HomeScreenState extends State<HomeScreen> implements HomeScreenContract {
   }
 
   @override
+  void dispose() {
+    notificationSingleton.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
@@ -71,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> implements HomeScreenContract {
         ),
         centerTitle: true,
         actions: [
-          NotificationBell(notificationCount: NotificationSingleton.getInstance().getUnreadCount()),
+          NotificationBell(notificationCount: _notificationCount),
         ],
       ),
       body: SingleChildScrollView(
@@ -201,12 +212,11 @@ class _HomeScreenState extends State<HomeScreen> implements HomeScreenContract {
 
   @override
   void onBarberPressed() {
-    // TODO: implement onBarberPressed
+    Navigator.of(context).pushNamed(MainBooking.routeName);
   }
 
   @override
   void onLoadDataSucceed() {
-    // TODO: implement onLoadDataSucceed
     setState(() {
       _barberList = _presenter!.barberList;
       _serviceList = _presenter!.serviceList;
@@ -217,6 +227,13 @@ class _HomeScreenState extends State<HomeScreen> implements HomeScreenContract {
 
   @override
   void onServicePressed() {
-    // TODO: implement onServicePressed
+    Navigator.of(context).pushNamed(MainBooking.routeName);
+  }
+
+  @override
+  void updateNotification() {
+    setState(() {
+      _notificationCount = notificationSingleton.getUnreadCount();
+    });
   }
 }

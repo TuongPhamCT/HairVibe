@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:hairvibe/Singletons/user_singleton.dart';
 import 'package:hairvibe/Theme/palette.dart';
-import 'package:hairvibe/views/barber/home_screen.dart';
-import 'package:hairvibe/views/admin_appointment/appointment_calendar.dart';
-import 'package:hairvibe/views/admin/home_screen.dart';
-import 'package:hairvibe/views/admin_contact/contact_list.dart';
-import 'package:hairvibe/views/admin_management/comment.dart';
-import 'package:hairvibe/views/barber_appointment/appointment_calendar.dart';
+import 'package:hairvibe/views/account/account_page.dart';
+import 'package:hairvibe/views/admin/admin_home_screen.dart';
 import 'package:hairvibe/views/barber_contact/contact_list.dart';
 import 'package:hairvibe/views/barber_details/barber_profile.dart';
+
+import '../views/admin_appointment/appointment_calendar.dart';
 // Import necessary pages for navigation
 
 class BarberBottomNavigationBar extends StatefulWidget {
@@ -31,21 +30,25 @@ class _BarberBottomNavigationBarState extends State<BarberBottomNavigationBar> {
 
   Widget _getPage(String routeName) {
     switch (routeName) {
-      case BarberHomeScreen.routeName:
-        return BarberHomeScreen();
-      case BarberAppointmentPage.routeName:
-        return BarberAppointmentPage();
+      case AdminHomeScreen.routeName:
+        return const AdminHomeScreen();
+      case AdminAppointmentPage.routeName:
+        return const AdminAppointmentPage();
       case BarberContactList.routeName:
-        return BarberContactList();
+        return const BarberContactList();
       case BarberProfilePage.routeName:
-        return BarberProfilePage();
+        return const BarberProfilePage();
+      case AccountPage.routeName:
+        return const AccountPage();
       default:
-        return BarberHomeScreen(); // Default page
+        return const AdminHomeScreen(); // Default page
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    String namePrefix = UserSingleton.getInstance().currentUser!.name!.characters.first;
+
     return Container(
       decoration: const BoxDecoration(
         border: Border(
@@ -60,11 +63,11 @@ class _BarberBottomNavigationBarState extends State<BarberBottomNavigationBar> {
         onTap: (value) {
           switch (value) {
             case 0:
-              _navigateWithoutAnimation(context, BarberHomeScreen.routeName);
+              _navigateWithoutAnimation(context, AdminHomeScreen.routeName);
               break;
             case 1:
               _navigateWithoutAnimation(
-                  context, BarberAppointmentPage.routeName);
+                  context, AdminAppointmentPage.routeName);
               break;
             case 2:
               _navigateWithoutAnimation(context, BarberContactList.routeName);
@@ -73,34 +76,34 @@ class _BarberBottomNavigationBarState extends State<BarberBottomNavigationBar> {
               _navigateWithoutAnimation(context, BarberProfilePage.routeName);
               break;
             case 4:
-              // Add logic for the fifth item if needed
+              _navigateWithoutAnimation(context, AccountPage.routeName);
               break;
           }
         },
         backgroundColor: Colors.black,
         selectedItemColor: Palette.primary,
         unselectedItemColor: Colors.white,
-        items: const [
-          BottomNavigationBarItem(
+        items: [
+          const BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.calendar_today),
             label: 'Booking',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.email),
             label: 'Contact',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',
           ),
           BottomNavigationBarItem(
             icon: CircleAvatar(
               backgroundColor: Palette.primary,
-              child: Text('D', style: TextStyle(color: Colors.black)),
+              child: Text(namePrefix.toUpperCase(), style: const TextStyle(color: Colors.black)),
             ),
             label: 'Menu',
           ),

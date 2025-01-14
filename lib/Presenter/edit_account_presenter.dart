@@ -50,7 +50,11 @@ class EditAccountPresenter {
     // Validating
     errorTexts["name"] = _validateName(name);
     errorTexts["phoneNumber"] = _validatePhoneNumber(phone);
-    errorTexts["password"] = _validatePassword(password);
+    if (password.isNotEmpty) {
+      errorTexts["password"] = _validatePassword(password);
+    } else {
+      errorTexts["password"] = null;
+    }
 
     for (String? value in errorTexts.values){
       if (value != null){
@@ -62,10 +66,19 @@ class EditAccountPresenter {
     _model!.name = name;
     _model!.phoneNumber = phone;
 
-    // Change password
     _view.onWaitingProgressBar();
-    bool result = await _auth.changePassword(password);
-    _userRepo.updateUser(_model!);
+
+    // Change password
+    bool result = true;
+
+    if (password.isNotEmpty) {
+      result = await _auth.changePassword(password);
+    }
+
+    if (result) {
+      result = await _userRepo.updateUser(_model!);
+    }
+
     _view.onPopContext();
 
     if (result == true) {

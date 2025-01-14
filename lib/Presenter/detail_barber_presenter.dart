@@ -24,7 +24,7 @@ class DetailBarberPresenter {
   List<WorkSessionModel> workSessions = [];
 
   Future<void> getData() async {
-    if (_userSingleton.currentUserIsCustomer() != false) {
+    if (_userSingleton.currentUserIsCustomer() == false) {
       _barberSingleton.setBarber(_userSingleton.currentUser!);
       workSessions = await _workSessionRepository.getWorkSessionsByBarberId(_barberSingleton.barber!.userID!);
       if (workSessions.isNotEmpty) {
@@ -78,7 +78,7 @@ class DetailBarberPresenter {
     }
     UserModel user = _userSingleton.currentUser!;
     for (WorkSessionModel model in workSessions) {
-      _workSessionRepository.deleteWorkSessionById(user.userID!, model.workSessionID!);
+      await _workSessionRepository.deleteWorkSessionById(user.userID!, model.workSessionID!);
     }
     workSessions.clear();
 

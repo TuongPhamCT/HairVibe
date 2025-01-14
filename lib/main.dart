@@ -4,10 +4,6 @@ import 'package:get/get.dart';
 import 'package:hairvibe/component/dependency_injection.dart';
 import 'package:hairvibe/config/firebase_options.dart';
 import 'package:hairvibe/router.dart';
-import 'package:hairvibe/views/auth_screen.dart';
-import 'package:hairvibe/views/admin/home_screen.dart';
-import 'package:hairvibe/views/admin_contact/contact_list.dart';
-import 'package:hairvibe/views/barber/home_screen.dart';
 import 'package:hairvibe/views/splash_screen.dart';
 
 Future<void> main() async {

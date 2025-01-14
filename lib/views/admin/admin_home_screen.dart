@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hairvibe/Contract/admin_home_screen_contract.dart';
 import 'package:hairvibe/Presenter/admin_home_screen_presenter.dart';
+import 'package:hairvibe/Singletons/user_singleton.dart';
+import 'package:hairvibe/Strategy/BottomBarStrategy/bottom_bar_strategy.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/Utility.dart';
@@ -32,17 +34,22 @@ class AdminHomeScreenState extends State<AdminHomeScreen>
   double bookedHours = 0.0;
   String completedAppointments = "";
   int _notificationCount = 0;
-  final int _currentPageIndex = 0;
   List<double> appointmentColumnsHeight = List.filled(7, 0.0);
   List<double> bookHoursColumnsHeight = List.filled(7, 0.0);
 
   bool isLoading = true;
+  bool isAdmin = true;
+
+  BottomBarRenderStrategy? bottomBarRenderStrategy;
 
   @override
   void initState() {
     _presenter = AdminHomeScreenPresenter(this);
     _notificationSingleton.subscribe(this);
     _notificationCount = _notificationSingleton.getUnreadCount();
+    isAdmin = UserSingleton.getInstance().currentUserIsAdmin();
+    _presenter!.isAdmin = isAdmin;
+    bottomBarRenderStrategy = UserSingleton.getInstance().getBottomBarRenderStrategy(0);
     super.initState();
   }
 
@@ -94,15 +101,17 @@ class AdminHomeScreenState extends State<AdminHomeScreen>
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(child: _buildSummaryCard('Barber', barberCount)),
-                  Expanded(child: _buildSummaryCard('Customer', customerCount)),
-                  Expanded(child: _buildSummaryCard('Service', serviceCount)),
-                ],
-              ),
+              if (isAdmin)
+                const SizedBox(height: 16),
+              if (isAdmin)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(child: _buildSummaryCard('Barber', barberCount)),
+                    Expanded(child: _buildSummaryCard('Customer', customerCount)),
+                    Expanded(child: _buildSummaryCard('Service', serviceCount)),
+                  ],
+                ),
               const SizedBox(height: 16),
               Row(
                 children: [
@@ -133,9 +142,7 @@ class AdminHomeScreenState extends State<AdminHomeScreen>
           ),
         ),
       ),
-      bottomNavigationBar: AdminBottomBar(
-        currentIndex: _currentPageIndex,
-      ),
+      bottomNavigationBar: bottomBarRenderStrategy?.render(),
     );
   }
 

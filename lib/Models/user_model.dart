@@ -31,7 +31,7 @@ class UserModel {
     'phoneNumber': phoneNumber,
     'userType': userType,
     'image': image ?? "",
-    'info': info != null ? jsonEncode(info) : {}
+    'info': info != null ? jsonEncode(info) : "{}"
   };
 
   static UserModel fromJson(Map<String, dynamic> json) {

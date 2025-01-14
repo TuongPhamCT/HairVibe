@@ -10,7 +10,11 @@ import 'package:hairvibe/views/admin_contact/add_barber.dart';
 import 'package:hairvibe/widgets/util_widgets.dart';
 
 class AdminContactListPage extends StatefulWidget {
-  const AdminContactListPage({super.key});
+  final int? tabIndex;
+  const AdminContactListPage({
+    super.key,
+    this.tabIndex
+  });
   static const String routeName = 'admin_contact';
 
   @override
@@ -25,7 +29,6 @@ class AdminContactListPageState extends State<AdminContactListPage>
   final int _currentPageIndex = 2;
   final TextEditingController _searchController = TextEditingController();
   bool isLoading = true;
-  bool firstEnter = true;
   bool isSearching = false;
 
   List<ContactListData> userData = [];
@@ -56,10 +59,10 @@ class AdminContactListPageState extends State<AdminContactListPage>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (firstEnter) {
-      loadData();
-      firstEnter = false;
+    if (widget.tabIndex != null) {
+      _tabController.animateTo(1, duration: const Duration(milliseconds: 0));
     }
+    loadData();
   }
 
   Future<void> loadData() async {

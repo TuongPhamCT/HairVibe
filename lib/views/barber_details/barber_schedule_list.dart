@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:hairvibe/Presenter/detail_barber_presenter.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
+import 'package:hairvibe/widgets/util_widgets.dart';
 
 import '../../Contract/schedule_list_screen_contract.dart';
+import '../../Presenter/schedule_list_screen_presenter.dart';
 
 class ScheduleListScreen extends StatefulWidget {
   final DetailBarberPresenter presenter;
@@ -17,6 +19,8 @@ class ScheduleListScreen extends StatefulWidget {
 }
 
 class ScheduleListScreenState extends State<ScheduleListScreen> implements ScheduleListScreenContract {
+  ScheduleListScreenPresenter? _presenter;
+
   final List<Map<String, dynamic>> workingHours = [
     {'day': 'Monday', 'enabled': true, 'time': '8am - 6pm'},
     {'day': 'Tuesday', 'enabled': true, 'time': '9am - 6pm'},
@@ -39,7 +43,9 @@ class ScheduleListScreenState extends State<ScheduleListScreen> implements Sched
 
   @override
   void initState() {
+    _presenter = ScheduleListScreenPresenter(this, widget.presenter);
     final List<bool> initToggles = widget.presenter.getWorkSessionToggles();
+    _presenter?.initToggles = initToggles;
     for (int i = 0; i < 7; i++) {
       workingHours[i]['enabled'] = initToggles[i];
     }
@@ -54,17 +60,17 @@ class ScheduleListScreenState extends State<ScheduleListScreen> implements Sched
       appBar: AppBar(
         backgroundColor: Colors.black,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.amber),
+          icon: const Icon(Icons.arrow_back, color: Colors.amber),
           onPressed: () {
-            Navigator.pop(context);
+            onBack();
           },
         ),
-        title: Text('Service', style: TextDecor.homeTitle),
+        title: Text('Work Schedule', style: TextDecor.homeTitle),
         centerTitle: true,
         actions: [
           TextButton(
             onPressed: () {
-              // Save action
+              _presenter?.handleSave(workingHours);
             },
             child: Text('SAVE',
                 style: TextDecor.homeTitle.copyWith(color: Colors.amber)),
@@ -124,12 +130,22 @@ class ScheduleListScreenState extends State<ScheduleListScreen> implements Sched
   }
 
   @override
-  void onSaveFailed() {
-    // TODO: implement onSaveFailed
+  void onSaveSucceeded() {
+    UtilWidgets.createSnackBar(context, "Save working hours succeeded");
   }
 
   @override
-  void onSaveSucceeded() {
-    // TODO: implement onSaveSucceeded
+  void onBack() {
+    Navigator.pop(context);
+  }
+
+  @override
+  void onPopContext() {
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  @override
+  void onWaitingProgressBar() {
+    UtilWidgets.createLoadingWidget(context);
   }
 }

@@ -4,15 +4,15 @@ import 'package:hairvibe/Theme/text_decor.dart';
 
 class CheckServiceListItem extends StatelessWidget {
   final String title;
-  final bool isChecked;
+  bool? isChecked;
   final String duration;
   final String price;
   final ValueChanged<bool> onChanged;
 
-  const CheckServiceListItem({
+  CheckServiceListItem({
     super.key,
     required this.title,
-    required this.isChecked,
+    this.isChecked,
     required this.duration,
     required this.price,
     required this.onChanged,
@@ -22,7 +22,7 @@ class CheckServiceListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        onChanged(!isChecked);
+        onChanged(!isChecked!);
       },
       child: Container(
         margin: const EdgeInsets.only(top: 4),
@@ -44,6 +44,7 @@ class CheckServiceListItem extends StatelessWidget {
                   value: isChecked,
                   onChanged: (value) {
                     onChanged(value!);
+                    isChecked = value;
                   },
                 ),
                 Column(

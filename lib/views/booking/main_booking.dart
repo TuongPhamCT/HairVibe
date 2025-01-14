@@ -31,12 +31,14 @@ class _MainBookingState extends State<MainBooking> implements MainBookingContrac
   DateTime _focusedDay = DateTime.now();
   final List<bool> _isSelected = List.generate(5, (_) => false);
   int _selectedIndex = -1; // Chỉ mục của Barber được chọn (-1: không chọn)
-  String _totalCost = "00,000 VNĐ";
+  String _totalCost = Utility.formatCurrency(0);
 
   List<UserModel> barbers = [];
   Map<String, double> ratings = {};
   List<Map<String, dynamic>> services = [];
   List<dynamic> times = [];
+
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -81,7 +83,7 @@ class _MainBookingState extends State<MainBooking> implements MainBookingContrac
           ],
         ),
       ),
-      body: SingleChildScrollView(
+      body: isLoading ? UtilWidgets.getLoadingWidget() : SingleChildScrollView(
         child: Column(
           children: [
             Container(
@@ -96,24 +98,26 @@ class _MainBookingState extends State<MainBooking> implements MainBookingContrac
                   const SizedBox(
                     height: 10,
                   ),
-                  SizedBox(
-                    height: 358,
-                    child: ListView.builder(
-                      itemCount: services.length,
-                      itemBuilder: (context, index) {
-                        CheckServiceListItemBuilder builder = CheckServiceListItemBuilder();
-                        ServiceModel service = services[index]['serviceModel'];
-                        builder.setService(service);
-                        builder.setIsChecked(services[index]['isChecked']);
-                        builder.setOnChanged(
-                            (bool newValue) {
-                              _presenter?.handleSelectService(service, index, newValue);
-                              services[index]['isChecked'] = newValue;
-                            }
-                        );
-                        return builder.createWidget();
-                      },
-                    ),
+                  Column(
+                    children: [
+                      ListView.builder(
+                        itemCount: services.length,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          CheckServiceListItemBuilder builder = CheckServiceListItemBuilder();
+                          ServiceModel service = services[index]['serviceModel'];
+                          builder.setService(service);
+                          builder.setIsChecked(services[index]['isChecked']);
+                          builder.setOnChanged(
+                              (bool newValue) {
+                                _presenter?.handleSelectService(service, index, newValue);
+                                services[index]['isChecked'] = newValue;
+                              }
+                          );
+                          return builder.createWidget();
+                        },
+                      )
+                    ] ,
                   ),
                   const SizedBox(
                     height: 20,
@@ -182,11 +186,15 @@ class _MainBookingState extends State<MainBooking> implements MainBookingContrac
                         const SizedBox(
                           height: 10,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: List.generate(
-                            times.length,
-                            (index) {
+                        Container(
+                          height: 40,
+                          margin: const EdgeInsets.symmetric(horizontal: 0.0),
+                          width: size.width,
+                          child:  ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: times.length,
+                            separatorBuilder: (context, index) => const SizedBox(width: 5),
+                            itemBuilder: (BuildContext context, int index) {
                               return ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.transparent,
@@ -206,7 +214,7 @@ class _MainBookingState extends State<MainBooking> implements MainBookingContrac
                                 },
                                 child: Text(
                                   '${(times[index]['time'] as TimeOfDay).hour.toString()}:'
-                                  '${(times[index]['time'] as TimeOfDay).minute.toString().padLeft(2, '0')}',
+                                      '${(times[index]['time'] as TimeOfDay).minute.toString().padLeft(2, '0')}',
                                   style: TextDecor.timeWork.copyWith(
                                     color: times[index]['isChecked']
                                         ? Palette.primary
@@ -306,6 +314,10 @@ class _MainBookingState extends State<MainBooking> implements MainBookingContrac
 
   @override
   void onLoadDataSucceed() {
+    if (!mounted) {
+      return;
+    }
+
     setState(() {
       // services
       services = _presenter!.services;
@@ -319,6 +331,9 @@ class _MainBookingState extends State<MainBooking> implements MainBookingContrac
 
       // Time
       times = _presenter!.times;
+      _totalCost = _presenter!.getTotalCost();
+
+      isLoading = false;
     });
   }
 
@@ -349,6 +364,7 @@ class _MainBookingState extends State<MainBooking> implements MainBookingContrac
   void onSelectService() {
     setState(() {
       times = _presenter!.times;
+      _totalCost = _presenter!.getTotalCost();
     });
   }
 

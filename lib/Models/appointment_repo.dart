@@ -159,6 +159,24 @@ class AppointmentRepository {
     }
   }
 
+  Future<List<AppointmentModel>> getAppointmentsByBarberIdAndDate(String id, DateTime date) async {
+    try {
+      final QuerySnapshot querySnapshot = await _storage.collection(AppointmentModel.collectionName)
+          .where('barberID', isEqualTo: id)
+          .get();
+      final appointments = querySnapshot
+          .docs
+          .map((doc) => AppointmentModel.fromJson(doc.data() as Map<String, dynamic>))
+          .toList();
+      final List<AppointmentModel> result =
+      appointments.where((appointment) => Utility.isSameDate(appointment.date, date)).toList();
+      return result;
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
   Future<List<AppointmentModel>> getAppointmentsByBarberId(String id) async {
     try {
       final QuerySnapshot querySnapshot = await _storage.collection(AppointmentModel.collectionName)

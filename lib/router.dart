@@ -24,7 +24,7 @@ import 'package:hairvibe/views/splash_screen.dart';
 import 'package:hairvibe/views/voucher/redeem_voucher.dart';
 import 'package:hairvibe/views/voucher/voucher_page.dart';
 
-import 'package:hairvibe/views/admin/home_screen.dart';
+import 'package:hairvibe/views/admin/admin_home_screen.dart';
 import 'package:hairvibe/views/admin_appointment/appointment_calendar.dart';
 import 'package:hairvibe/views/admin_contact/contact_list.dart';
 import 'package:hairvibe/views/admin_management/comment.dart';

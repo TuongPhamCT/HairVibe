@@ -1,7 +1,9 @@
 import 'package:hairvibe/Contract/admin_appointment_contract.dart';
+import 'package:hairvibe/Facades/authenticator_facade.dart';
 import 'package:hairvibe/Models/appointment_model.dart';
 import 'package:hairvibe/Models/appointment_repo.dart';
 import 'package:hairvibe/Singletons/appointment_singleton.dart';
+import 'package:hairvibe/Singletons/user_singleton.dart';
 
 class AdminAppointmentPagePresenter {
   final AdminAppointmentPageContract _view;
@@ -9,19 +11,31 @@ class AdminAppointmentPagePresenter {
 
   final AppointmentSingleton _appointmentSingleton = AppointmentSingleton.getInstance();
   final AppointmentRepository _appointmentRepo = AppointmentRepository();
+  final AuthenticatorFacade _auth = AuthenticatorFacade();
 
   List<AppointmentModel> appointments = [];
   DateTime selectedDate = DateTime.now();
 
+  bool get isAdmin => UserSingleton.getInstance().currentUserIsAdmin();
+
   Future<void> getData() async {
-    appointments = await _appointmentRepo.getAppointmentsByDate(selectedDate);
+    if (isAdmin) {
+      appointments = await _appointmentRepo.getAppointmentsByDate(selectedDate);
+    } else {
+      appointments = await _appointmentRepo.getAppointmentsByBarberIdAndDate(_auth.userId!, selectedDate);
+    }
+
     _view.onLoadDataSucceeded();
   }
 
   Future<void> handleChangeDate(DateTime date) async {
     _view.onSelectDate();
     selectedDate = date;
-    appointments = await _appointmentRepo.getAppointmentsByDate(selectedDate);
+    if (isAdmin) {
+      appointments = await _appointmentRepo.getAppointmentsByDate(selectedDate);
+    } else {
+      appointments = await _appointmentRepo.getAppointmentsByBarberIdAndDate(_auth.userId!, selectedDate);
+    }
     _view.onLoadDataSucceeded();
   }
 
