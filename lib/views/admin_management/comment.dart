@@ -23,7 +23,8 @@ class AdminCommentPage extends StatefulWidget {
 }
 
 class AdminCommentPageState extends State<AdminCommentPage>
-    with SingleTickerProviderStateMixin implements AdminCommentPageContract {
+    with SingleTickerProviderStateMixin
+    implements AdminCommentPageContract {
   AdminCommentPagePresenter? _presenter;
   late TabController _tabController;
   final int _currentPageIndex = 3;
@@ -67,58 +68,60 @@ class AdminCommentPageState extends State<AdminCommentPage>
         centerTitle: true,
         actions: const [],
       ),
-      body: isLoading ? UtilWidgets.getLoadingWidget() : Column(
-        children: [
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Container(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height * 0.25,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  image: DecorationImage(
-                    image: AssetImage(AssetHelper.logo),
-                    fit: BoxFit.cover,
+      body: isLoading
+          ? UtilWidgets.getLoadingWidget()
+          : Column(
+              children: [
+                Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      height: MediaQuery.of(context).size.height * 0.25,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        image: DecorationImage(
+                          image: AssetImage(AssetHelper.logo),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: -40,
+                      left: MediaQuery.of(context).size.width / 2 - 40,
+                      child: const CircleAvatar(
+                        radius: 40,
+                        backgroundImage: AssetImage(AssetHelper.logo),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 50),
+                Text(
+                  barberName,
+                  style: TextDecor.homeTitle.copyWith(color: Colors.white),
+                ),
+                TabBar(
+                  controller: _tabController,
+                  indicatorColor: Palette.primary,
+                  labelColor: Colors.white,
+                  unselectedLabelColor: Colors.grey,
+                  tabs: const [
+                    Tab(text: 'REVIEWS'),
+                    Tab(text: 'SERVICES'),
+                  ],
+                ),
+                Expanded(
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: [
+                      _buildReviews(),
+                      _buildServices(),
+                    ],
                   ),
                 ),
-              ),
-              Positioned(
-                bottom: -40,
-                left: MediaQuery.of(context).size.width / 2 - 40,
-                child: const CircleAvatar(
-                  radius: 40,
-                  backgroundImage: AssetImage(AssetHelper.logo),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 50),
-          Text(
-            barberName,
-            style: TextDecor.homeTitle.copyWith(color: Colors.white),
-          ),
-          TabBar(
-            controller: _tabController,
-            indicatorColor: Palette.primary,
-            labelColor: Colors.white,
-            unselectedLabelColor: Colors.grey,
-            tabs: const [
-              Tab(text: 'REVIEWS'),
-              Tab(text: 'SERVICES'),
-            ],
-          ),
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                _buildReviews(),
-                _buildServices(),
               ],
             ),
-          ),
-        ],
-      ),
       bottomNavigationBar: AdminBottomBar(currentIndex: _currentPageIndex),
     );
   }
@@ -147,20 +150,20 @@ class AdminCommentPageState extends State<AdminCommentPage>
           subtitle: Text(rating.info.toString(),
               style: const TextStyle(color: Colors.white)),
           trailing: RatingBar.builder(
-              initialRating: rating.rate ?? 1,
-              minRating: 1,
-              direction: Axis.horizontal,
-              allowHalfRating: true,
-              itemCount: 5,
-              itemSize: 45,
-              itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-              itemBuilder: (context, _) => const Icon(
-                Icons.star,
-                color: Colors.amber,
-              ),
-              ignoreGestures: true,
-              onRatingUpdate: (double value) {  },
+            initialRating: rating.rate ?? 1,
+            minRating: 1,
+            direction: Axis.horizontal,
+            allowHalfRating: true,
+            itemCount: 5,
+            itemSize: 45,
+            itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+            itemBuilder: (context, _) => const Icon(
+              Icons.star,
+              color: Colors.amber,
             ),
+            ignoreGestures: true,
+            onRatingUpdate: (double value) {},
+          ),
         );
       },
     );
@@ -202,7 +205,48 @@ class AdminCommentPageState extends State<AdminCommentPage>
         ServiceListItemBuilder builder = ServiceListItemBuilder();
         builder.setService(_presenter!.services[index]);
         builder.setOnPressed(() {});
-        return builder.createWidget();
+
+        return Dismissible(
+          key: Key(_presenter!.services[index].serviceID.toString()),
+          direction: DismissDirection.endToStart,
+          confirmDismiss: (direction) async {
+            return await showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text('Confirm'),
+                  content: const Text(
+                      'Are you sure you want to delete this service?'),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(true),
+                      child: const Text('Delete'),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+          onDismissed: (direction) {
+            setState(() {
+              _presenter!.services.removeAt(index);
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Service deleted')),
+            );
+          },
+          background: Container(
+            color: Colors.red,
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: const Icon(Icons.delete, color: Colors.white),
+          ),
+          child: builder.createWidget() ?? Container(),
+        );
       },
     );
   }
