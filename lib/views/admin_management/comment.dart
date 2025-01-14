@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:hairvibe/Builders/WidgetBuilder/widget_builder_director.dart';
 import 'package:hairvibe/Contract/admin_comment_page_contract.dart';
 import 'package:hairvibe/Presenter/admin_comment_page_presenter.dart';
 import 'package:hairvibe/Singletons/barber_singleton.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
+import 'package:hairvibe/commands/admin_comment_page/comment_delete_service_command.dart';
 import 'package:hairvibe/config/asset_helper.dart';
 import 'package:hairvibe/views/admin_management/add_service.dart';
 import 'package:hairvibe/widgets/admin_bottom_bar.dart';
@@ -202,51 +204,17 @@ class AdminCommentPageState extends State<AdminCommentPage>
       shrinkWrap: true,
       itemCount: _presenter!.services.length,
       itemBuilder: (context, index) {
+        CustomizedWidgetBuilderDirector director = CustomizedWidgetBuilderDirector();
         ServiceListItemBuilder builder = ServiceListItemBuilder();
-        builder.setService(_presenter!.services[index]);
-        builder.setOnPressed(() {});
-
-        return Dismissible(
-          key: Key(_presenter!.services[index].serviceID.toString()),
-          direction: DismissDirection.endToStart,
-          confirmDismiss: (direction) async {
-            return await showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: const Text('Confirm'),
-                  content: const Text(
-                      'Are you sure you want to delete this service?'),
-                  actions: <Widget>[
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(false),
-                      child: const Text('Cancel'),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(true),
-                      child: const Text('Delete'),
-                    ),
-                  ],
-                );
-              },
-            );
-          },
-          onDismissed: (direction) {
-            setState(() {
-              _presenter!.services.removeAt(index);
-            });
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Service deleted')),
-            );
-          },
-          background: Container(
-            color: Colors.red,
-            alignment: Alignment.centerRight,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: const Icon(Icons.delete, color: Colors.white),
-          ),
-          child: builder.createWidget() ?? Container(),
+        director.makeAdminCommentServiceItem(
+            builder: builder,
+            model: _presenter!.services[index],
+            onDelete: AdminCommentDeleteServiceCommand(
+                presenter: _presenter,
+                serviceModel: _presenter!.services[index]
+            )
         );
+        return builder.createWidget();
       },
     );
   }
@@ -265,5 +233,15 @@ class AdminCommentPageState extends State<AdminCommentPage>
       barberName = _presenter!.getUserName();
       isLoading = false;
     });
+  }
+
+  @override
+  void onPopContext() {
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  @override
+  void onWaitingProgressBar() {
+    UtilWidgets.createLoadingWidget(context);
   }
 }

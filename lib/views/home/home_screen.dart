@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_icon_class/font_awesome_icon_class.dart';
 import 'package:hairvibe/Builders/WidgetBuilder/barber_list_item_builder.dart';
+import 'package:hairvibe/Builders/WidgetBuilder/widget_builder_director.dart';
 import 'package:hairvibe/Contract/home_screen_contract.dart';
 import 'package:hairvibe/Models/rating_repo.dart';
 import 'package:hairvibe/Models/service_model.dart';
 import 'package:hairvibe/Models/user_model.dart';
 import 'package:hairvibe/Presenter/home_screen_presenter.dart';
+import 'package:hairvibe/Singletons/notification_singleton.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/Utility.dart';
+import 'package:hairvibe/commands/home_screen/home_screen_press_service_command.dart';
 import 'package:hairvibe/views/all_barber/barber.dart';
 import 'package:hairvibe/views/all_service.dart';
 import 'package:hairvibe/views/booking/main_booking.dart';
@@ -37,8 +40,8 @@ class _HomeScreenState extends State<HomeScreen> implements HomeScreenContract {
   List<ServiceModel> _serviceList = [];
   Map<String, double> _ratings = {};
 
-  final int _soLuongThongBao = 2;
   final int _currentPageIndex = 0;
+  final CustomizedWidgetBuilderDirector director = CustomizedWidgetBuilderDirector();
 
   @override
   void initState() {
@@ -68,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> implements HomeScreenContract {
         ),
         centerTitle: true,
         actions: [
-          NotificationBell(notificationCount: _soLuongThongBao),
+          NotificationBell(notificationCount: NotificationSingleton.getInstance().getUnreadCount()),
         ],
       ),
       body: SingleChildScrollView(
@@ -128,10 +131,14 @@ class _HomeScreenState extends State<HomeScreen> implements HomeScreenContract {
                 itemCount: _serviceList.length,
                 itemBuilder: (context, index) {
                   ServiceListItemBuilder builder = ServiceListItemBuilder();
-                  builder.setService(_serviceList[index]);
-                  builder.setOnPressed(() {
-                    _presenter!.handleServicePressed(builder.service!);
-                  });
+                  director.makePressableServiceItem(
+                      builder: builder,
+                      model: _serviceList[index],
+                      onPressed: HomeScreenPressServiceCommand(
+                          presenter: _presenter,
+                          serviceModel: _serviceList[index]
+                      )
+                  );
                   return builder.createWidget();
                 },
               ),

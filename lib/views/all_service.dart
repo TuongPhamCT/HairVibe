@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_icon_class/font_awesome_icon_class.dart';
+import 'package:hairvibe/Builders/WidgetBuilder/widget_builder_director.dart';
 import 'package:hairvibe/Contract/all_service_screen_contract.dart';
 import 'package:hairvibe/Models/service_model.dart';
 import 'package:hairvibe/Presenter/all_service_screen_presenter.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
+import 'package:hairvibe/commands/all_services/all_services_press_service_command.dart';
 import 'package:hairvibe/widgets/util_widgets.dart';
 
 import '../Builders/WidgetBuilder/service_list_item_builder.dart';
@@ -80,11 +82,16 @@ class _AllServiceScreenState extends State<AllServiceScreen> implements AllServi
                 shrinkWrap: true,
                 itemCount: _serviceList.length,
                 itemBuilder: (context, index) {
+                  CustomizedWidgetBuilderDirector director = CustomizedWidgetBuilderDirector();
                   ServiceListItemBuilder builder = ServiceListItemBuilder();
-                  builder.setService(_serviceList[index]);
-                  builder.setOnPressed(() {
-                    _presenter!.handleServicePressed(builder.service!);
-                  });
+                  director.makePressableServiceItem(
+                      builder: builder,
+                      model: _serviceList[index],
+                      onPressed: AllServicesPressServiceCommand(
+                          presenter: _presenter,
+                          serviceModel: _serviceList[index]
+                      )
+                  );
                   return builder.createWidget();
                 },
               ),

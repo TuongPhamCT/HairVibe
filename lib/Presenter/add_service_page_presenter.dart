@@ -37,7 +37,7 @@ class AddServicePagePresenter {
     ServiceModel service = ServiceModel(
       name: name,
       price: priceNumber,
-      duration: int.parse(duration),
+      duration: int.parse(duration) * 60,
       info: description
     );
 
