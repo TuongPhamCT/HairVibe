@@ -34,4 +34,12 @@ class AdminCommentPagePresenter {
     return _userSingleton.currentUser!.name ?? "";
   }
 
+  Future<void> handleDeleteService(ServiceModel service) async {
+    _view.onWaitingProgressBar();
+    await _serviceRepo.deleteServiceById(service.serviceID!);
+    services.remove(service);
+    _view.onPopContext();
+    _view.onLoadDataSucceeded();
+  }
+
 }

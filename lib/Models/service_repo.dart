@@ -32,7 +32,7 @@ class ServiceRepository {
     return isSuccess;
   }
 
-  void deleteServiceById(String id) async => _storage.collection(ServiceModel.collectionName).doc(id).delete();
+  Future<void> deleteServiceById(String id) async => _storage.collection(ServiceModel.collectionName).doc(id).delete();
 
   Future<List<ServiceModel>> getAllServices() async {
     try {
