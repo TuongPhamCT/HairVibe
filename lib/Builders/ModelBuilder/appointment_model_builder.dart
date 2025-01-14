@@ -48,6 +48,7 @@ class AppointmentModelBuilder {
   }
 
   void addServices(List<ServiceModel> services) {
+    _model.services ??= [];
     _model.services!.addAll(services);
   }
 

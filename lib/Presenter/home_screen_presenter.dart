@@ -28,8 +28,12 @@ class HomeScreenPresenter {
   Future<void> getData() async {
     serviceList = await _serviceRepo.getAllServices();
     barberList = await _userRepo.getAllBarbers();
-    serviceList = serviceList.getRange(0, maxServiceLength).toList();
-    barberList = barberList.getRange(0, maxBarberLength).toList();
+    if (serviceList.length > 4) {
+      serviceList = serviceList.getRange(0, maxServiceLength).toList();
+    }
+    if (barberList.length > 4) {
+      barberList = barberList.getRange(0, maxBarberLength).toList();
+    }
     for (UserModel barber in barberList) {
       ratings[barber.userID!] = await _ratingRepo.calculateRatingOfBarber(barber.userID!);
     }

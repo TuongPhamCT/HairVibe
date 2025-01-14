@@ -20,7 +20,7 @@ class WorkSessionRepository {
     }
   }
 
-  void deleteWorkSessionById(String userId, String id) async
+  Future<void> deleteWorkSessionById(String userId, String id) async
     => _storage.collection(UserModel.collectionName)
                 .doc(userId)
                 .collection(WorkSessionModel.collectionName)

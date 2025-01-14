@@ -37,34 +37,19 @@ class BarberReviewTab extends StatelessWidget {
                   color: Palette.primary,
                 ),
               ),
-              Expanded(child: Container()),
-              InkWell(
-                onTap: () {
-                  Navigator.of(context).pushNamed(RatingBarberPage.routeName);
-                },
-                child: Text(
-                  'Add Review',
-                  style: TextDecor.nameBarberBook.copyWith(
-                    color: Palette.primary,
-                  ),
-                ),
-              ),
             ],
           ),
           const SizedBox(height: 20),
-          SizedBox(
-            height: 450,
-            child: ListView.builder(
-              itemCount: ratings.length,
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                ReviewItemBuilder builder = ReviewItemBuilder();
-                RatingModel rating = ratings[index];
-                builder.setRatingModel(rating);
-                builder.setUserModel(users[rating.userID]!);
-                return builder.createWidget();
-              },
-            ),
+          ListView.builder(
+            itemCount: ratings.length,
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              ReviewItemBuilder builder = ReviewItemBuilder();
+              RatingModel rating = ratings[index];
+              builder.setRatingModel(rating);
+              builder.setUserModel(users[rating.userID]!);
+              return builder.createWidget();
+            },
           ),
         ],
       ),

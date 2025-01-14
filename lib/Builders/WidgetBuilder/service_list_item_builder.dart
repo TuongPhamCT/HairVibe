@@ -34,7 +34,7 @@ class ServiceListItemBuilder implements CustomizedWidgetBuilder {
     }
     return ServiceListItem(
       serviceName: service!.name,
-      duration: Utility.formatDurationFromSeconds(service!.duration),
+      duration: Utility.formatDurationFromMinutes(service!.duration),
       cost: Utility.formatCurrency(service!.price),
       onPressed: onPressed,
       deletable: deletable,

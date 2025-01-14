@@ -1,4 +1,5 @@
 import 'package:hairvibe/Contract/admin_home_screen_contract.dart';
+import 'package:hairvibe/Facades/authenticator_facade.dart';
 import 'package:hairvibe/Models/appointment_model.dart';
 import 'package:hairvibe/Models/appointment_repo.dart';
 import 'package:hairvibe/Models/service_repo.dart';
@@ -12,6 +13,7 @@ class AdminHomeScreenPresenter {
   final UserRepository _userRepo = UserRepository();
   final ServiceRepository _serviceRepo = ServiceRepository();
   final AppointmentRepository _appointmentRepo = AppointmentRepository();
+  final AuthenticatorFacade _auth = AuthenticatorFacade();
 
   int servicesCount = 0;
   int todayAppointmentCount = 0;
@@ -21,17 +23,30 @@ class AdminHomeScreenPresenter {
   static const List<String> dayOfWeeks = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
   Map<String, List<AppointmentModel>> appointments = {};
 
+  bool isAdmin = true;
+
   Future<void> getData() async {
-    servicesCount = await _serviceRepo.getServicesCount();
-    customerCount = await _userRepo.getCustomersCount();
-    barberCount = await _userRepo.getBarbersCount();
+    if (isAdmin) {
+      servicesCount = await _serviceRepo.getServicesCount();
+      customerCount = await _userRepo.getCustomersCount();
+      barberCount = await _userRepo.getBarbersCount();
 
-    for (int i = 0; i < 7; i++) {
-      List<AppointmentModel> appointmentList = await _appointmentRepo.getAppointmentsByDate(dateOfWeeks[i]);
-      appointments[dayOfWeeks[i]] = appointmentList;
+      for (int i = 0; i < 7; i++) {
+        List<AppointmentModel> appointmentList = await _appointmentRepo.getAppointmentsByDate(dateOfWeeks[i]);
+        appointments[dayOfWeeks[i]] = appointmentList;
 
-      if (Utility.isSameDate(DateTime.now(), dateOfWeeks[i])) {
-        todayAppointmentCount = appointmentList.length;
+        if (Utility.isSameDate(DateTime.now(), dateOfWeeks[i])) {
+          todayAppointmentCount = appointmentList.length;
+        }
+      }
+    } else {
+      for (int i = 0; i < 7; i++) {
+        List<AppointmentModel> appointmentList = await _appointmentRepo.getAppointmentsByBarberIdAndDate(_auth.userId!, dateOfWeeks[i]);
+        appointments[dayOfWeeks[i]] = appointmentList;
+
+        if (Utility.isSameDate(DateTime.now(), dateOfWeeks[i])) {
+          todayAppointmentCount = appointmentList.length;
+        }
       }
     }
 

@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_icon_class/font_awesome_icon_class.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/views/admin_appointment/appointment_calendar.dart';
-import 'package:hairvibe/views/admin/home_screen.dart';
+import 'package:hairvibe/views/admin/admin_home_screen.dart';
 import 'package:hairvibe/views/admin_contact/contact_list.dart';
 import 'package:hairvibe/views/admin_management/comment.dart';
+
+import '../Singletons/user_singleton.dart';
+import '../views/account/account_page.dart';
 
 class AdminBottomBar extends StatefulWidget {
   final int currentIndex;
@@ -27,20 +30,24 @@ class _AdminBottomBarState extends State<AdminBottomBar> {
   Widget _getPage(String routeName) {
     switch (routeName) {
       case AdminHomeScreen.routeName:
-        return AdminHomeScreen();
+        return const AdminHomeScreen();
       case AdminAppointmentPage.routeName:
-        return AdminAppointmentPage();
+        return const AdminAppointmentPage();
       case AdminContactListPage.routeName:
-        return AdminContactListPage();
+        return const AdminContactListPage();
       case AdminCommentPage.routeName:
-        return AdminCommentPage();
+        return const AdminCommentPage();
+      case AccountPage.routeName:
+        return const AccountPage();
       default:
-        return AdminHomeScreen(); // Default page
+        return const AdminHomeScreen(); // Default page
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    String namePrefix = UserSingleton.getInstance().currentUser!.name!.characters.first;
+
     return Container(
       decoration: const BoxDecoration(
         border: Border(
@@ -67,6 +74,8 @@ class _AdminBottomBarState extends State<AdminBottomBar> {
               break;
             case 3:
               _navigateWithoutAnimation(context, AdminCommentPage.routeName);
+            case 4:
+              _navigateWithoutAnimation(context, AccountPage.routeName);
               break;
           }
         },
@@ -75,27 +84,27 @@ class _AdminBottomBarState extends State<AdminBottomBar> {
         unselectedItemColor: Colors.white,
         showSelectedLabels: false,
         showUnselectedLabels: false,
-        items: const [
-          BottomNavigationBarItem(
+        items: [
+          const BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.houseChimney),
             label: 'Home',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.solidCalendarDays),
             label: 'Booking',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.solidMessage),
             label: 'Contact',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.solidUser),
             label: 'Profile',
           ),
           BottomNavigationBarItem(
             icon: CircleAvatar(
               backgroundColor: Palette.primary,
-              child: Text('D', style: TextStyle(color: Colors.black)),
+              child: Text(namePrefix.toUpperCase(), style: const TextStyle(color: Colors.black)),
             ),
             label: 'Menu',
           ),

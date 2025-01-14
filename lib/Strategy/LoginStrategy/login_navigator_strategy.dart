@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:hairvibe/views/admin/home_screen.dart';
-
-import '../../views/barber/home_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:hairvibe/views/admin/admin_home_screen.dart';
 import '../../views/home/home_screen.dart';
 
 abstract class LoginNavigatorStrategy {
@@ -11,20 +10,29 @@ abstract class LoginNavigatorStrategy {
 class CustomerLoginNavigatorStrategy implements LoginNavigatorStrategy {
   @override
   void execute(BuildContext context) {
-    Navigator.of(context).pushNamed(HomeScreen.routeName);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const HomeScreen()),
+    );
   }
 }
 
 class AdminLoginNavigatorStrategy implements LoginNavigatorStrategy {
   @override
   void execute(BuildContext context) {
-    Navigator.of(context).pushNamed(AdminHomeScreen.routeName);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const AdminHomeScreen()),
+    );
   }
 }
 
 class BarberLoginNavigatorStrategy implements LoginNavigatorStrategy {
   @override
   void execute(BuildContext context) {
-    Navigator.of(context).pushNamed(BarberHomeScreen.routeName);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const AdminHomeScreen()),
+    );
   }
 }

@@ -29,9 +29,9 @@ class CheckServiceListItemBuilder implements CustomizedWidgetBuilder {
     }
     return CheckServiceListItem(
       title: service!.name!,
-      isChecked: true,
+      isChecked: isChecked ?? false,
       price: Utility.formatCurrency(service!.price),
-      duration: Utility.formatDurationFromSeconds(service!.duration),
+      duration: Utility.formatDurationFromMinutes(service!.duration),
       onChanged: onChanged ?? (bool newValue) {},
     );
   }

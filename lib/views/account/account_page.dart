@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_icon_class/font_awesome_icon_class.dart';
 import 'package:hairvibe/Singletons/notification_singleton.dart';
 import 'package:hairvibe/Singletons/user_singleton.dart';
+import 'package:hairvibe/Strategy/BottomBarStrategy/bottom_bar_strategy.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/facades/authenticator_facade.dart';
@@ -24,8 +25,23 @@ class _AccountPageState extends State<AccountPage> implements NotificationSubscr
   final AuthenticatorFacade _auth = AuthenticatorFacade();
   final NotificationSingleton _notificationSingleton = NotificationSingleton.getInstance();
 
-  int _currentPageIndex = 3;
   int _notificationCount = 2;
+
+  BottomBarRenderStrategy? bottomBarRenderStrategy;
+
+  @override
+  void initState() {
+    _notificationSingleton.subscribe(this);
+    _notificationCount = _notificationSingleton.getUnreadCount();
+    UserSingleton userSingleton = UserSingleton.getInstance();
+    if (userSingleton.currentUserIsCustomer()) {
+      bottomBarRenderStrategy = userSingleton.getBottomBarRenderStrategy(3);
+    } else {
+      bottomBarRenderStrategy = userSingleton.getBottomBarRenderStrategy(4);
+    }
+
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -112,9 +128,7 @@ class _AccountPageState extends State<AccountPage> implements NotificationSubscr
           ],
         ),
       ),
-      bottomNavigationBar: BottomBarCustom(
-        currentIndex: _currentPageIndex,
-      ),
+      bottomNavigationBar: bottomBarRenderStrategy?.render()
     );
   }
 

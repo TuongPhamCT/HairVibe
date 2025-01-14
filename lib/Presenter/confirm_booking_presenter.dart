@@ -23,7 +23,7 @@ class ConfirmBookingPresenter {
   }
 
   void onChangeDependencies() {
-    _view.onChangeDependencies(true);
+    _view.onChangeDependencies(checkCacheVoucher());
   }
 
   bool checkCacheVoucher() {

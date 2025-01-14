@@ -1,9 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:hairvibe/Contract/add_barber_screen_contract.dart';
+import 'package:hairvibe/Presenter/add_barber_screen_presenter.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/views/admin_contact/contact_list.dart';
 
-class AddBarberScreen extends StatelessWidget {
+import '../../widgets/sign_up_form.dart';
+import '../../widgets/util_widgets.dart';
+
+class AddBarberScreen extends StatefulWidget {
+  const AddBarberScreen({super.key});
+
+  @override
+  State<AddBarberScreen> createState() => _AddBarberScreenState();
+}
+
+class _AddBarberScreenState extends State<AddBarberScreen> implements AddBarberScreenContract {
+  AddBarberScreenPresenter? _presenter;
+
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPassController = TextEditingController();
+
+  String? emailError;
+  String? fullNameError;
+  String? phoneError;
+  String? passwordError;
+  String? confirmPasswordError;
+
+  @override
+  void initState() {
+    _presenter = AddBarberScreenPresenter(this);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,10 +46,7 @@ class AddBarberScreen extends StatelessWidget {
         leadingWidth: 100,
         leading: TextButton(
           onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => AdminContactListPage()),
-            );
+            onBack();
           },
           child: Text(
             'CANCEL',
@@ -31,8 +60,14 @@ class AddBarberScreen extends StatelessWidget {
         centerTitle: true,
         actions: [
           TextButton(
-            onPressed: () {
-              // Save action
+            onPressed: () async {
+              await _presenter?.signUp(
+              emailController.text,
+              nameController.text,
+              phoneController.text,
+              passwordController.text,
+              confirmPassController.text
+              );
             },
             child: Text(
               'SAVE',
@@ -46,51 +81,100 @@ class AddBarberScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextField(
-              decoration: InputDecoration(
-                hintText: 'Name',
-                hintStyle: TextDecor.hintText,
-                filled: true,
-                fillColor: Colors.black,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-              style: TextDecor.inputText,
+            SignUpForm(
+              textController: emailController,
+              lableText: 'Email',
+              obscureText: false,
+              keyboardType: TextInputType.text,
+              errorText: emailError,
             ),
-            const SizedBox(height: 20),
-            TextField(
-              decoration: InputDecoration(
-                hintText: 'Email',
-                hintStyle: TextDecor.hintText,
-                filled: true,
-                fillColor: Colors.black,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-              style: TextDecor.inputText,
+            SignUpForm(
+              textController: nameController,
+              lableText: 'Name',
+              obscureText: false,
+              keyboardType: TextInputType.text,
+              errorText: fullNameError,
             ),
-            const SizedBox(height: 20),
-            TextField(
+            SignUpForm(
+              textController: phoneController,
+              lableText: 'Phone number',
+              obscureText: false,
+              keyboardType: TextInputType.number,
+              errorText: phoneError,
+            ),
+            SignUpForm(
+              textController: passwordController,
+              lableText: 'Password',
               obscureText: true,
-              decoration: InputDecoration(
-                hintText: 'Password',
-                hintStyle: TextDecor.hintText,
-                filled: true,
-                fillColor: Colors.black,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-              style: TextDecor.inputText,
+              keyboardType: TextInputType.text,
+              errorText: passwordError,
+            ),
+            SignUpForm(
+              textController: confirmPassController,
+              lableText: 'Confirm Password',
+              obscureText: true,
+              keyboardType: TextInputType.text,
+              errorText: confirmPasswordError,
             ),
           ],
         ),
       ),
     );
+  }
+
+  @override
+  void onBack() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const AdminContactListPage(tabIndex: 1)),
+    );
+  }
+
+  @override
+  void onSave() {
+    UtilWidgets.createDialog(
+        context,
+        UtilWidgets.NOTIFICATION,
+        "Add new barber successfully!",
+        () {
+          Navigator.of(context, rootNavigator: true).pop();
+          onBack();
+        }
+    );
+  }
+
+  @override
+  void onValidatingFailed(Map<String, String?> errors) {
+    if (errors.isNotEmpty){
+      setState(() {
+        emailError = errors["email"];
+        fullNameError = errors["name"];
+        phoneError = errors["phoneNumber"];
+        passwordError = errors["password"];
+        confirmPasswordError = errors["confirmPassword"];
+      });
+    }
+  }
+
+  @override
+  void onPopContext() {
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  @override
+  void onWaitingProgressBar() {
+    UtilWidgets.createLoadingWidget(context);
+  }
+
+  @override
+  void onEmailAlreadyInUse() {
+    setState(() {
+      emailError = "Email has already been taken";
+    });
+  }
+
+  @override
+  void onSignUpFailed() {
+    UtilWidgets.createSnackBar(context, "Add barber failed. Please try again.");
   }
 }

@@ -1,4 +1,6 @@
 abstract class ScheduleListScreenContract {
   void onSaveSucceeded();
-  void onSaveFailed();
+  void onBack();
+  void onWaitingProgressBar();
+  void onPopContext();
 }

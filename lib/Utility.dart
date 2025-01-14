@@ -4,21 +4,21 @@ import 'package:hairvibe/Models/notice_repo.dart';
 
 abstract class Utility {
 
-  static String formatDurationFromSeconds (int? seconds) {
-    if (seconds == null){
-      return "--";
+  static String formatDurationFromMinutes (int? minutes) {
+    if (minutes == null) {
+      return "0 minutes";
     }
 
-    final int hours = seconds ~/ 3600;
-    final int minutes = (seconds % 3600) ~/60;
+    final int hours = minutes ~/ 60;
+    final int remainMinutes = minutes % 60;
 
     // final String hoursStr = minutes.toString().padLeft(2, '0');
     // final String minutesStr = minutes.toString().padLeft(2, '0');
 
     if (hours == 0) {
-      return "$minutes minutes";
+      return "$remainMinutes minutes";
     }
-    return "{$hours}h ${minutes}m";
+    return "${hours}h ${remainMinutes}m";
   }
 
   static String formatCurrency(int? amount) {
