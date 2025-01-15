@@ -1,6 +1,7 @@
 import 'package:hairvibe/Contract/admin_contact_list_contract.dart';
 import 'package:hairvibe/Models/user_model.dart';
 import 'package:hairvibe/Models/user_repo.dart';
+import 'package:hairvibe/Singletons/barber_singleton.dart';
 
 class AdminContactListPagePresenter {
   final AdminContactListPageContract _view;
@@ -43,6 +44,8 @@ class AdminContactListPagePresenter {
   }
 
   void handleBarberPressed(UserModel barber) {
-
+    BarberSingleton barberSingleton = BarberSingleton.getInstance();
+    barberSingleton.setBarber(barber);
+    _view.onSelectBarber();
   }
 }

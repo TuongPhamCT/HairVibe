@@ -36,7 +36,11 @@ class AdminHomeScreenPresenter {
         appointments[dayOfWeeks[i]] = appointmentList;
 
         if (Utility.isSameDate(DateTime.now(), dateOfWeeks[i])) {
-          todayAppointmentCount = appointmentList.length;
+          todayAppointmentCount = appointmentList
+                                    .where((element)
+                                      => element.status != AppointmentStatus.CANCELLED)
+                                    .toList()
+                                    .length;
         }
       }
     } else {
@@ -45,7 +49,12 @@ class AdminHomeScreenPresenter {
         appointments[dayOfWeeks[i]] = appointmentList;
 
         if (Utility.isSameDate(DateTime.now(), dateOfWeeks[i])) {
-          todayAppointmentCount = appointmentList.length;
+          todayAppointmentCount = appointmentList
+              .where((element)
+          => element.status != AppointmentStatus.CANCELLED)
+              .toList()
+              .length;
+
         }
       }
     }

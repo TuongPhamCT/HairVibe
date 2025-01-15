@@ -5,6 +5,7 @@ import 'package:hairvibe/Presenter/admin_contact_list_presenter.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/config/asset_helper.dart';
+import 'package:hairvibe/views/all_barber/detail_barber.dart';
 import 'package:hairvibe/widgets/admin_bottom_bar.dart';
 import 'package:hairvibe/views/admin_contact/add_barber.dart';
 import 'package:hairvibe/widgets/util_widgets.dart';
@@ -100,7 +101,7 @@ class AdminContactListPageState extends State<AdminContactListPage>
                       FocusScope.of(context).unfocus();
                     },
                     onSubmitted: (text) {
-                      isSearching = true;
+                      isSearching = text.isNotEmpty;
                       _presenter?.handleSearch(text.trim());
                     },
                     decoration: InputDecoration(
@@ -226,7 +227,7 @@ class AdminContactListPageState extends State<AdminContactListPage>
 
   @override
   void onSelectBarber() {
-    //Navigator.of(context).pushNamed();
+    Navigator.of(context).pushNamed(DetailBarber.routeName);
   }
 
   @override

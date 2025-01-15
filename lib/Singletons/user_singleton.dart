@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:hairvibe/Strategy/BottomBarStrategy/bottom_bar_strategy.dart';
+import 'package:hairvibe/observers/data_fetching_subcriber.dart';
 
 import '../Models/user_model.dart';
 import 'notification_singleton.dart';
@@ -13,6 +13,8 @@ class UserSingleton {
   }
 
   UserModel? currentUser;
+
+  List<DataFetchingSubscriber> subscribers = [];
 
   bool currentUserIsCustomer() {
     return currentUser != null
@@ -57,6 +59,20 @@ class UserSingleton {
         return AdminBottomBarRenderStrategy(index: index);
       default:
         return CustomerBottomBarRenderStrategy(index: index);
+    }
+  }
+
+  void subscribe(DataFetchingSubscriber subscriber) {
+    subscribers.add(subscriber);
+  }
+
+  void unsubscribe(DataFetchingSubscriber subscriber) {
+    subscribers.remove(subscriber);
+  }
+
+  void notifySubscribers() {
+    for (var subscriber in subscribers) {
+      subscriber.updateData();
     }
   }
 }

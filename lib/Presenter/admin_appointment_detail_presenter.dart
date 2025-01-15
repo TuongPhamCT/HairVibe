@@ -37,4 +37,23 @@ class AdminAppointmentDetailPagePresenter {
     _singleton.reset();
     _view.onBack();
   }
+
+  void handleCompleteButtonPressed() {
+    _view.onCompleteAppointment();
+  }
+
+  void handleCompleteAppointment() {
+    try {
+      AppointmentModel targetAppointment = _singleton.appointment!;
+      targetAppointment.status = AppointmentStatus.COMPLETED;
+      _appointmentRepo.updateAppointment(targetAppointment);
+      _notificationFacade.createCompleteAppointmentNotification(
+          appointment: targetAppointment,
+      );
+      _view.onCompleteAppointmentSucceeded();
+    } catch (e) {
+      print(e);
+      _view.onCompleteAppointmentFailed();
+    }
+  }
 }

@@ -3,9 +3,11 @@ import 'package:font_awesome_icon_class/font_awesome_icon_class.dart';
 import 'package:hairvibe/Contract/detail_barber_contract.dart';
 import 'package:hairvibe/Models/rating_model.dart';
 import 'package:hairvibe/Presenter/detail_barber_presenter.dart';
+import 'package:hairvibe/Singletons/user_singleton.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/config/asset_helper.dart';
+import 'package:hairvibe/observers/data_fetching_subcriber.dart';
 import 'package:hairvibe/views/all_barber/photo_tab.dart';
 import 'package:hairvibe/views/all_barber/review_tab.dart';
 import 'package:hairvibe/widgets/util_widgets.dart';
@@ -18,12 +20,16 @@ class DetailBarber extends StatefulWidget {
   State<DetailBarber> createState() => _DetailBarberState();
 }
 
-class _DetailBarberState extends State<DetailBarber> implements DetailBarberContract {
+class _DetailBarberState extends State<DetailBarber>
+    implements DetailBarberContract, DataFetchingSubscriber {
   DetailBarberPresenter? _presenter;
   bool isLoading = true;
 
+  final UserSingleton userSingleton = UserSingleton.getInstance();
+
   @override
   void initState() {
+    userSingleton.subscribe(this);
     _presenter = DetailBarberPresenter(this);
     super.initState();
   }
@@ -36,6 +42,12 @@ class _DetailBarberState extends State<DetailBarber> implements DetailBarberCont
 
   Future<void> loadData() async {
     await _presenter?.getData();
+  }
+
+  @override
+  void dispose() {
+    userSingleton.unsubscribe(this);
+    super.dispose();
   }
 
   @override
@@ -68,10 +80,17 @@ class _DetailBarberState extends State<DetailBarber> implements DetailBarberCont
               width: 100,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(80),
-                image: DecorationImage(
-                  image: NetworkImage(_presenter!.getBarberAvatarUrl()),
-                  fit: BoxFit.cover,
-                ),
+                image: _presenter!.getBarberAvatarUrl().isNotEmpty ?
+                  DecorationImage(
+                    image: NetworkImage(_presenter!.getBarberAvatarUrl()),
+                    fit: BoxFit.cover,
+                  )
+                :
+                  const DecorationImage(
+                    image: AssetImage(AssetHelper.barberAvatar),
+                    fit: BoxFit.cover,
+                  )
+                ,
               ),
             ),
             const SizedBox(height: 10),
@@ -109,5 +128,10 @@ class _DetailBarberState extends State<DetailBarber> implements DetailBarberCont
     setState(() {
       isLoading = false;
     });
+  }
+
+  @override
+  void updateData() {
+    _presenter?.getData();
   }
 }

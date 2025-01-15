@@ -65,7 +65,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> implements ConfirmBooki
       servicePrices.add(const SizedBox(height: 10));
     }
 
-    if (data[ViewBookingData.DISCOUNT] > 0) {
+    if (data[ViewBookingData.DISCOUNT] != null && data[ViewBookingData.DISCOUNT] > 0) {
       serviceNames.add(
         Text(
           'Discount',

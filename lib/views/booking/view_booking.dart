@@ -15,7 +15,7 @@ class ViewBooking extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
 
     final Map<String, dynamic> data = AppointmentSingleton.getInstance().getViewBookingData();
-    List<ServiceModel> services = data[ViewBookingData.SERVICES] as List<ServiceModel>;
+    List<ServiceModel> services = (data[ViewBookingData.SERVICES] ?? []) as List<ServiceModel>;
     List<Widget> serviceNames = [];
     List<Widget> servicePrices = [];
 
@@ -37,7 +37,7 @@ class ViewBooking extends StatelessWidget {
       servicePrices.add(const SizedBox(height: 10));
     }
 
-    if (data[ViewBookingData.DISCOUNT] > 0) {
+    if (data[ViewBookingData.DISCOUNT] != null && data[ViewBookingData.DISCOUNT] > 0) {
       serviceNames.add(
         Text(
           'Discount',

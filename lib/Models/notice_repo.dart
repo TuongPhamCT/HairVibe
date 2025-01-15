@@ -8,7 +8,11 @@ class NoticeRepository {
 
   Future<void> addNoticeToFirestore(NoticeModel model) async {
     try {
-      DocumentReference docRef = _storage.collection(NoticeModel.collectionName).doc(model.noticeID);
+      DocumentReference docRef
+        = _storage.collection(UserModel.collectionName)
+                  .doc(model.receiverID)
+                  .collection(NoticeModel.collectionName)
+                  .doc();
       await docRef.set(model.toJson()).whenComplete(()
       => print('Notice added to Firestore with ID: ${docRef.id}'));
     } catch (e) {
