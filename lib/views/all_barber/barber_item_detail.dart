@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:hairvibe/Commands/command_interface.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/config/asset_helper.dart';
 import 'package:hairvibe/views/all_barber/barber_image_item.dart';
-import 'package:hairvibe/views/all_barber/detail_barber.dart';
 
 class BarberItemDetail extends StatefulWidget {
   final String? barberName;
   final String? description;
   final String? rating;
-  final VoidCallback? onDetailPressed;
-  final VoidCallback? onBookPressed;
+  final List<int>? workSessions;
+  final CommandInterface? onDetailPressed;
+  final CommandInterface? onBookPressed;
 
   const BarberItemDetail({
     super.key,
     this.barberName,
     this.description,
     this.rating,
+    this.workSessions,
     this.onDetailPressed,
     this.onBookPressed
   });
@@ -26,11 +28,11 @@ class BarberItemDetail extends StatefulWidget {
 }
 
 class _BarberItemDetailState extends State<BarberItemDetail> {
-  final List<String> weekDays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+  final List<String> weekDays = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
 
   List<DateTime> getCurrentWeekDates() {
     DateTime now = DateTime.now();
-    int currentWeekday = now.weekday % 7;
+    int currentWeekday = now.weekday - 1;
     DateTime startOfWeek = now.subtract(Duration(days: currentWeekday));
     return List.generate(7, (index) => startOfWeek.add(Duration(days: index)));
   }
@@ -39,7 +41,9 @@ class _BarberItemDetailState extends State<BarberItemDetail> {
   Widget build(BuildContext context) {
     List<DateTime> weekDates = getCurrentWeekDates();
     return InkWell(
-      onTap: widget.onDetailPressed,
+      onTap: () {
+        widget.onDetailPressed?.execute();
+      },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
         margin: const EdgeInsets.only(top: 16),
@@ -158,7 +162,9 @@ class _BarberItemDetailState extends State<BarberItemDetail> {
                                   height: 32,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(18),
-                                    color: Palette.primary,
+                                    color: widget.workSessions != null && widget.workSessions!.contains(date.weekday)
+                                      ? Palette.workDayWeek
+                                      : Palette.freeDayWeek,
                                     border: Border.all(color: Colors.black),
                                   ),
                                   child: Center(
@@ -166,8 +172,8 @@ class _BarberItemDetailState extends State<BarberItemDetail> {
                                       '${date.day}',
                                       style: TextDecor.weekCalendarDay.copyWith(
                                         color: date.day == DateTime.now().day
-                                            ? Palette.inactiveDayWeek
-                                            : Palette.serviceListItem,
+                                            ? Palette.activeDayWeek
+                                            : Palette.inactiveDayWeek,
                                       ),
                                     ),
                                   ),
@@ -178,7 +184,9 @@ class _BarberItemDetailState extends State<BarberItemDetail> {
                   ],
                 ),
                 ElevatedButton(
-                  onPressed: widget.onBookPressed,
+                  onPressed: () {
+                    widget.onBookPressed?.execute();
+                  },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Palette.primary),
                     padding: MaterialStateProperty.all(

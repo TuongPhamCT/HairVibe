@@ -1,5 +1,6 @@
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:hairvibe/Builders/WidgetBuilder/widget_builder.dart';
+import 'package:hairvibe/Commands/command_interface.dart';
 import 'package:hairvibe/widgets/list_view/book_barber_item.dart';
 
 import '../../Models/user_model.dart';
@@ -8,7 +9,7 @@ class BookBarberItemBuilder implements CustomizedWidgetBuilder {
   UserModel? barber;
   String? rating;
   bool isSelected = false;
-  VoidCallback? onTap;
+  CommandInterface? onTap;
 
   void setBarber(UserModel barber) {
     this.barber = barber;
@@ -22,7 +23,7 @@ class BookBarberItemBuilder implements CustomizedWidgetBuilder {
     isSelected = value;
   }
 
-  void setOnTap(VoidCallback onTap) {
+  void setOnTap(CommandInterface onTap) {
     this.onTap = onTap;
   }
 
@@ -35,7 +36,7 @@ class BookBarberItemBuilder implements CustomizedWidgetBuilder {
     return BookBarberItem(
       title: barber!.name!,
       isSelected: isSelected,
-      onTap: onTap ?? () {},
+      onTap: onTap,
       rating: rating ?? "4.5",
     );
   }

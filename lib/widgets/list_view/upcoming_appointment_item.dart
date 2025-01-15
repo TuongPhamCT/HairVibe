@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:hairvibe/Commands/command_interface.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/Utility.dart';
 import 'package:hairvibe/config/asset_helper.dart';
-import 'package:hairvibe/views/appoinment/cancel_appointment.dart';
-import 'package:hairvibe/views/booking/view_booking.dart';
 import 'package:hairvibe/widgets/appoiment_button.dart';
 
 class UpcomingAppointItem extends StatefulWidget {
   final DateTime? date;
   final String? barberName;
   final String? serviceID;
-  final VoidCallback? onCancelPressed;
-  final VoidCallback? onViewReceiptPressed;
+  final CommandInterface? onCancelPressed;
+  final CommandInterface? onViewReceiptPressed;
   const UpcomingAppointItem({
     super.key,
     this.date,
@@ -125,7 +124,9 @@ class _UpcomingAppointItemState extends State<UpcomingAppointItem> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               AppointmentButton(
-                onPressed: widget.onCancelPressed,
+                onPressed: () {
+                  widget.onCancelPressed?.execute();
+                },
                 width: 140,
                 backgroundColor: Colors.white,
                 borderSide: const BorderSide(color: Palette.primary, width: 2),
@@ -138,7 +139,9 @@ class _UpcomingAppointItemState extends State<UpcomingAppointItem> {
                 // onPressed: () {
                 //   Navigator.of(context).pushNamed(ViewBooking.routeName);
                 // },
-                onPressed: widget.onViewReceiptPressed,
+                onPressed: () {
+                  widget.onViewReceiptPressed?.execute();
+                },
                 width: 140,
                 backgroundColor: Palette.primary,
                 child: Text(

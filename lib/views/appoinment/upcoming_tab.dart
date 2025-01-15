@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hairvibe/Builders/WidgetBuilder/upcoming_appoint_item_builder.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
-import 'package:hairvibe/widgets/list_view/upcoming_appointment_item.dart';
 
+import '../../Builders/WidgetBuilder/widget_builder_director.dart';
 import '../../Models/appointment_model.dart';
 import '../../Presenter/appointment_tab_presenter.dart';
 
@@ -18,7 +18,10 @@ class UpcomingTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    CustomizedWidgetBuilderDirector director = CustomizedWidgetBuilderDirector();
+    UpcomingAppointItemBuilder builder = UpcomingAppointItemBuilder();
     Size size = MediaQuery.of(context).size;
+
     if (appointments.isEmpty) {
       return Center(
         child: Text(
@@ -34,15 +37,11 @@ class UpcomingTab extends StatelessWidget {
         child: ListView.builder(
           itemCount: appointments.length,
           itemBuilder: (context, index) {
-            UpcomingAppointItemBuilder builder = UpcomingAppointItemBuilder();
-            builder.setAppointment(appointments[index]);
-            builder.setBarber(presenter.findBarberByID(appointments[index].barberID!)!);
-            builder.setOnCancelPressed(() {
-              presenter.handleCancelPressed(appointments[index]);
-            });
-            builder.setOnViewReceiptPressed(() {
-              presenter.handleViewReceiptPressed(appointments[index]);
-            });
+            director.makeUpcomingAppointItem(
+                builder: builder,
+                appointment: appointments[index],
+                presenter: presenter
+            );
             return builder.createWidget();
           },
         ),

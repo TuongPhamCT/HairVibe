@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hairvibe/Models/notice_model.dart';
-import 'package:hairvibe/Models/notice_repo.dart';
 
 abstract class Utility {
 

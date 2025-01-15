@@ -152,11 +152,11 @@ class AdminContactListPageState extends State<AdminContactListPage>
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AddBarberScreen()),
+                  MaterialPageRoute(builder: (context) => const AddBarberScreen()),
                 );
               },
               backgroundColor: Palette.primary,
-              child: Icon(Icons.add, color: Colors.black),
+              child: const Icon(Icons.add, color: Colors.black),
             )
           : null,
     );

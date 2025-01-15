@@ -34,7 +34,7 @@ class AppointmentModel {
     'services': services?.map((service) => service.toJson()).toList(),
     'date': Timestamp.fromDate(date!),
     'status': status,
-    'otherInfo': jsonEncode(otherInfo) ?? "{}"
+    'otherInfo': jsonEncode(otherInfo)
   };
 
   static AppointmentModel fromJson(Map<String, dynamic> json) {

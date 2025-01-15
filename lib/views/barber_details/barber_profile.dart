@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_icon_class/font_awesome_icon_class.dart';
 import 'package:hairvibe/Contract/detail_barber_contract.dart';
-import 'package:hairvibe/Models/rating_model.dart';
 import 'package:hairvibe/Presenter/detail_barber_presenter.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
@@ -123,7 +121,7 @@ class _BarberProfilePageState extends State<BarberProfilePage> implements Detail
                       children: [
                         BarberInfoTab(presenter: _presenter!, workingHours: _presenter!.getWorkingHours()),
                         BarberReviewTab(ratings: _presenter!.ratings, users: _presenter!.users),
-                        BarberPhotoTab(urls: _presenter!.getBarberImages()),
+                        BarberPhotoTab(presenter: _presenter!, urls: _presenter!.getBarberImages()),
                         // Update as needed
                       ],
                     ),
@@ -143,5 +141,20 @@ class _BarberProfilePageState extends State<BarberProfilePage> implements Detail
       barberName = _presenter!.getBarberName(); // Example data
       barberAvatarUrl = _presenter!.getBarberAvatarUrl(); // Example data
     });
+  }
+
+  @override
+  void onPopContext() {
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  @override
+  void onWaitingProgressBar() {
+    UtilWidgets.createLoadingWidget(context);
+  }
+
+  @override
+  void onBack() {
+    // Nothing to do
   }
 }

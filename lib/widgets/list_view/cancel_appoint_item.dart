@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:hairvibe/Commands/command_interface.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/Utility.dart';
 import 'package:hairvibe/config/asset_helper.dart';
 import 'package:hairvibe/widgets/appoiment_button.dart';
-import 'package:hairvibe/widgets/util_widgets.dart';
 
 class CancelledAppointItem extends StatefulWidget {
   final DateTime? date;
   final String? barberName;
   final String? serviceID;
-  final VoidCallback? onRebookPressed;
+  final CommandInterface? onRebookPressed;
 
   const CancelledAppointItem({
     super.key,
@@ -92,7 +92,9 @@ class _CancelledAppointItemState extends State<CancelledAppointItem> {
             height: 15,
           ),
           AppointmentButton(
-            onPressed: widget.onRebookPressed,
+            onPressed: () {
+              widget.onRebookPressed?.execute();
+            },
             width: double.maxFinite,
             backgroundColor: Palette.primary,
             child: Text(

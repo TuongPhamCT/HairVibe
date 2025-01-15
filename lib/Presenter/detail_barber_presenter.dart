@@ -1,4 +1,5 @@
 import 'package:hairvibe/Contract/detail_barber_contract.dart';
+import 'package:hairvibe/Facades/image_storage_facade.dart';
 import 'package:hairvibe/Models/rating_repo.dart';
 import 'package:hairvibe/Models/user_repo.dart';
 import 'package:hairvibe/Models/work_session_model.dart';
@@ -19,16 +20,19 @@ class DetailBarberPresenter {
   final RatingRepository _ratingRepo = RatingRepository();
   final UserRepository _userRepo = UserRepository();
   final WorkSessionRepository _workSessionRepository = WorkSessionRepository();
+  final ImageStorageFacade _imageStorageFacade = ImageStorageFacade();
   List<RatingModel> ratings = [];
   Map<String, UserModel> users = {};
   List<WorkSessionModel> workSessions = [];
 
   Future<void> getData() async {
-    if (_userSingleton.currentUserIsCustomer() == false) {
+    if (_userSingleton.currentUserIsCustomer() == false && _barberSingleton.barber == null) {
       _barberSingleton.setBarber(_userSingleton.currentUser!);
-      workSessions = await _workSessionRepository.getWorkSessionsByBarberId(_barberSingleton.barber!.userID!);
-      if (workSessions.isNotEmpty) {
-        workSessions.sort((element1, element2) => element1.day! - element2.day!);
+      if (_userSingleton.currentUserIsBarber()) {
+        workSessions = await _workSessionRepository.getWorkSessionsByBarberId(_barberSingleton.barber!.userID!);
+        if (workSessions.isNotEmpty) {
+          workSessions.sort((element1, element2) => element1.day! - element2.day!);
+        }
       }
     }
     ratings = await _ratingRepo.getRatingsByBarberId(_barberSingleton.barber!.userID!);
@@ -97,5 +101,41 @@ class DetailBarberPresenter {
       }
     }
     _view.onLoadDataSucceed();
+  }
+
+  Future<void> deletePhoto(String url) async {
+
+    UserModel model = _userSingleton.currentUser!;
+    model.removeBarberImage(url);
+
+    _barberSingleton.barber = model;
+
+    _view.onWaitingProgressBar();
+    await _userRepo.updateUser(model);
+    _view.onPopContext();
+    _view.onLoadDataSucceed();
+  }
+
+  Future<void> addPhoto() async {
+    _view.onWaitingProgressBar();
+    String? path = await _imageStorageFacade.uploadImage(StorageFolderNames.BARBER_IMAGES);
+
+    if (path != null) {
+      UserModel model = _userSingleton.currentUser!;
+      model.addBarberImage(path);
+
+      _barberSingleton.barber = model;
+
+      await _userRepo.updateUser(model);
+      _view.onPopContext();
+      _view.onLoadDataSucceed();
+      return;
+    }
+    _view.onPopContext();
+  }
+
+  void handleBack() {
+    _barberSingleton.reset();
+    _view.onBack();
   }
 }

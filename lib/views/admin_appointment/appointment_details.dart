@@ -7,8 +7,6 @@ import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/Utility.dart';
 import 'package:hairvibe/config/asset_helper.dart';
-import 'package:hairvibe/views/admin/admin_home_screen.dart';
-import 'package:hairvibe/views/admin_appointment/appointment_calendar.dart';
 import 'package:hairvibe/widgets/util_widgets.dart';
 
 class AdminAppointmentDetailPage extends StatefulWidget {

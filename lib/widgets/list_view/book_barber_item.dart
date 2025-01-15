@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hairvibe/Commands/command_interface.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/config/asset_helper.dart';
@@ -6,7 +7,7 @@ import 'package:hairvibe/config/asset_helper.dart';
 class BookBarberItem extends StatelessWidget {
   final String title;
   final bool isSelected;
-  final VoidCallback onTap;
+  final CommandInterface? onTap;
   final String rating;
   const BookBarberItem({
     super.key,
@@ -19,7 +20,9 @@ class BookBarberItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        onTap?.execute();
+      },
       child: Container(
         margin: const EdgeInsets.only(right: 12),
         padding: const EdgeInsets.all(10),

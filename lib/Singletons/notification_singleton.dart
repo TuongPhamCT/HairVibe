@@ -45,7 +45,7 @@ class NotificationSingleton {
     print('Received new data from Firestore (${snapshot.docs})');
     final noticeList = snapshot.docs.map((doc) => NoticeModel.fromJson(doc.id, doc.data())).toList();
 
-    if (notifications.length == noticeList.length) {
+    if (checkIfNotificationChanges(notifications, noticeList) == false) {
       print('No change');
     } else {
       print('Updating notice with Firestore data ($noticeList)');
@@ -53,6 +53,18 @@ class NotificationSingleton {
       _calculateUnreadCount();
       notifySubscribers();
     }
+  }
+
+  bool checkIfNotificationChanges(List<NoticeModel> listA, List<NoticeModel> listB) {
+    if (listA.length != listB.length) {
+      return true;
+    }
+    for (int i = 0; i < listA.length; i++) {
+      if (listA[i].isEqual(listB[i]) == false) {
+        return true;
+      }
+    }
+    return false;
   }
 
   void _calculateUnreadCount() {
@@ -76,6 +88,8 @@ class NotificationSingleton {
         await _noticeRepo.updateNotice(model);
       }
     }
+    _calculateUnreadCount();
+    notifySubscribers();
   }
 
   void dispose() {

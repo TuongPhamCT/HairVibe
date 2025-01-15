@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hairvibe/Presenter/add_service_page_presenter.dart';
-import 'package:hairvibe/Presenter/admin_comment_page_presenter.dart';
 import 'package:hairvibe/Singletons/barber_singleton.dart';
-import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
-import 'package:hairvibe/Utility.dart';
 import 'package:hairvibe/views/admin_management/comment.dart';
 import 'package:hairvibe/widgets/util_widgets.dart';
 

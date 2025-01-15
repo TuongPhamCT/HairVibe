@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hairvibe/Builders/WidgetBuilder/completed_appoint_item_builder.dart';
+import 'package:hairvibe/Builders/WidgetBuilder/widget_builder_director.dart';
 import 'package:hairvibe/Models/appointment_model.dart';
 import 'package:hairvibe/Presenter/appointment_tab_presenter.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
-import 'package:hairvibe/widgets/list_view/completed_appointment_item.dart';
 
 class CompletedTab extends StatelessWidget {
   final AppointmentTabPresenter presenter;
@@ -17,6 +17,9 @@ class CompletedTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    CustomizedWidgetBuilderDirector director = CustomizedWidgetBuilderDirector();
+    CompletedAppointItemBuilder builder = CompletedAppointItemBuilder();
+
     Size size = MediaQuery.of(context).size;
     if (appointments.isEmpty) {
       return Center(
@@ -33,12 +36,11 @@ class CompletedTab extends StatelessWidget {
         child: ListView.builder(
           itemCount: appointments.length,
           itemBuilder: (context, index) {
-            CompletedAppointItemBuilder builder = CompletedAppointItemBuilder();
-            builder.setAppointment(appointments[index]);
-            builder.setBarber(presenter.findBarberByID(appointments[index].barberID!)!);
-            builder.setOnViewReceiptPressed(() async {
-              await presenter.handleViewReceiptPressed(appointments[index]);
-            });
+            director.makeCompletedAppointItem(
+                builder: builder,
+                appointment: appointments[index],
+                presenter: presenter
+            );
             return builder.createWidget();
           },
         ),

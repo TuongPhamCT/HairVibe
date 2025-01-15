@@ -50,10 +50,24 @@ class UserModel {
 
   List<String> getBarberImages() {
     if (info!.containsKey(UserInfo.BARBER_IMAGES)) {
-      return info![UserInfo.BARBER_IMAGES] as List<String>;
+      return (info![UserInfo.BARBER_IMAGES] as List<dynamic>).map((e) => e.toString()).toList();
     }
     return [];
   }
+
+  void addBarberImage(String url) {
+    if (info!.containsKey(UserInfo.BARBER_IMAGES) == false) {
+      info![UserInfo.BARBER_IMAGES] = [];
+    }
+    (info![UserInfo.BARBER_IMAGES] as List<dynamic>).add(url);
+  }
+
+  void removeBarberImage(String url) {
+    if (info!.containsKey(UserInfo.BARBER_IMAGES)) {
+      (info![UserInfo.BARBER_IMAGES] as List<dynamic>).remove(url);
+    }
+  }
+
 
   List<String> getVoucherIDs() {
     if (info!.containsKey(UserInfo.VOUCHERS)) {

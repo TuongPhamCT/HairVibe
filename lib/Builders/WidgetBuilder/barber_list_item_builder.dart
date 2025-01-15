@@ -1,5 +1,6 @@
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:hairvibe/Builders/WidgetBuilder/widget_builder.dart';
+import 'package:hairvibe/Commands/command_interface.dart';
 import 'package:hairvibe/Models/user_model.dart';
 
 import '../../widgets/list_view/barber_list_item.dart';
@@ -8,7 +9,7 @@ class BarberListItemBuilder implements CustomizedWidgetBuilder {
   UserModel? barber;
   String? description;
   String? rating;
-  VoidCallback? onPressed;
+  CommandInterface? onPressed;
 
   void setBarber(UserModel barber){
     this.barber = barber;
@@ -22,7 +23,7 @@ class BarberListItemBuilder implements CustomizedWidgetBuilder {
     this.rating = rating;
   }
 
-  void setOnPressed(VoidCallback onPressed) {
+  void setOnPressed(CommandInterface onPressed) {
     this.onPressed = onPressed;
   }
 

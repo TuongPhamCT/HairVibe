@@ -3,7 +3,6 @@ import 'package:font_awesome_icon_class/font_awesome_icon_class.dart';
 import 'package:hairvibe/Builders/WidgetBuilder/barber_list_item_builder.dart';
 import 'package:hairvibe/Builders/WidgetBuilder/widget_builder_director.dart';
 import 'package:hairvibe/Contract/home_screen_contract.dart';
-import 'package:hairvibe/Models/rating_repo.dart';
 import 'package:hairvibe/Models/service_model.dart';
 import 'package:hairvibe/Models/user_model.dart';
 import 'package:hairvibe/Presenter/home_screen_presenter.dart';
@@ -11,7 +10,6 @@ import 'package:hairvibe/Singletons/notification_singleton.dart';
 import 'package:hairvibe/Singletons/user_singleton.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
-import 'package:hairvibe/Utility.dart';
 import 'package:hairvibe/commands/home_screen/home_screen_press_service_command.dart';
 import 'package:hairvibe/observers/data_fetching_subcriber.dart';
 import 'package:hairvibe/observers/notification_subcriber.dart';
@@ -20,8 +18,6 @@ import 'package:hairvibe/views/all_barber/detail_barber.dart';
 import 'package:hairvibe/views/all_service.dart';
 import 'package:hairvibe/views/booking/main_booking.dart';
 import 'package:hairvibe/widgets/bottom_bar.dart';
-import 'package:hairvibe/widgets/list_view/barber_list_item.dart';
-import 'package:hairvibe/widgets/list_view/service_list_item.dart';
 import 'package:hairvibe/widgets/noti_bell.dart';
 import 'package:hairvibe/widgets/search_field.dart';
 import 'package:hairvibe/widgets/util_widgets.dart';
@@ -186,13 +182,11 @@ class _HomeScreenState extends State<HomeScreen>
                 itemCount: _barberList.length,
                 itemBuilder: (context, index) {
                   BarberListItemBuilder builder = BarberListItemBuilder();
-                  UserModel barber = _barberList[index];
-                  builder.setBarber(barber);
-                  builder.setDescription("Barber");
-                  builder.setRating(_ratings[barber.userID] != null ? _ratings[barber.userID]!.toStringAsFixed(1) : "0");
-                  builder.setOnPressed(() {
-                    _presenter?.handleBarberPressed(barber);
-                  });
+                  director.makeBarberListItem(
+                      builder: builder,
+                      barber: _barberList[index],
+                      presenter: _presenter!
+                  );
                   return builder.createWidget();
                 },
               ),

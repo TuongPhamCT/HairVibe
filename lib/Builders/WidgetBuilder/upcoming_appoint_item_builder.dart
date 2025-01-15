@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:hairvibe/Builders/WidgetBuilder/widget_builder.dart';
+import 'package:hairvibe/Commands/command_interface.dart';
 import 'package:hairvibe/widgets/list_view/upcoming_appointment_item.dart';
 import '../../Models/appointment_model.dart';
 import '../../Models/user_model.dart';
@@ -8,8 +9,8 @@ import '../../Models/user_model.dart';
 class UpcomingAppointItemBuilder implements CustomizedWidgetBuilder {
   AppointmentModel? appointment;
   UserModel? barber;
-  VoidCallback? onCancelPressed;
-  VoidCallback? onViewReceiptPressed;
+  CommandInterface? onCancelPressed;
+  CommandInterface? onViewReceiptPressed;
 
   void setAppointment(AppointmentModel appointment) {
     this.appointment = appointment;
@@ -19,11 +20,11 @@ class UpcomingAppointItemBuilder implements CustomizedWidgetBuilder {
     this.barber = barber;
   }
 
-  void setOnCancelPressed(VoidCallback onPressed) {
+  void setOnCancelPressed(CommandInterface onPressed) {
     onCancelPressed = onPressed;
   }
 
-  void setOnViewReceiptPressed(VoidCallback onPressed) {
+  void setOnViewReceiptPressed(CommandInterface onPressed) {
     onViewReceiptPressed = onPressed;
   }
 

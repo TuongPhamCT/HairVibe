@@ -1,15 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hairvibe/Builders/WidgetBuilder/book_barber_item_builder.dart';
+import 'package:hairvibe/Builders/WidgetBuilder/widget_builder_director.dart';
 import 'package:hairvibe/Contract/main_booking_contract.dart';
-import 'package:hairvibe/Models/service_model.dart';
 import 'package:hairvibe/Models/user_model.dart';
 import 'package:hairvibe/Presenter/main_booking_presenter.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/views/booking/confirm_booking.dart';
-import 'package:hairvibe/widgets/list_view/book_barber_item.dart';
-import 'package:hairvibe/widgets/list_view/check_service_list_item.dart';
 import 'package:hairvibe/widgets/util_widgets.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -27,10 +25,11 @@ class MainBooking extends StatefulWidget {
 class _MainBookingState extends State<MainBooking> implements MainBookingContract {
   MainBookingPresenter? _presenter;
 
+  final CustomizedWidgetBuilderDirector director = CustomizedWidgetBuilderDirector();
+
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
-  final List<bool> _isSelected = List.generate(5, (_) => false);
-  int _selectedIndex = -1; // Chỉ mục của Barber được chọn (-1: không chọn)
+  //int _selectedIndex = -1; // Chỉ mục của Barber được chọn (-1: không chọn)
   String _totalCost = Utility.formatCurrency(0);
 
   List<UserModel> barbers = [];
@@ -105,14 +104,11 @@ class _MainBookingState extends State<MainBooking> implements MainBookingContrac
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
                           CheckServiceListItemBuilder builder = CheckServiceListItemBuilder();
-                          ServiceModel service = services[index]['serviceModel'];
-                          builder.setService(service);
-                          builder.setIsChecked(services[index]['isChecked']);
-                          builder.setOnChanged(
-                              (bool newValue) {
-                                _presenter?.handleSelectService(service, index, newValue);
-                                services[index]['isChecked'] = newValue;
-                              }
+                          director.makeCheckServiceListItem(
+                              builder: builder,
+                              service: services[index]['serviceModel'],
+                              index: index,
+                              presenter: _presenter!
                           );
                           return builder.createWidget();
                         },
@@ -245,14 +241,11 @@ class _MainBookingState extends State<MainBooking> implements MainBookingContrac
                       itemCount: barbers.length,
                       itemBuilder: (context, index) {
                         BookBarberItemBuilder builder = BookBarberItemBuilder();
-                        UserModel barber = barbers[index];
-                        builder.setBarber(barber);
-                        builder.setRating(Utility.formatRatingValue(ratings[barber.userID]));
-                        builder.setIsSelected(index == _selectedIndex);
-                        builder.setOnTap(
-                          () {
-                            _presenter!.handleSelectBarber(barber, index);
-                          }
+                        director.makeBookBarberItem(
+                            builder: builder,
+                            barber: barbers[index],
+                            index: index,
+                            presenter: _presenter!
                         );
                         return builder.createWidget();
                       },
@@ -325,9 +318,9 @@ class _MainBookingState extends State<MainBooking> implements MainBookingContrac
       // barbers
       ratings = _presenter!.ratings;
       barbers = _presenter!.barbers;
-      if (barbers.isNotEmpty) {
-        _selectedIndex = 0;
-      }
+      // if (barbers.isNotEmpty) {
+      //   _selectedIndex = _presenter!.selectedBarberIndex;
+      // }
 
       // Time
       times = _presenter!.times;
@@ -345,7 +338,7 @@ class _MainBookingState extends State<MainBooking> implements MainBookingContrac
   @override
   void onSelectBarber(int index) {
     setState(() {
-      _selectedIndex = index;
+      //_selectedIndex = index;
       _totalCost = _presenter!.getTotalCost();
       times = _presenter!.times;
     });

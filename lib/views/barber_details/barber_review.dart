@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hairvibe/Builders/WidgetBuilder/review_item_builder.dart';
 import 'package:hairvibe/Models/rating_model.dart';
-import 'package:hairvibe/Presenter/detail_barber_presenter.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
-import 'package:hairvibe/views/all_barber/rating_barber.dart';
-import 'package:hairvibe/widgets/list_view/review_item.dart';
 import 'package:hairvibe/Models/user_model.dart';
 
 class BarberReviewTab extends StatelessWidget {

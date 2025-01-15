@@ -35,4 +35,9 @@ class NoticeModel {
       isRead: json['isRead'] as bool
     );
   }
+
+  bool isEqual(NoticeModel model) {
+    return noticeID == model.noticeID
+      && isRead == model.isRead;
+  }
 }

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hairvibe/Builders/ModelBuilder/appointment_model_builder.dart';
 import 'package:hairvibe/Contract/main_booking_contract.dart';
@@ -49,6 +48,7 @@ class MainBookingPresenter {
   int cacheTimeCheckIndex = -1;
 
   UserModel? selectedBarber;
+  int selectedBarberIndex = 0;
   DateTime? selectedDate;
   DateTime? focusedDate;
   int totalCost = 0;
@@ -80,11 +80,13 @@ class MainBookingPresenter {
     UserModel? storedBarber = _bookingSingleton.cacheBarber;
 
     selectedBarber = barbers.first;
+    selectedBarberIndex = 0;
     for (UserModel barber in barbers) {
       if (storedBarber != null && barber.userID == storedBarber.userID) {
         selectedBarber = barber;
         break;
       }
+      selectedBarberIndex ++;
     }
 
     for (UserModel barber in barbers) {
@@ -119,6 +121,7 @@ class MainBookingPresenter {
   Future<void> handleSelectBarber(UserModel barber, int index) async {
     _view.onWaitingProgressBar();
     selectedBarber = barber;
+    selectedBarberIndex = index;
     currentBarberAppointments = await _appointmentRepo.getAppointmentsByBarberIdAndDate(barber.userID!, selectedDate!);
     currentBarberLeaves = await _leaveRepo.getLeavesByBarberId(barber.userID!);
     await _loadWorkSessions();

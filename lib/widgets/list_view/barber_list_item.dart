@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hairvibe/Commands/command_interface.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/config/asset_helper.dart';
@@ -7,7 +8,7 @@ class BarberListItem extends StatefulWidget {
   final String? barberName;
   final String? description;
   final String? rating;
-  final VoidCallback? onPressed;
+  final CommandInterface? onPressed;
 
   const BarberListItem({
     super.key,
@@ -30,7 +31,9 @@ class _BarberListItemState extends State<BarberListItem> {
         color: Palette.primary.withOpacity(0.2),
       ),
       child:  GestureDetector(
-        onTap: widget.onPressed,
+        onTap: () {
+          widget.onPressed?.execute();
+        },
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
