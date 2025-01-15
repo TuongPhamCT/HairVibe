@@ -11,27 +11,32 @@ class BarberPhotoTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Widget> widgets = urls.map((url) {
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: AspectRatio(
-          aspectRatio: 1,
-          child: Image.network(
-            url,
-            fit: BoxFit.cover,
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) return child;
-              return Center(
-                child: CircularProgressIndicator(
-                  value: loadingProgress.expectedTotalBytes != null
-                      ? loadingProgress.cumulativeBytesLoaded /
-                          (loadingProgress.expectedTotalBytes ?? 1)
-                      : null,
-                ),
-              );
-            },
-            errorBuilder: (context, error, stackTrace) {
-              return const Image(image: AssetImage(AssetHelper.barberAvatar));
-            },
+      return GestureDetector(
+        onTap: () {
+          _showImageDialog(context, url);
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: AspectRatio(
+            aspectRatio: 1,
+            child: Image.network(
+              url,
+              fit: BoxFit.cover,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Center(
+                  child: CircularProgressIndicator(
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded /
+                            (loadingProgress.expectedTotalBytes ?? 1)
+                        : null,
+                  ),
+                );
+              },
+              errorBuilder: (context, error, stackTrace) {
+                return const Image(image: AssetImage(AssetHelper.barberAvatar));
+              },
+            ),
           ),
         ),
       );
@@ -61,17 +66,7 @@ class BarberPhotoTab extends StatelessWidget {
                         color: Palette.primary,
                       ),
                     ),
-                    const Spacer(),
-                    CircleAvatar(
-                      backgroundColor: Colors.red,
-                      radius: 20,
-                      child: IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.white),
-                        onPressed: () {
-                          // logic xoa anh
-                        },
-                      ),
-                    ),
+                    
                   ],
                 ),
                 const SizedBox(height: 40),
@@ -100,6 +95,47 @@ class BarberPhotoTab extends StatelessWidget {
         child: const Icon(Icons.add),
         backgroundColor: Palette.primary, // Use your theme's primary color
       ),
+    );
+  }
+
+  void _showImageDialog(BuildContext context, String url) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.network(
+                url,
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) {
+                  return const Image(
+                      image: AssetImage(AssetHelper.barberAvatar));
+                },
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      // Logic to delete the image
+                    },
+                    child: const Text('Delete',
+                        style: TextStyle(color: Colors.red)),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Close the dialog
+                    },
+                    child: const Text('Close'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
