@@ -6,7 +6,7 @@ class CouponRepository {
 
   void addCouponToFirestore(CouponModel model) async {
     try {
-      DocumentReference docRef = _storage.collection(CouponModel.collectionName).doc(model.couponID);
+      DocumentReference docRef = _storage.collection(CouponModel.collectionName).doc();
       await docRef.set(model.toJson()).whenComplete(()
         => print('Coupon added to Firestore with ID: ${docRef.id}'));
     } catch (e) {

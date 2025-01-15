@@ -26,6 +26,8 @@ class _VoucherPageState extends State<VoucherPage> implements VoucherPageContrac
 
   final int _currentPageIndex = 2;
 
+  bool isLoading = true;
+
   @override
   void initState() {
     _presenter = VoucherPagePresenter(this);
@@ -81,7 +83,7 @@ class _VoucherPageState extends State<VoucherPage> implements VoucherPageContrac
             ),
             const SizedBox(height: 20),
             SizedBox(
-              height: size.height * 0.735,
+              height: size.height * 0.70,
               child: ListView.builder(
                   itemBuilder: (context, index) {
                     VoucherItemBuilder builder = VoucherItemBuilder();
@@ -107,6 +109,7 @@ class _VoucherPageState extends State<VoucherPage> implements VoucherPageContrac
   void onLoadDataSucceed() {
     setState(() {
       coupons = _presenter!.coupons;
+      isLoading = false;
     });
   }
 

@@ -10,7 +10,7 @@ class ServiceRepository {
 
   Future<String> addServiceToFirestore(ServiceModel model) async {
     try {
-      DocumentReference docRef = _storage.collection(ServiceModel.collectionName).doc(model.serviceID);
+      DocumentReference docRef = _storage.collection(ServiceModel.collectionName).doc();
       await docRef.set(model.toJson()).whenComplete(()
       => print('Service added to Firestore with ID: ${docRef.id}')
       );

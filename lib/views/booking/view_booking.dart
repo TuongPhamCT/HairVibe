@@ -37,19 +37,21 @@ class ViewBooking extends StatelessWidget {
       servicePrices.add(const SizedBox(height: 10));
     }
 
-    serviceNames.add(
-      Text(
-        'Discount',
-        style: TextDecor.label2Appointment,
-      ),
-    );
+    if (data[ViewBookingData.DISCOUNT] > 0) {
+      serviceNames.add(
+        Text(
+          'Discount',
+          style: TextDecor.label2Appointment,
+        ),
+      );
 
-    servicePrices.add(
-      Text(
-        "${data[ViewBookingData.DISCOUNT]}%",
-        style: TextDecor.content1Appointment,
-      ),
-    );
+      servicePrices.add(
+        Text(
+          "${data[ViewBookingData.DISCOUNT]}%",
+          style: TextDecor.content1Appointment,
+        ),
+      );
+    }
 
     return Scaffold(
       backgroundColor: Colors.black,

@@ -5,6 +5,7 @@ import 'package:hairvibe/Singletons/appointment_singleton.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/Utility.dart';
+import 'package:hairvibe/config/asset_helper.dart';
 import 'package:hairvibe/views/admin/admin_home_screen.dart';
 import 'package:hairvibe/views/admin_appointment/appointment_calendar.dart';
 import 'package:hairvibe/widgets/util_widgets.dart';
@@ -71,11 +72,19 @@ class AdminAppointmentDetailPageState
                 children: [
                   Row(
                     children: [
-                      CircleAvatar(
-                        backgroundColor: Colors.grey,
-                        radius: 20,
-                        foregroundImage: NetworkImage(avatarUrl),
-                      ),
+                      if (avatarUrl.isNotEmpty)
+                        CircleAvatar(
+                          backgroundColor: Colors.grey,
+                          radius: 20,
+                          foregroundImage: NetworkImage(avatarUrl),
+                        )
+                      else
+                        const CircleAvatar(
+                          backgroundColor: Colors.grey,
+                          radius: 20,
+                          foregroundImage: AssetImage(AssetHelper.barberAvatar),
+                        )
+                      ,
                       const SizedBox(width: 8),
                       Text(customerName,
                           style: TextDecor.robo16Semi
@@ -94,7 +103,7 @@ class AdminAppointmentDetailPageState
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Container(
                 padding:
                     const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
@@ -104,15 +113,15 @@ class AdminAppointmentDetailPageState
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.access_time, color: Palette.primary),
-                    SizedBox(width: 10),
+                    const Icon(Icons.access_time, color: Palette.primary),
+                    const SizedBox(width: 10),
                     Text(appointmentDate,
                         style: TextDecor.inter13Medi
                             .copyWith(color: Colors.white)),
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Container(
                 padding:
                     const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
@@ -159,7 +168,7 @@ class AdminAppointmentDetailPageState
 
   @override
   void onBack() {
-    Navigator.of(context).pushNamed(AdminHomeScreen.routeName);
+    Navigator.of(context, rootNavigator: true).pop();
   }
 
   @override

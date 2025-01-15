@@ -144,10 +144,13 @@ class AdminAppointmentPageState extends State<AdminAppointmentPage>
                           const SizedBox(height: 8),
                           Container(
                             height: 50,
-                            color: Colors.blue,
+                            color: appointment.status == AppointmentStatus.COMPLETED ?
+                              Colors.green
+                              :
+                              Colors.blue,
                             child: Center(
                               child: Text(
-                                appointment.customerID ?? "Customer Name",
+                                _presenter!.customerNames[appointment.customerID] ?? "Customer Name",
                                 style: const TextStyle(color: Colors.white),
                               ),
                             ),

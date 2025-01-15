@@ -60,7 +60,7 @@ class AppointmentRepository {
       final QuerySnapshot querySnapshot
       = await _storage.collection(AppointmentModel.collectionName)
           .where('status', isEqualTo: AppointmentStatus.CANCELLED)
-          .where('barberID', isEqualTo: id)
+          .where('customerID', isEqualTo: id)
           .get();
       final appointments = querySnapshot
           .docs
@@ -78,7 +78,7 @@ class AppointmentRepository {
       final QuerySnapshot querySnapshot
       = await _storage.collection(AppointmentModel.collectionName)
           .where('status', isEqualTo: AppointmentStatus.COMPLETED)
-          .where('barberID', isEqualTo: id)
+          .where('customerID', isEqualTo: id)
           .get();
       final appointments = querySnapshot
           .docs
@@ -96,7 +96,7 @@ class AppointmentRepository {
       final QuerySnapshot querySnapshot
       = await _storage.collection(AppointmentModel.collectionName)
           .where('status', isEqualTo: AppointmentStatus.UPCOMING)
-          .where('barberID', isEqualTo: id)
+          .where('customerID', isEqualTo: id)
           .get();
       final appointments = querySnapshot
           .docs
@@ -141,6 +141,25 @@ class AppointmentRepository {
     }
   }
 
+  Future<List<AppointmentModel>> getActiveAppointmentsByDate(DateTime date) async {
+    try {
+      final QuerySnapshot querySnapshot
+        = await _storage.collection(AppointmentModel.collectionName)
+            .where('status', whereIn: [AppointmentStatus.COMPLETED, AppointmentStatus.UPCOMING])
+            .get();
+      final appointments = querySnapshot
+          .docs
+          .map((doc) => AppointmentModel.fromJson(doc.data() as Map<String, dynamic>))
+          .toList();
+      final List<AppointmentModel> result =
+      appointments.where((appointment) => Utility.isSameDate(appointment.date, date)).toList();
+      return result;
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
   Future<List<AppointmentModel>> getAppointmentsByUserIdAndDate(String id, DateTime date) async {
     try {
       final QuerySnapshot querySnapshot = await _storage.collection(AppointmentModel.collectionName)
@@ -163,6 +182,44 @@ class AppointmentRepository {
     try {
       final QuerySnapshot querySnapshot = await _storage.collection(AppointmentModel.collectionName)
           .where('barberID', isEqualTo: id)
+          .get();
+      final appointments = querySnapshot
+          .docs
+          .map((doc) => AppointmentModel.fromJson(doc.data() as Map<String, dynamic>))
+          .toList();
+      final List<AppointmentModel> result =
+      appointments.where((appointment) => Utility.isSameDate(appointment.date, date)).toList();
+      return result;
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
+  Future<List<AppointmentModel>> getActiveAppointmentsByBarberIdAndDate(String id, DateTime date) async {
+    try {
+      final QuerySnapshot querySnapshot = await _storage.collection(AppointmentModel.collectionName)
+          .where('barberID', isEqualTo: id)
+          .where('status', whereIn: [AppointmentStatus.COMPLETED, AppointmentStatus.UPCOMING])
+          .get();
+      final appointments = querySnapshot
+          .docs
+          .map((doc) => AppointmentModel.fromJson(doc.data() as Map<String, dynamic>))
+          .toList();
+      final List<AppointmentModel> result =
+      appointments.where((appointment) => Utility.isSameDate(appointment.date, date)).toList();
+      return result;
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
+  Future<List<AppointmentModel>> getCompletedAppointmentsByBarberIdAndDate(String id, DateTime date) async {
+    try {
+      final QuerySnapshot querySnapshot = await _storage.collection(AppointmentModel.collectionName)
+          .where('barberID', isEqualTo: id)
+          .where('status', isEqualTo: AppointmentStatus.COMPLETED)
           .get();
       final appointments = querySnapshot
           .docs
