@@ -15,11 +15,12 @@ class AdminAppointmentDetailPage extends StatefulWidget {
   static const String routeName = 'admin_appointment_detail_page';
 
   @override
-  AdminAppointmentDetailPageState createState() => AdminAppointmentDetailPageState();
+  AdminAppointmentDetailPageState createState() =>
+      AdminAppointmentDetailPageState();
 }
 
-class AdminAppointmentDetailPageState
-    extends State<AdminAppointmentDetailPage> implements AdminAppointmentDetailPageContract {
+class AdminAppointmentDetailPageState extends State<AdminAppointmentDetailPage>
+    implements AdminAppointmentDetailPageContract {
   final AppointmentSingleton _singleton = AppointmentSingleton.getInstance();
   AdminAppointmentDetailPagePresenter? _presenter;
   late final String customerName;
@@ -32,15 +33,13 @@ class AdminAppointmentDetailPageState
   void initState() {
     _presenter = AdminAppointmentDetailPagePresenter(this);
     customerName = _singleton.getCustomerName();
-    appointmentDate = "${_singleton.getAppointmentDate()} ${_singleton.getAppointmentTime()}";
+    appointmentDate =
+        "${_singleton.getAppointmentDate()} ${_singleton.getAppointmentTime()}";
     avatarUrl = _singleton.getCustomerAvatarUrl();
     int sum = 0;
     servicesList = _singleton.getServices().map((service) {
       sum += service.price!;
-      return Service(
-        name: service.name!,
-        price: service.price!
-      );
+      return Service(name: service.name!, price: service.price!);
     }).toList();
     totalPrice = sum;
     super.initState();
@@ -83,23 +82,37 @@ class AdminAppointmentDetailPageState
                           backgroundColor: Colors.grey,
                           radius: 20,
                           foregroundImage: AssetImage(AssetHelper.barberAvatar),
-                        )
-                      ,
+                        ),
                       const SizedBox(width: 8),
                       Text(customerName,
                           style: TextDecor.robo16Semi
                               .copyWith(color: Colors.white)),
                     ],
                   ),
-                  CircleAvatar(
-                    backgroundColor: Colors.red,
-                    radius: 20,
-                    child: IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.white),
-                      onPressed: () {
-                        _presenter!.handleCancelButtonPressed();
-                      },
-                    ),
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        backgroundColor: Colors.green,
+                        radius: 20,
+                        child: IconButton(
+                          icon: const Icon(Icons.check, color: Colors.white),
+                          onPressed: () {
+                            // Thêm logic hoàn thành lịch hẹn ở đây
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      CircleAvatar(
+                        backgroundColor: Colors.red,
+                        radius: 20,
+                        child: IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.white),
+                          onPressed: () {
+                            _presenter!.handleCancelButtonPressed();
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -183,8 +196,7 @@ class AdminAppointmentDetailPageState
         },
         onCancel: () {
           Navigator.of(context, rootNavigator: true).pop();
-        }
-    );
+        });
   }
 
   @override
@@ -199,14 +211,14 @@ class AdminAppointmentDetailPageState
 
   @override
   void onCancelAppointmentFailed() {
-    UtilWidgets.createSnackBar(context, "Something was wrong. Please try again.");
+    UtilWidgets.createSnackBar(
+        context, "Something was wrong. Please try again.");
   }
 
   @override
   void onCancelAppointmentSucceeded() {
     Navigator.of(context, rootNavigator: true).pop();
   }
-
 }
 
 class Service {
