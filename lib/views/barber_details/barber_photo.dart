@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:hairvibe/Presenter/detail_barber_presenter.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/config/asset_helper.dart';
 
 class BarberPhotoTab extends StatelessWidget {
   final List<String> urls;
+  final DetailBarberPresenter presenter;
 
-  const BarberPhotoTab({super.key, required this.urls});
+  const BarberPhotoTab({
+    super.key,
+    required this.urls,
+    required this.presenter
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +32,7 @@ class BarberPhotoTab extends StatelessWidget {
                 if (loadingProgress == null) return child;
                 return Center(
                   child: CircularProgressIndicator(
+                    color: Colors.white,
                     value: loadingProgress.expectedTotalBytes != null
                         ? loadingProgress.cumulativeBytesLoaded /
                             (loadingProgress.expectedTotalBytes ?? 1)
@@ -34,7 +41,7 @@ class BarberPhotoTab extends StatelessWidget {
                 );
               },
               errorBuilder: (context, error, stackTrace) {
-                return const Image(image: AssetImage(AssetHelper.barberAvatar));
+                return const Image(image: AssetImage(AssetHelper.backgroundImg));
               },
             ),
           ),
@@ -91,9 +98,10 @@ class BarberPhotoTab extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // logic them anh
+          presenter.addPhoto();
         },
-        child: const Icon(Icons.add),
-        backgroundColor: Palette.primary, // Use your theme's primary color
+        backgroundColor: Palette.primary,
+        child: const Icon(Icons.add), // Use your theme's primary color
       ),
     );
   }
@@ -106,6 +114,7 @@ class BarberPhotoTab extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              const SizedBox(height: 20),
               Image.network(
                 url,
                 fit: BoxFit.contain,
@@ -120,6 +129,8 @@ class BarberPhotoTab extends StatelessWidget {
                   TextButton(
                     onPressed: () {
                       // Logic to delete the image
+                      Navigator.of(context).pop();
+                      presenter.deletePhoto(url);
                     },
                     child: const Text('Delete',
                         style: TextStyle(color: Colors.red)),

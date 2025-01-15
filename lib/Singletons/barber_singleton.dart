@@ -23,9 +23,6 @@ class BarberSingleton {
   }
 
   List<String> getBarberImageUrls() {
-    if (barber!.info == null || barber!.info!.containsKey(UserInfo.BARBER_IMAGES) == false) {
-      return [];
-    }
-    return barber!.info![UserInfo.BARBER_IMAGES] as List<String>;
+    return barber!.getBarberImages();
   }
 }

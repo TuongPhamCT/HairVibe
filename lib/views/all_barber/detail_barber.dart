@@ -134,4 +134,14 @@ class _DetailBarberState extends State<DetailBarber>
   void updateData() {
     _presenter?.getData();
   }
+
+  @override
+  void onPopContext() {
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  @override
+  void onWaitingProgressBar() {
+    UtilWidgets.createLoadingWidget(context);
+  }
 }

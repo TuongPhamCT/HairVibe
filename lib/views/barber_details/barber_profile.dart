@@ -123,7 +123,7 @@ class _BarberProfilePageState extends State<BarberProfilePage> implements Detail
                       children: [
                         BarberInfoTab(presenter: _presenter!, workingHours: _presenter!.getWorkingHours()),
                         BarberReviewTab(ratings: _presenter!.ratings, users: _presenter!.users),
-                        BarberPhotoTab(urls: _presenter!.getBarberImages()),
+                        BarberPhotoTab(presenter: _presenter!, urls: _presenter!.getBarberImages()),
                         // Update as needed
                       ],
                     ),
@@ -143,5 +143,15 @@ class _BarberProfilePageState extends State<BarberProfilePage> implements Detail
       barberName = _presenter!.getBarberName(); // Example data
       barberAvatarUrl = _presenter!.getBarberAvatarUrl(); // Example data
     });
+  }
+
+  @override
+  void onPopContext() {
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  @override
+  void onWaitingProgressBar() {
+    UtilWidgets.createLoadingWidget(context);
   }
 }
