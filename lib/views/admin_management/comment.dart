@@ -38,6 +38,9 @@ class AdminCommentPageState extends State<AdminCommentPage>
     _presenter = AdminCommentPagePresenter(this);
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
@@ -125,6 +128,15 @@ class AdminCommentPageState extends State<AdminCommentPage>
               ],
             ),
       bottomNavigationBar: AdminBottomBar(currentIndex: _currentPageIndex),
+      floatingActionButton: _tabController.index == 1
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed(AddServicePage.routeName);
+              },
+              backgroundColor: Palette.primary,
+              child: const Icon(Icons.add, color: Colors.white),
+            )
+          : null,
     );
   }
 
@@ -182,18 +194,18 @@ class AdminCommentPageState extends State<AdminCommentPage>
               style: TextStyle(color: Colors.white, fontSize: 18),
             ),
             const SizedBox(height: 10),
-            GestureDetector(
-              onTap: () {
-                Navigator.of(context).pushNamed(AddServicePage.routeName);
-              },
-              child: const Text(
-                'ADD SERVICE',
-                style: TextStyle(
-                    color: Palette.primary,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
+            // GestureDetector(
+            //   onTap: () {
+            //     Navigator.of(context).pushNamed(AddServicePage.routeName);
+            //   },
+            //   child: const Text(
+            //     'ADD SERVICE',
+            //     style: TextStyle(
+            //         color: Palette.primary,
+            //         fontSize: 18,
+            //         fontWeight: FontWeight.bold),
+            //   ),
+            // ),
           ],
         ),
       );
@@ -204,16 +216,15 @@ class AdminCommentPageState extends State<AdminCommentPage>
       shrinkWrap: true,
       itemCount: _presenter!.services.length,
       itemBuilder: (context, index) {
-        CustomizedWidgetBuilderDirector director = CustomizedWidgetBuilderDirector();
+        CustomizedWidgetBuilderDirector director =
+            CustomizedWidgetBuilderDirector();
         ServiceListItemBuilder builder = ServiceListItemBuilder();
         director.makeAdminCommentServiceItem(
             builder: builder,
             model: _presenter!.services[index],
             onDelete: AdminCommentDeleteServiceCommand(
                 presenter: _presenter,
-                serviceModel: _presenter!.services[index]
-            )
-        );
+                serviceModel: _presenter!.services[index]));
         return builder.createWidget();
       },
     );

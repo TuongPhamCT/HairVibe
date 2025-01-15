@@ -6,14 +6,10 @@ import 'package:hairvibe/config/asset_helper.dart';
 class BarberPhotoTab extends StatelessWidget {
   final List<String> urls;
 
-  const BarberPhotoTab({
-    super.key,
-    required this.urls
-  });
+  const BarberPhotoTab({super.key, required this.urls});
 
   @override
   Widget build(BuildContext context) {
-
     List<Widget> widgets = urls.map((url) {
       return ClipRRect(
         borderRadius: BorderRadius.circular(10),
@@ -41,48 +37,58 @@ class BarberPhotoTab extends StatelessWidget {
       );
     }).toList();
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        int crossAxisCount = (constraints.maxWidth / 200).floor();
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          int crossAxisCount = (constraints.maxWidth / 200).floor();
 
-        return Container(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    'Photos',
-                    style: TextDecor.nameBarberBook,
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    "(${urls.length})",
-                    style: TextDecor.nameBarberBook.copyWith(
-                      color: Palette.primary,
+          return Container(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      'Photos',
+                      style: TextDecor.nameBarberBook,
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 40),
-              Expanded(
-                child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: crossAxisCount,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                  ),
-                  itemCount: widgets.length,
-                  itemBuilder: (context, index) {
-                    return widgets[index];
-                  },
+                    const SizedBox(width: 10),
+                    Text(
+                      "(${urls.length})",
+                      style: TextDecor.nameBarberBook.copyWith(
+                        color: Palette.primary,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-        );
-      },
+                const SizedBox(height: 40),
+                Expanded(
+                  child: GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: crossAxisCount,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                    ),
+                    itemCount: widgets.length,
+                    itemBuilder: (context, index) {
+                      return widgets[index];
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // logic them anh
+        },
+        child: const Icon(Icons.add),
+        backgroundColor: Palette.primary, // Use your theme's primary color
+      ),
     );
   }
 }
