@@ -61,6 +61,17 @@ class BarberPhotoTab extends StatelessWidget {
                         color: Palette.primary,
                       ),
                     ),
+                    const Spacer(),
+                    CircleAvatar(
+                      backgroundColor: Colors.red,
+                      radius: 20,
+                      child: IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.white),
+                        onPressed: () {
+                          // logic xoa anh
+                        },
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 40),
