@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class RatingModel {
 
   String? ratingID;
@@ -34,7 +36,7 @@ class RatingModel {
       userID: json['userID'] as String,
       barberID: json['barberID'] as String,
       rate: json['rate'] as double,
-      date: json['date'] as DateTime,
+      date: (json['date'] as Timestamp).toDate(),
       info: json['info'] as String,
     );
   }

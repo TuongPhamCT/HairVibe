@@ -1,5 +1,6 @@
 import 'package:hairvibe/Builders/ModelBuilder/appointment_model_builder.dart';
 import 'package:hairvibe/Contract/confirm_booking_contract.dart';
+import 'package:hairvibe/Facades/notification_facade.dart';
 import 'package:hairvibe/Models/coupon_model.dart';
 import 'package:hairvibe/Models/user_model.dart';
 import 'package:hairvibe/Models/user_repo.dart';

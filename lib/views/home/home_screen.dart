@@ -8,12 +8,15 @@ import 'package:hairvibe/Models/service_model.dart';
 import 'package:hairvibe/Models/user_model.dart';
 import 'package:hairvibe/Presenter/home_screen_presenter.dart';
 import 'package:hairvibe/Singletons/notification_singleton.dart';
+import 'package:hairvibe/Singletons/user_singleton.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/Utility.dart';
 import 'package:hairvibe/commands/home_screen/home_screen_press_service_command.dart';
+import 'package:hairvibe/observers/data_fetching_subcriber.dart';
 import 'package:hairvibe/observers/notification_subcriber.dart';
 import 'package:hairvibe/views/all_barber/barber.dart';
+import 'package:hairvibe/views/all_barber/detail_barber.dart';
 import 'package:hairvibe/views/all_service.dart';
 import 'package:hairvibe/views/booking/main_booking.dart';
 import 'package:hairvibe/widgets/bottom_bar.dart';
@@ -33,7 +36,8 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> implements HomeScreenContract, NotificationSubscriber {
+class _HomeScreenState extends State<HomeScreen>
+    implements HomeScreenContract, NotificationSubscriber, DataFetchingSubscriber {
   HomeScreenPresenter? _presenter;
   bool isLoading = true;
 
@@ -45,11 +49,13 @@ class _HomeScreenState extends State<HomeScreen> implements HomeScreenContract, 
   final int _currentPageIndex = 0;
   final CustomizedWidgetBuilderDirector director = CustomizedWidgetBuilderDirector();
   final NotificationSingleton notificationSingleton = NotificationSingleton.getInstance();
+  final UserSingleton userSingleton = UserSingleton.getInstance();
 
   @override
   void initState() {
     _presenter = HomeScreenPresenter(this);
     notificationSingleton.subscribe(this);
+    userSingleton.subscribe(this);
     _notificationCount = notificationSingleton.getUnreadCount();
     super.initState();
   }
@@ -67,6 +73,7 @@ class _HomeScreenState extends State<HomeScreen> implements HomeScreenContract, 
   @override
   void dispose() {
     notificationSingleton.unsubscribe(this);
+    userSingleton.unsubscribe(this);
     super.dispose();
   }
 
@@ -212,7 +219,7 @@ class _HomeScreenState extends State<HomeScreen> implements HomeScreenContract, 
 
   @override
   void onBarberPressed() {
-    Navigator.of(context).pushNamed(MainBooking.routeName);
+    Navigator.of(context).pushNamed(DetailBarber.routeName);
   }
 
   @override
@@ -235,5 +242,10 @@ class _HomeScreenState extends State<HomeScreen> implements HomeScreenContract, 
     setState(() {
       _notificationCount = notificationSingleton.getUnreadCount();
     });
+  }
+
+  @override
+  void updateData() {
+    _presenter?.getData();
   }
 }

@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:string_validator/string_validator.dart';
 
 class NoticeModel {
   String? noticeID;
@@ -22,7 +21,7 @@ class NoticeModel {
 
   Map<String, dynamic> toJson() => {
     'receiverID': receiverID,
-    'title': date,
+    'date': date,
     'content': content,
     'isRead': isRead,
   };

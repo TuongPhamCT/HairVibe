@@ -7,7 +7,7 @@ class AppointmentRepository {
   final FirebaseFirestore _storage = FirebaseFirestore.instance;
   // final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  void addAppointmentToFirestore(AppointmentModel model) async {
+  Future<void> addAppointmentToFirestore(AppointmentModel model) async {
     try {
       DocumentReference docRef = _storage.collection(AppointmentModel.collectionName).doc(model.appointmentID);
       await docRef.set(model.toJson()).whenComplete(()

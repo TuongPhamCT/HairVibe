@@ -21,8 +21,10 @@ class BarberContactListState extends State<BarberContactList>
   BarberContactListPagePresenter? _presenter;
   //late TabController _tabController;
   final int _currentPageIndex = 2;
+  final TextEditingController _searchController = TextEditingController();
 
   bool isLoading = true;
+  bool isSearching = false;
 
   List<ContactListData> userData = [];
 
@@ -65,10 +67,11 @@ class BarberContactListState extends State<BarberContactList>
               children: [
                 Expanded(
                   child: TextField(
+                    controller: _searchController,
                     decoration: InputDecoration(
                       hintText: 'Search',
-                      hintStyle: TextStyle(color: Colors.grey),
-                      prefixIcon: Icon(Icons.search, color: Colors.grey),
+                      hintStyle: const TextStyle(color: Colors.grey),
+                      prefixIcon: const Icon(Icons.search, color: Colors.grey),
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
@@ -76,18 +79,25 @@ class BarberContactListState extends State<BarberContactList>
                         borderSide: BorderSide.none,
                       ),
                     ),
+                    onSubmitted: (text) {
+                      isSearching = text.isNotEmpty;
+                      _presenter?.handleSearch(text.trim());
+                    },
                   ),
                 ),
-                SizedBox(width: 14),
-                IconButton(
-                  icon: CircleAvatar(
-                    backgroundColor: Palette.primary,
-                    child: Icon(Icons.filter_alt, color: Colors.black),
+                const SizedBox(width: 14),
+                if (isSearching)
+                  IconButton(
+                    icon: const CircleAvatar(
+                      backgroundColor: Palette.primary,
+                      child: Icon(Icons.backspace_rounded, color: Colors.black),
+                    ),
+                    onPressed: () {
+                      _searchController.clear();
+                      isSearching = false;
+                      _presenter?.handleSearch("");
+                    },
                   ),
-                  onPressed: () {
-                    // Filter action
-                  },
-                ),
               ],
             ),
           ),

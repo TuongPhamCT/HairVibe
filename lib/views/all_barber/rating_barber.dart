@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_icon_class/font_awesome_icon_class.dart';
+import 'package:hairvibe/Contract/rating_barber_contract.dart';
+import 'package:hairvibe/Presenter/rating_barber_presenter.dart';
+import 'package:hairvibe/Singletons/barber_singleton.dart';
+import 'package:hairvibe/Singletons/notification_singleton.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
+import 'package:hairvibe/observers/notification_subcriber.dart';
 import 'package:hairvibe/widgets/custom_button.dart';
 import 'package:hairvibe/widgets/noti_bell.dart';
+import '../../Models/rating_model.dart';
+import '../../widgets/util_widgets.dart';
 
 class RatingBarberPage extends StatefulWidget {
   const RatingBarberPage({super.key});
@@ -14,8 +21,36 @@ class RatingBarberPage extends StatefulWidget {
   State<RatingBarberPage> createState() => _RatingBarberPageState();
 }
 
-class _RatingBarberPageState extends State<RatingBarberPage> {
-  final int _soLuongThongBao = 3;
+class _RatingBarberPageState extends State<RatingBarberPage>
+  implements RatingBarberContract, NotificationSubscriber {
+  final NotificationSingleton notificationSingleton = NotificationSingleton.getInstance();
+  RatingBarberPresenter? _presenter;
+
+  int _soLuongThongBao = 0;
+  double _ratingValue = 3;
+
+  final TextEditingController _reviewController = TextEditingController();
+
+  @override
+  void initState() {
+    _presenter = RatingBarberPresenter(this);
+    notificationSingleton.subscribe(this);
+    _soLuongThongBao = notificationSingleton.getUnreadCount();
+    RatingModel? rating = BarberSingleton.getInstance().thisUserRating;
+    if (rating != null) {
+      _ratingValue = rating.rate!;
+      _reviewController.text = rating.info ?? "";
+    }
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    notificationSingleton.unsubscribe(this);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -63,7 +98,7 @@ class _RatingBarberPageState extends State<RatingBarberPage> {
                 height: 5,
               ),
               RatingBar(
-                initialRating: 3,
+                initialRating: _ratingValue,
                 direction: Axis.horizontal,
                 allowHalfRating: true,
                 itemCount: 5,
@@ -83,7 +118,9 @@ class _RatingBarberPageState extends State<RatingBarberPage> {
                 ),
                 itemSize: 30,
                 itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-                onRatingUpdate: (rating) {},
+                onRatingUpdate: (rating) {
+                  _ratingValue = rating;
+                },
               ),
               const SizedBox(
                 height: 35,
@@ -96,6 +133,7 @@ class _RatingBarberPageState extends State<RatingBarberPage> {
                 height: 5,
               ),
               TextField(
+                controller: _reviewController,
                 onTapOutside: (event) {
                   FocusScope.of(context).unfocus();
                 },
@@ -116,7 +154,9 @@ class _RatingBarberPageState extends State<RatingBarberPage> {
                 height: 30,
               ),
               CustomButton(
-                onPressed: () {},
+                onPressed: () {
+                  _presenter?.handleRating(_reviewController.text.trim(), _ratingValue);
+                },
                 text: 'CONFIRM',
               ),
             ],
@@ -124,5 +164,41 @@ class _RatingBarberPageState extends State<RatingBarberPage> {
         ),
       ),
     );
+  }
+
+
+  @override
+  void onRatingFailed(String message) {
+    UtilWidgets.createSnackBar(context, message);
+  }
+
+  @override
+  void onRatingSucceeded() {
+    UtilWidgets.createDialog(
+        context,
+        UtilWidgets.NOTIFICATION,
+        "Review successfully!",
+        () {
+          Navigator.of(context, rootNavigator: true).pop();
+          Navigator.of(context, rootNavigator: true).pop();
+        }
+    );
+  }
+
+  @override
+  void onPopContext() {
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  @override
+  void onWaitingProgressBar() {
+    UtilWidgets.createLoadingWidget(context);
+  }
+
+  @override
+  void updateNotification() {
+    setState(() {
+      _soLuongThongBao = notificationSingleton.getUnreadCount();
+    });
   }
 }

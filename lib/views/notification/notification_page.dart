@@ -6,6 +6,7 @@ import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/Utility.dart';
 import 'package:hairvibe/config/asset_helper.dart';
 import 'package:hairvibe/observers/notification_subcriber.dart';
+import 'package:hairvibe/widgets/util_widgets.dart';
 
 import '../../Models/notice_model.dart';
 
@@ -19,10 +20,10 @@ class NotificationsPage extends StatefulWidget {
 
 class _NotificationsPageState extends State<NotificationsPage> implements NotificationSubscriber {
   final Map<String, List<String>> notifications = {};
+  final NotificationSingleton singleton = NotificationSingleton.getInstance();
 
   @override
   void initState() {
-    NotificationSingleton singleton = NotificationSingleton.getInstance();
     singleton.subscribe(this);
     singleton.notifications.sort((element1, element2) => element1.date!.compareTo(element2.date!));
 
@@ -51,7 +52,10 @@ class _NotificationsPageState extends State<NotificationsPage> implements Notifi
       backgroundColor: Colors.black,
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () {
+          onPressed: () async {
+            UtilWidgets.createLoadingWidget(context);
+            await singleton.readAll();
+            Navigator.pop(context);
             Navigator.pop(context);
           },
           icon: const Icon(

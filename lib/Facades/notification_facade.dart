@@ -21,7 +21,8 @@ class NotificationFacade {
     required bool sendToBarber,
     required bool sendToCustomer
   }) async {
-    String content = "Your appointment at ${Utility.formatStringFromDateTime(appointment.date)} was cancel";
+    String content = "Your appointment at ${Utility.formatStringFromDateTime(appointment.date)} was cancel."
+        " Appointment ID: ${appointment.appointmentID}";
     if (sendToBarber) {
       NoticeModel notification = createNotification(receiverID: appointment.barberID!, content: content);
       await _noticeRepo.addNoticeToFirestore(notification);
@@ -31,5 +32,34 @@ class NotificationFacade {
       NoticeModel notification = createNotification(receiverID: appointment.customerID!, content: content);
       await _noticeRepo.addNoticeToFirestore(notification);
     }
+  }
+
+  Future<void> createCompleteAppointmentNotification({
+    required AppointmentModel appointment,
+  }) async {
+    String content = "Your appointment at ${Utility.formatStringFromDateTime(appointment.date)} was completed."
+        " Appointment ID: ${appointment.appointmentID}";
+    NoticeModel notification = createNotification(receiverID: appointment.customerID!, content: content);
+    await _noticeRepo.addNoticeToFirestore(notification);
+  }
+
+  Future<void> createBookingAppointmentNotification({
+    required AppointmentModel appointment,
+    required String customerName,
+  }) async {
+    String content = "$customerName has booked an appointment with you at ${Utility.formatStringFromDateTime(appointment.date)}."
+        " Appointment ID: ${appointment.appointmentID}";
+    NoticeModel notification = createNotification(receiverID: appointment.barberID!, content: content);
+    await _noticeRepo.addNoticeToFirestore(notification);
+  }
+
+  Future<void> createRatingBarberNotification({
+    required double ratingValue,
+    required String customerName,
+    required String barberID
+  }) async {
+    String content = "$customerName has left a review for you with rating of $ratingValue stars.";
+    NoticeModel notification = createNotification(receiverID: barberID, content: content);
+    await _noticeRepo.addNoticeToFirestore(notification);
   }
 }

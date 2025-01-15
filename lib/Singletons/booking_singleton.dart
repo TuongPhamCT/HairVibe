@@ -1,8 +1,10 @@
 import 'package:hairvibe/Builders/ModelBuilder/appointment_model_builder.dart';
+import 'package:hairvibe/Facades/notification_facade.dart';
 import 'package:hairvibe/Models/appointment_repo.dart';
 import 'package:hairvibe/Models/coupon_model.dart';
 import 'package:hairvibe/Models/service_model.dart';
 import 'package:hairvibe/Models/user_model.dart';
+import 'package:hairvibe/Singletons/user_singleton.dart';
 
 import '../Models/appointment_model.dart';
 
@@ -65,6 +67,8 @@ class BookingSingleton {
   }
 
   Future<bool> confirmAppointment() async {
+    NotificationFacade notificationFacade = NotificationFacade();
+
     if (customerID == null || barberID == null ) {
       return false;
     }
@@ -76,8 +80,11 @@ class BookingSingleton {
 
     AppointmentModel appointment = builder.build();
 
-    _appointmentRepo.addAppointmentToFirestore(appointment);
-
+    await _appointmentRepo.addAppointmentToFirestore(appointment);
+    await notificationFacade.createBookingAppointmentNotification(
+        appointment: appointment,
+        customerName: UserSingleton.getInstance().currentUser!.name!
+    );
     return true;
   }
 }

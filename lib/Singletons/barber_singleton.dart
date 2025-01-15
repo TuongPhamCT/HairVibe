@@ -1,3 +1,4 @@
+import '../Models/rating_model.dart';
 import '../Models/user_model.dart';
 
 class BarberSingleton {
@@ -10,9 +11,15 @@ class BarberSingleton {
 
   UserModel? barber;
   bool navigateFromOtherPage = false;
+  RatingModel? thisUserRating;
 
   void setBarber(UserModel barber) {
     this.barber = barber;
+    thisUserRating = null;
+  }
+
+  void setThisUserRating(RatingModel rating) {
+    thisUserRating = rating;
   }
 
   List<String> getBarberImageUrls() {

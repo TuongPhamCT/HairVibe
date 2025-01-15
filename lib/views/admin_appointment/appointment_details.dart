@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hairvibe/Contract/admin_appointment_detail_contract.dart';
+import 'package:hairvibe/Models/appointment_model.dart';
 import 'package:hairvibe/Presenter/admin_appointment_detail_presenter.dart';
 import 'package:hairvibe/Singletons/appointment_singleton.dart';
 import 'package:hairvibe/Theme/palette.dart';
@@ -28,6 +29,7 @@ class AdminAppointmentDetailPageState extends State<AdminAppointmentDetailPage>
   late final String avatarUrl;
   late final List<Service> servicesList;
   late final int totalPrice;
+  bool isCompleted = false;
 
   @override
   void initState() {
@@ -37,6 +39,7 @@ class AdminAppointmentDetailPageState extends State<AdminAppointmentDetailPage>
         "${_singleton.getAppointmentDate()} ${_singleton.getAppointmentTime()}";
     avatarUrl = _singleton.getCustomerAvatarUrl();
     int sum = 0;
+    isCompleted = _singleton.appointment!.status! == AppointmentStatus.COMPLETED;
     servicesList = _singleton.getServices().map((service) {
       sum += service.price!;
       return Service(name: service.name!, price: service.price!);
@@ -89,31 +92,37 @@ class AdminAppointmentDetailPageState extends State<AdminAppointmentDetailPage>
                               .copyWith(color: Colors.white)),
                     ],
                   ),
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        backgroundColor: Colors.green,
-                        radius: 20,
-                        child: IconButton(
-                          icon: const Icon(Icons.check, color: Colors.white),
-                          onPressed: () {
-                            // Thêm logic hoàn thành lịch hẹn ở đây
-                          },
+                  if (!isCompleted)
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.green,
+                          radius: 20,
+                          child: IconButton(
+                            icon: const Icon(Icons.check, color: Colors.white),
+                            onPressed: () {
+                              // Thêm logic hoàn thành lịch hẹn ở đây
+                              _presenter?.handleCompleteButtonPressed();
+                            },
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                      CircleAvatar(
-                        backgroundColor: Colors.red,
-                        radius: 20,
-                        child: IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.white),
-                          onPressed: () {
-                            _presenter!.handleCancelButtonPressed();
-                          },
+                        const SizedBox(width: 8),
+                        CircleAvatar(
+                          backgroundColor: Colors.red,
+                          radius: 20,
+                          child: IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.white),
+                            onPressed: () {
+                              _presenter?.handleCancelButtonPressed();
+                            },
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    )
+                  else
+                    Text("COMPLETED",
+                    style: TextDecor.robo16Semi
+                        .copyWith(color: Colors.green))
                 ],
               ),
               const SizedBox(height: 20),
@@ -185,6 +194,21 @@ class AdminAppointmentDetailPageState extends State<AdminAppointmentDetailPage>
   }
 
   @override
+  void onCompleteAppointment() {
+    UtilWidgets.createYesNoDialog(
+        context: context,
+        title: UtilWidgets.NOTIFICATION,
+        content: "Do you want to complete this appointment?",
+        onAccept: () {
+          Navigator.of(context, rootNavigator: true).pop();
+          _presenter!.handleCompleteAppointment();
+        },
+        onCancel: () {
+          Navigator.of(context, rootNavigator: true).pop();
+        });
+  }
+
+  @override
   void onCancelAppointment() {
     UtilWidgets.createYesNoDialog(
         context: context,
@@ -218,6 +242,19 @@ class AdminAppointmentDetailPageState extends State<AdminAppointmentDetailPage>
   @override
   void onCancelAppointmentSucceeded() {
     Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  @override
+  void onCompleteAppointmentFailed() {
+    UtilWidgets.createSnackBar(
+        context, "Something was wrong. Please try again.");
+  }
+
+  @override
+  void onCompleteAppointmentSucceeded() {
+    setState(() {
+      isCompleted = true;
+    });
   }
 }
 

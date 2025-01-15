@@ -7,7 +7,7 @@ class RatingRepository {
   final FirebaseFirestore _storage = FirebaseFirestore.instance;
   // final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<void> addRatingToFirestore(RatingModel model) async {
+  Future<String> addRatingToFirestore(RatingModel model) async {
     try {
       DocumentReference docRef
         = _storage.collection(UserModel.collectionName)
@@ -16,8 +16,10 @@ class RatingRepository {
             .doc(model.ratingID);
       await docRef.set(model.toJson()).whenComplete(()
       => print('Ratings added to Firestore with ID: ${docRef.id}'));
+      return docRef.id;
     } catch (e) {
       print('Error adding Rating to Firestore: $e');
+      return "";
     }
   }
 

@@ -52,7 +52,7 @@ class BookBarberItem extends StatelessWidget {
             const SizedBox(
               height: 5,
             ),
-            Text('MS001', style: TextDecor.idBarber),
+            Text("Barber", style: TextDecor.idBarber),
             const SizedBox(
               height: 5,
             ),

@@ -34,6 +34,10 @@ class DetailBarberPresenter {
     ratings = await _ratingRepo.getRatingsByBarberId(_barberSingleton.barber!.userID!);
     for (RatingModel model in ratings) {
       users[model.userID!] = await _userRepo.getUserById(model.userID!);
+      if (_userSingleton.currentUserIsCustomer()
+          && model.userID == _userSingleton.currentUser!.userID!) {
+        _barberSingleton.setThisUserRating(model);
+      }
     }
     _view.onLoadDataSucceed();
   }
