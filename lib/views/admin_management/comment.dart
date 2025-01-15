@@ -75,68 +75,62 @@ class AdminCommentPageState extends State<AdminCommentPage>
       ),
       body: isLoading
           ? UtilWidgets.getLoadingWidget()
-          : Column(
-              children: [
-                Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      height: MediaQuery.of(context).size.height * 0.25,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        image: DecorationImage(
-                          image: AssetImage(AssetHelper.logo),
-                          fit: BoxFit.cover,
+          : SingleChildScrollView(
+              child: Column(
+                children: [
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        height: MediaQuery.of(context).size.height * 0.25,
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          image: DecorationImage(
+                            image: AssetImage(AssetHelper.logo),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-                    ),
-                    Positioned(
-                      bottom: -40,
-                      left: MediaQuery.of(context).size.width / 2 - 40,
-                      child: const CircleAvatar(
-                        radius: 40,
-                        backgroundImage: AssetImage(AssetHelper.logo),
+                      Positioned(
+                        bottom: -40,
+                        left: MediaQuery.of(context).size.width / 2 - 40,
+                        child: const CircleAvatar(
+                          radius: 40,
+                          backgroundImage: AssetImage(AssetHelper.logo),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 50),
-                Text(
-                  barberName,
-                  style: TextDecor.homeTitle.copyWith(color: Colors.white),
-                ),
-                TabBar(
-                  controller: _tabController,
-                  indicatorColor: Palette.primary,
-                  labelColor: Colors.white,
-                  unselectedLabelColor: Colors.grey,
-                  tabs: const [
-                    Tab(text: 'REVIEWS'),
-                    Tab(text: 'SERVICES'),
-                  ],
-                ),
-                Expanded(
-                  child: TabBarView(
-                    controller: _tabController,
-                    children: [
-                      _buildReviews(),
-                      _buildServices(),
                     ],
                   ),
-                ),
-              ],
+                  const SizedBox(height: 50),
+                  Text(
+                    barberName,
+                    style: TextDecor.homeTitle.copyWith(color: Colors.white),
+                  ),
+                  TabBar(
+                    controller: _tabController,
+                    indicatorColor: Palette.primary,
+                    labelColor: Colors.white,
+                    unselectedLabelColor: Colors.grey,
+                    tabs: const [
+                      Tab(text: 'REVIEWS'),
+                      Tab(text: 'SERVICES'),
+                    ],
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.5,
+                    child: TabBarView(
+                      controller: _tabController,
+                      children: [
+                        _buildReviews(),
+                        _buildServices(),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
       bottomNavigationBar: AdminBottomBar(currentIndex: _currentPageIndex),
-      floatingActionButton: _tabController.index == 1
-          ? FloatingActionButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed(AddServicePage.routeName);
-              },
-              backgroundColor: Palette.primary,
-              child: const Icon(Icons.add, color: Colors.white),
-            )
-          : null,
     );
   }
 
@@ -194,39 +188,72 @@ class AdminCommentPageState extends State<AdminCommentPage>
               style: TextStyle(color: Colors.white, fontSize: 18),
             ),
             const SizedBox(height: 10),
-            // GestureDetector(
-            //   onTap: () {
-            //     Navigator.of(context).pushNamed(AddServicePage.routeName);
-            //   },
-            //   child: const Text(
-            //     'ADD SERVICE',
-            //     style: TextStyle(
-            //         color: Palette.primary,
-            //         fontSize: 18,
-            //         fontWeight: FontWeight.bold),
-            //   ),
-            // ),
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushNamed(AddServicePage.routeName);
+              },
+              child: const Text(
+                'ADD SERVICE',
+                style: TextStyle(
+                    color: Palette.primary,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
           ],
         ),
       );
     }
 
-    return ListView.builder(
-      physics: const ScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: _presenter!.services.length,
-      itemBuilder: (context, index) {
-        CustomizedWidgetBuilderDirector director =
-            CustomizedWidgetBuilderDirector();
-        ServiceListItemBuilder builder = ServiceListItemBuilder();
-        director.makeAdminCommentServiceItem(
-            builder: builder,
-            model: _presenter!.services[index],
-            onDelete: AdminCommentDeleteServiceCommand(
-                presenter: _presenter,
-                serviceModel: _presenter!.services[index]));
-        return builder.createWidget();
-      },
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'SERVICE',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pushNamed(AddServicePage.routeName);
+                },
+                child: const Text(
+                  'ADD SERVICE',
+                  style: TextStyle(
+                      color: Palette.primary,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: ListView.builder(
+            physics: const ScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: _presenter!.services.length,
+            itemBuilder: (context, index) {
+              CustomizedWidgetBuilderDirector director =
+                  CustomizedWidgetBuilderDirector();
+              ServiceListItemBuilder builder = ServiceListItemBuilder();
+              director.makeAdminCommentServiceItem(
+                  builder: builder,
+                  model: _presenter!.services[index],
+                  onDelete: AdminCommentDeleteServiceCommand(
+                      presenter: _presenter,
+                      serviceModel: _presenter!.services[index]));
+              return builder.createWidget();
+            },
+          ),
+        ),
+      ],
     );
   }
 
