@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hairvibe/Models/service_model.dart';
 
@@ -32,13 +34,13 @@ class AppointmentModel {
     'services': services?.map((service) => service.toJson()).toList(),
     'date': Timestamp.fromDate(date!),
     'status': status,
-    'otherInfo': otherInfo
+    'otherInfo': jsonEncode(otherInfo) ?? "{}"
   };
 
   static AppointmentModel fromJson(Map<String, dynamic> json) {
     final dataServices = json['services'] as List?;
     final listServices = List.castFrom<Object?, Map<String, Object?>>(dataServices!);
-    final dataOtherInfo = json['otherInfo'] as Map<String, Object?>?;
+    final dataOtherInfo = jsonDecode(json['otherInfo']) as Map<String, Object?>?;
     return AppointmentModel(
       appointmentID: json['appointmentID'] as String,
       customerID: json['customerID'] as String,

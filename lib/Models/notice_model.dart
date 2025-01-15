@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:string_validator/string_validator.dart';
+
 class NoticeModel {
   String? noticeID;
   String? receiverID;
@@ -28,7 +31,7 @@ class NoticeModel {
     return NoticeModel(
       noticeID: key,
       receiverID: json['receiverID'] as String,
-      date: json['date'] as DateTime,
+      date: (json['date'] as Timestamp).toDate(),
       content: json['content'] as String,
       isRead: json['isRead'] as bool
     );

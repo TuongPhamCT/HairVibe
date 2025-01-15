@@ -40,7 +40,9 @@ class _SplashScreenState extends State<SplashScreen>
 
     // Bắt đầu animation
     _controller!.forward().then((_) {
-      Navigator.of(context).pushNamed(AuthScreen.routeName);
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const AuthScreen()),
+      );
     });
   }
 

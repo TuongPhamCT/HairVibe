@@ -63,9 +63,9 @@ class AppointmentSingleton {
     if (appointment!.otherInfo != null) {
       Map<String, Object?> otherInfo = appointment!.otherInfo!;
       if (otherInfo.containsKey(AppointmentOtherInfo.DISCOUNT)) {
-        data[ViewBookingData.DISCOUNT] = otherInfo[AppointmentOtherInfo.DISCOUNT] as String;
+        data[ViewBookingData.DISCOUNT] = otherInfo[AppointmentOtherInfo.DISCOUNT] as int;
       } else {
-        data[ViewBookingData.DISCOUNT] = "0";
+        data[ViewBookingData.DISCOUNT] = 0;
       }
     }
 

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:hairvibe/Contract/appointment_tab_contract.dart';
 import 'package:hairvibe/Models/appointment_model.dart';
 import 'package:hairvibe/Presenter/appointment_tab_presenter.dart';
+import 'package:hairvibe/Singletons/notification_singleton.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
+import 'package:hairvibe/observers/notification_subcriber.dart';
 import 'package:hairvibe/views/appoinment/cancelled_tab.dart';
 import 'package:hairvibe/views/appoinment/completed_tab.dart';
 import 'package:hairvibe/views/appoinment/upcoming_tab.dart';
@@ -22,8 +24,10 @@ class AppointmentScreen extends StatefulWidget {
   State<AppointmentScreen> createState() => _AppointmentScreenState();
 }
 
-class _AppointmentScreenState extends State<AppointmentScreen> implements AppointmentTabContract {
+class _AppointmentScreenState extends State<AppointmentScreen>
+    implements AppointmentTabContract, NotificationSubscriber {
   AppointmentTabPresenter? _presenter;
+  final NotificationSingleton notificationSingleton = NotificationSingleton.getInstance();
 
   List<AppointmentModel> cancelledAppointments = [];
   List<AppointmentModel> completedAppointments = [];
@@ -32,10 +36,11 @@ class _AppointmentScreenState extends State<AppointmentScreen> implements Appoin
   bool isLoading = true;
 
   final int _currentPageIndex = 1;
-  final int _soLuongThongBao = 2;
+  int _soLuongThongBao = 2;
 
   @override
   void initState() {
+    _soLuongThongBao = notificationSingleton.getUnreadCount();
     _presenter = AppointmentTabPresenter(this);
     super.initState();
   }
@@ -145,5 +150,12 @@ class _AppointmentScreenState extends State<AppointmentScreen> implements Appoin
   @override
   void onWaitingProgressBar() {
     UtilWidgets.createLoadingWidget(context);
+  }
+
+  @override
+  void updateNotification() {
+    setState(() {
+      _soLuongThongBao = notificationSingleton.getUnreadCount();
+    });
   }
 }

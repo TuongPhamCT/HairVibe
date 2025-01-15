@@ -29,7 +29,13 @@ class AppointmentTabPresenter {
   }
 
   UserModel? findBarberByID(String barberID) {
-    return (barbers as List<UserModel?>).firstWhere((item) => item!.userID == barberID, orElse: () => null);
+    UserModel? result;
+    for (UserModel model in barbers) {
+      if (model.userID == barberID) {
+        return model;
+      }
+    }
+    return result;
   }
 
   Future<void> handleViewReceiptPressed(AppointmentModel model) async {

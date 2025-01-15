@@ -120,7 +120,7 @@ class AdminHomeScreenState extends State<AdminHomeScreen>
                       title: 'COMPLETED APPOINTMENT',
                       content: completedAppointments,
                       lineColor: Colors.blue,
-                      columnsHeight: bookHoursColumnsHeight,
+                      columnsHeight: appointmentColumnsHeight,
                     ),
                   ),
                 ],
@@ -267,7 +267,7 @@ class AdminHomeScreenState extends State<AdminHomeScreen>
             highestAppointmentHeight *
             highestColumns + 2;
       } else {
-        appointmentColumnsHeight[i] == 2;
+        appointmentColumnsHeight[i] = 2;
       }
 
       if (highestBookedHoursHeight > 0) {

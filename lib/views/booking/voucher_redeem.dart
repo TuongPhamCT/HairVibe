@@ -115,7 +115,7 @@ class _VoucherRedeemState extends State<VoucherRedeem> implements VoucherRedeemC
             ),
             const SizedBox(height: 20),
             SizedBox(
-              height: size.height * 0.75,
+              height: size.height * 0.6,
               child: ListView.builder(
                 itemBuilder: (context, index) {
                   VoucherItemBuilder builder = VoucherItemBuilder();
@@ -138,6 +138,7 @@ class _VoucherRedeemState extends State<VoucherRedeem> implements VoucherRedeemC
   void onLoadDataSucceed() {
     setState(() {
       coupons = _presenter!.coupons;
+      isLoading = false;
     });
   }
 
