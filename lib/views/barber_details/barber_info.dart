@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hairvibe/Presenter/detail_barber_presenter.dart';
-import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/views/barber_details/barber_schedule_list.dart';
 

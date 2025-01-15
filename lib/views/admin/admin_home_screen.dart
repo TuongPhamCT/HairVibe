@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hairvibe/Contract/admin_home_screen_contract.dart';
 import 'package:hairvibe/Presenter/admin_home_screen_presenter.dart';
 import 'package:hairvibe/Singletons/user_singleton.dart';
@@ -9,7 +8,6 @@ import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/Utility.dart';
 import 'package:hairvibe/observers/notification_subcriber.dart';
 import 'package:hairvibe/widgets/noti_bell.dart';
-import 'package:hairvibe/widgets/admin_bottom_bar.dart';
 import 'package:hairvibe/widgets/util_widgets.dart';
 
 import '../../Singletons/notification_singleton.dart';

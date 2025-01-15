@@ -10,7 +10,6 @@ import 'package:hairvibe/observers/notification_subcriber.dart';
 import 'package:hairvibe/views/account/about_us.dart';
 import 'package:hairvibe/views/account/edit_account.dart';
 import 'package:hairvibe/views/auth_screen.dart';
-import 'package:hairvibe/widgets/bottom_bar.dart';
 import 'package:hairvibe/widgets/noti_bell.dart';
 
 class AccountPage extends StatefulWidget {

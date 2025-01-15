@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_icon_class/font_awesome_icon_class.dart';
 import 'package:hairvibe/Contract/detail_barber_contract.dart';
-import 'package:hairvibe/Models/rating_model.dart';
 import 'package:hairvibe/Presenter/detail_barber_presenter.dart';
 import 'package:hairvibe/Singletons/user_singleton.dart';
 import 'package:hairvibe/Theme/palette.dart';
@@ -61,7 +60,7 @@ class _DetailBarberState extends State<DetailBarber>
           backgroundColor: Colors.black,
           leading: IconButton(
             onPressed: () {
-              Navigator.pop(context);
+              _presenter?.handleBack();
             },
             icon: const Icon(
               FontAwesomeIcons.angleLeft,
@@ -143,5 +142,10 @@ class _DetailBarberState extends State<DetailBarber>
   @override
   void onWaitingProgressBar() {
     UtilWidgets.createLoadingWidget(context);
+  }
+
+  @override
+  void onBack() {
+    Navigator.pop(context);
   }
 }

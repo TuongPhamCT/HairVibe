@@ -25,4 +25,10 @@ class BarberSingleton {
   List<String> getBarberImageUrls() {
     return barber!.getBarberImages();
   }
+
+  void reset() {
+    barber = null;
+    navigateFromOtherPage = false;
+    thisUserRating = null;
+  }
 }

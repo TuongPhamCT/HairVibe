@@ -1,11 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_icon_class/font_awesome_icon_class.dart';
 import 'package:hairvibe/Singletons/notification_singleton.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/observers/notification_subcriber.dart';
-import 'package:hairvibe/widgets/bottom_bar.dart';
 import 'package:hairvibe/widgets/noti_bell.dart';
 
 import '../../Singletons/user_singleton.dart';

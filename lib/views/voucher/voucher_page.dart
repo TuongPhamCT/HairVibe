@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:hairvibe/Builders/WidgetBuilder/widget_builder_director.dart';
 import 'package:hairvibe/Contract/voucher_page_contract.dart';
 import 'package:hairvibe/Models/coupon_model.dart';
 import 'package:hairvibe/Presenter/voucher_page_presenter.dart';
-import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/views/booking/main_booking.dart';
-import 'package:hairvibe/views/voucher/redeem_voucher.dart';
 import 'package:hairvibe/widgets/bottom_bar.dart';
-import 'package:hairvibe/widgets/list_view/voucher_item.dart';
 
 import '../../Builders/WidgetBuilder/voucher_item_builder.dart';
 
@@ -86,11 +84,13 @@ class _VoucherPageState extends State<VoucherPage> implements VoucherPageContrac
               height: size.height * 0.70,
               child: ListView.builder(
                   itemBuilder: (context, index) {
+                    CustomizedWidgetBuilderDirector director = CustomizedWidgetBuilderDirector();
                     VoucherItemBuilder builder = VoucherItemBuilder();
-                    builder.setCouponModel(coupons[index]);
-                    builder.setOnPressed(() {
-                      _presenter?.handleUseVoucher(coupons[index]);
-                    });
+                    director.makeVoucherItem(
+                        builder: builder,
+                        model: coupons[index],
+                        presenter: _presenter!
+                    );
                     return builder.createWidget();
                   },
                   itemCount: coupons.length,

@@ -7,7 +7,6 @@ import 'package:hairvibe/Singletons/user_singleton.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/views/all_barber/rating_barber.dart';
-import 'package:hairvibe/widgets/list_view/review_item.dart';
 
 class ReviewsTab extends StatelessWidget {
   final DetailBarberPresenter presenter;

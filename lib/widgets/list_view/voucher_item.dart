@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hairvibe/Commands/command_interface.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 
@@ -6,7 +7,7 @@ class VoucherItem extends StatelessWidget {
   final String voucherName;
   final String voucherCode;
   final String discountRate;
-  final VoidCallback onPressed;
+  final CommandInterface? onPressed;
   const VoucherItem({
     super.key,
     required this.voucherName,
@@ -48,7 +49,9 @@ class VoucherItem extends StatelessWidget {
             ],
           ),
           ElevatedButton(
-            onPressed: onPressed,
+            onPressed: () {
+              onPressed?.execute();
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: Palette.primary,
               shape: RoundedRectangleBorder(

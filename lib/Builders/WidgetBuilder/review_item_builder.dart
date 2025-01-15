@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:hairvibe/Builders/WidgetBuilder/widget_builder.dart';
 import 'package:hairvibe/Models/rating_model.dart';

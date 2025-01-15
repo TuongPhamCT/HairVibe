@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hairvibe/Builders/WidgetBuilder/voucher_item_builder.dart';
+import 'package:hairvibe/Builders/WidgetBuilder/widget_builder_director.dart';
 import 'package:hairvibe/Contract/voucher_redeem_contract.dart';
 import 'package:hairvibe/Models/coupon_model.dart';
 import 'package:hairvibe/Presenter/voucher_redeem_presenter.dart';
@@ -118,11 +119,13 @@ class _VoucherRedeemState extends State<VoucherRedeem> implements VoucherRedeemC
               height: size.height * 0.6,
               child: ListView.builder(
                 itemBuilder: (context, index) {
+                  CustomizedWidgetBuilderDirector director = CustomizedWidgetBuilderDirector();
                   VoucherItemBuilder builder = VoucherItemBuilder();
-                  builder.setCouponModel(coupons[index]);
-                  builder.setOnPressed(() {
-                    _presenter?.handleUseVoucher(coupons[index]);
-                  });
+                  director.makeVoucherItem(
+                      builder: builder,
+                      model: coupons[index],
+                      presenter: _presenter!
+                  );
                   return builder.createWidget();
                 },
                 itemCount: coupons.length

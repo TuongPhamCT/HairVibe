@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hairvibe/Contract/forgot_pass_contract.dart';
 import 'package:hairvibe/Presenter/forgot_pass_presenter.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
-import 'package:hairvibe/views/reset_password_screen.dart';
 import 'package:hairvibe/widgets/sign_up_form.dart';
 
 class ForgotPassScreen extends StatefulWidget {

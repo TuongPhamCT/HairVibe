@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:hairvibe/Builders/WidgetBuilder/widget_builder.dart';
+import 'package:hairvibe/Commands/command_interface.dart';
 import 'package:hairvibe/Models/user_model.dart';
 
 import '../../views/all_barber/barber_item_detail.dart';
@@ -8,8 +9,9 @@ class BarberItemDetailBuilder implements CustomizedWidgetBuilder {
   UserModel? barber;
   String? description;
   String? rating;
-  VoidCallback? onDetailPressed;
-  VoidCallback? onBookPressed;
+  List<int>? workSessions;
+  CommandInterface? onDetailPressed;
+  CommandInterface? onBookPressed;
 
   void setBarber(UserModel barber){
     this.barber = barber;
@@ -23,11 +25,15 @@ class BarberItemDetailBuilder implements CustomizedWidgetBuilder {
     this.rating = rating;
   }
 
-  void setOnDetailPressed(VoidCallback onDetailPressed){
+  void setWorkSessions(List<int> workSessions) {
+    this.workSessions = workSessions;
+  }
+
+  void setOnDetailPressed(CommandInterface onDetailPressed){
     this.onDetailPressed = onDetailPressed;
   }
 
-  void setOnBookPressed(VoidCallback onBookPressed){
+  void setOnBookPressed(CommandInterface onBookPressed){
     this.onBookPressed = onBookPressed;
   }
 
@@ -40,6 +46,7 @@ class BarberItemDetailBuilder implements CustomizedWidgetBuilder {
         barberName: barber!.name,
         description: description,
         rating: rating,
+        workSessions: workSessions,
         onDetailPressed: onDetailPressed,
         onBookPressed: onBookPressed
     );
@@ -51,5 +58,6 @@ class BarberItemDetailBuilder implements CustomizedWidgetBuilder {
     rating = null;
     onDetailPressed = null;
     onBookPressed = null;
+    workSessions = null;
   }
 }

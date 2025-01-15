@@ -26,11 +26,13 @@ class DetailBarberPresenter {
   List<WorkSessionModel> workSessions = [];
 
   Future<void> getData() async {
-    if (_userSingleton.currentUserIsCustomer() == false) {
+    if (_userSingleton.currentUserIsCustomer() == false && _barberSingleton.barber == null) {
       _barberSingleton.setBarber(_userSingleton.currentUser!);
-      workSessions = await _workSessionRepository.getWorkSessionsByBarberId(_barberSingleton.barber!.userID!);
-      if (workSessions.isNotEmpty) {
-        workSessions.sort((element1, element2) => element1.day! - element2.day!);
+      if (_userSingleton.currentUserIsBarber()) {
+        workSessions = await _workSessionRepository.getWorkSessionsByBarberId(_barberSingleton.barber!.userID!);
+        if (workSessions.isNotEmpty) {
+          workSessions.sort((element1, element2) => element1.day! - element2.day!);
+        }
       }
     }
     ratings = await _ratingRepo.getRatingsByBarberId(_barberSingleton.barber!.userID!);
@@ -130,5 +132,10 @@ class DetailBarberPresenter {
       return;
     }
     _view.onPopContext();
+  }
+
+  void handleBack() {
+    _barberSingleton.reset();
+    _view.onBack();
   }
 }

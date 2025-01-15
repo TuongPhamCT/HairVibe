@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_icon_class/font_awesome_icon_class.dart';
 import 'package:hairvibe/Contract/detail_barber_contract.dart';
-import 'package:hairvibe/Models/rating_model.dart';
 import 'package:hairvibe/Presenter/detail_barber_presenter.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
@@ -153,5 +151,10 @@ class _BarberProfilePageState extends State<BarberProfilePage> implements Detail
   @override
   void onWaitingProgressBar() {
     UtilWidgets.createLoadingWidget(context);
+  }
+
+  @override
+  void onBack() {
+    // Nothing to do
   }
 }

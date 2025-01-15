@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hairvibe/Builders/WidgetBuilder/widget_builder_director.dart';
 import 'package:hairvibe/Models/appointment_model.dart';
 import 'package:hairvibe/Presenter/appointment_tab_presenter.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
-import 'package:hairvibe/widgets/list_view/cancel_appoint_item.dart';
 
 import '../../Builders/WidgetBuilder/cancelled_appoint_item_builder.dart';
 
@@ -18,6 +18,9 @@ class CancelledTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    CustomizedWidgetBuilderDirector director = CustomizedWidgetBuilderDirector();
+    CancelledAppointItemBuilder builder = CancelledAppointItemBuilder();
+
     Size size = MediaQuery.of(context).size;
     if (appointments.isEmpty) {
       return Center(
@@ -34,12 +37,11 @@ class CancelledTab extends StatelessWidget {
         child: ListView.builder(
           itemCount: appointments.length,
           itemBuilder: (context, index) {
-            CancelledAppointItemBuilder builder = CancelledAppointItemBuilder();
-            builder.setAppointment(appointments[index]);
-            builder.setBarber(presenter.findBarberByID(appointments[index].barberID!)!);
-            builder.setOnRebookPressed(() {
-              presenter.handleRebookPressed(appointments[index]);
-            });
+            director.makeCancelledAppointItem(
+                builder: builder,
+                appointment: appointments[index],
+                presenter: presenter
+            );
             return builder.createWidget();
           },
         ),
