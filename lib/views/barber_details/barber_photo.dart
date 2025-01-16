@@ -8,11 +8,8 @@ class BarberPhotoTab extends StatelessWidget {
   final List<String> urls;
   final DetailBarberPresenter presenter;
 
-  const BarberPhotoTab({
-    super.key,
-    required this.urls,
-    required this.presenter
-  });
+  const BarberPhotoTab(
+      {super.key, required this.urls, required this.presenter});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +38,8 @@ class BarberPhotoTab extends StatelessWidget {
                 );
               },
               errorBuilder: (context, error, stackTrace) {
-                return const Image(image: AssetImage(AssetHelper.backgroundImg));
+                return const Image(
+                    image: AssetImage(AssetHelper.backgroundImg));
               },
             ),
           ),
@@ -73,7 +71,6 @@ class BarberPhotoTab extends StatelessWidget {
                         color: Palette.primary,
                       ),
                     ),
-                    
                   ],
                 ),
                 const SizedBox(height: 40),
@@ -111,39 +108,48 @@ class BarberPhotoTab extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return Dialog(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(height: 20),
-              Image.network(
-                url,
-                fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) {
-                  return const Image(
-                      image: AssetImage(AssetHelper.barberAvatar));
-                },
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      // Logic to delete the image
-                      Navigator.of(context).pop();
-                      presenter.deletePhoto(url);
-                    },
-                    child: const Text('Delete',
-                        style: TextStyle(color: Colors.red)),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop(); // Close the dialog
-                    },
-                    child: const Text('Close'),
-                  ),
-                ],
-              ),
-            ],
+          backgroundColor: Colors.black,
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Palette.primary, width: 2),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 20),
+                Image.network(
+                  url,
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Image(
+                        image: AssetImage(AssetHelper.barberAvatar));
+                  },
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        // Logic to delete the image
+                        Navigator.of(context).pop();
+                        presenter.deletePhoto(url);
+                      },
+                      child: const Text('Delete',
+                          style: TextStyle(color: Colors.red)),
+                    ),
+                    const SizedBox(width: 10),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(); // Close the dialog
+                      },
+                      child: const Text('Close'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+              ],
+            ),
           ),
         );
       },

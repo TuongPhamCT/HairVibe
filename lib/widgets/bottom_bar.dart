@@ -42,8 +42,8 @@ class _BottomBarCustomState extends State<BottomBarCustom> {
         backgroundColor: Colors.black,
         selectedItemColor: Palette.primary,
         unselectedItemColor: Colors.white,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.houseChimney),
