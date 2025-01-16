@@ -10,15 +10,13 @@ class UpcomingTab extends StatelessWidget {
   final AppointmentTabPresenter presenter;
   final List<AppointmentModel> appointments;
 
-  const UpcomingTab({
-    super.key,
-    required this.presenter,
-    required this.appointments
-  });
+  const UpcomingTab(
+      {super.key, required this.presenter, required this.appointments});
 
   @override
   Widget build(BuildContext context) {
-    CustomizedWidgetBuilderDirector director = CustomizedWidgetBuilderDirector();
+    CustomizedWidgetBuilderDirector director =
+        CustomizedWidgetBuilderDirector();
     UpcomingAppointItemBuilder builder = UpcomingAppointItemBuilder();
     Size size = MediaQuery.of(context).size;
 
@@ -40,8 +38,7 @@ class UpcomingTab extends StatelessWidget {
             director.makeUpcomingAppointItem(
                 builder: builder,
                 appointment: appointments[index],
-                presenter: presenter
-            );
+                presenter: presenter);
             return builder.createWidget();
           },
         ),

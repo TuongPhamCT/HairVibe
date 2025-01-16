@@ -23,9 +23,12 @@ class BarberReviewTab extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text(
-                'Reviews',
-                style: TextDecor.nameBarberBook,
+              Flexible(
+                child: Text(
+                  'Reviews',
+                  style: TextDecor.nameBarberBook,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
               const SizedBox(width: 10),
               Text(
@@ -37,16 +40,18 @@ class BarberReviewTab extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-          ListView.builder(
-            itemCount: ratings.length,
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              ReviewItemBuilder builder = ReviewItemBuilder();
-              RatingModel rating = ratings[index];
-              builder.setRatingModel(rating);
-              builder.setUserModel(users[rating.userID]!);
-              return builder.createWidget();
-            },
+          Expanded(
+            child: ListView.builder(
+              itemCount: ratings.length,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                ReviewItemBuilder builder = ReviewItemBuilder();
+                RatingModel rating = ratings[index];
+                builder.setRatingModel(rating);
+                builder.setUserModel(users[rating.userID]!);
+                return builder.createWidget();
+              },
+            ),
           ),
         ],
       ),

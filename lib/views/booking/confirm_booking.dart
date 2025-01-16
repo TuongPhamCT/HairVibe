@@ -19,7 +19,8 @@ class ConfirmBooking extends StatefulWidget {
   State<ConfirmBooking> createState() => _ConfirmBookingState();
 }
 
-class _ConfirmBookingState extends State<ConfirmBooking> implements ConfirmBookingContract {
+class _ConfirmBookingState extends State<ConfirmBooking>
+    implements ConfirmBookingContract {
   ConfirmBookingPresenter? _presenter;
   final AppointmentSingleton _singleton = AppointmentSingleton.getInstance();
 
@@ -43,29 +44,27 @@ class _ConfirmBookingState extends State<ConfirmBooking> implements ConfirmBooki
     Size size = MediaQuery.of(context).size;
 
     final Map<String, dynamic> data = _singleton.getViewBookingData();
-    List<ServiceModel> services = data[ViewBookingData.SERVICES] as List<ServiceModel>;
+    List<ServiceModel> services =
+        data[ViewBookingData.SERVICES] as List<ServiceModel>;
     List<Widget> serviceNames = [];
     List<Widget> servicePrices = [];
 
     for (ServiceModel service in services) {
-      serviceNames.add(
-          Text(
-            service.name ?? "Service Name",
-            style: TextDecor.label2Appointment,
-          )
-      );
+      serviceNames.add(Text(
+        service.name ?? "Service Name",
+        style: TextDecor.label2Appointment,
+      ));
       serviceNames.add(const SizedBox(height: 10));
 
-      servicePrices.add(
-          Text(
-            Utility.formatCurrency(service.price),
-            style: TextDecor.label2Appointment,
-          )
-      );
+      servicePrices.add(Text(
+        Utility.formatCurrency(service.price),
+        style: TextDecor.label2Appointment,
+      ));
       servicePrices.add(const SizedBox(height: 10));
     }
 
-    if (data[ViewBookingData.DISCOUNT] != null && data[ViewBookingData.DISCOUNT] > 0) {
+    if (data[ViewBookingData.DISCOUNT] != null &&
+        data[ViewBookingData.DISCOUNT] > 0) {
       serviceNames.add(
         Text(
           'Discount',
@@ -78,7 +77,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> implements ConfirmBooki
           _haveVoucher ? "${data[ViewBookingData.DISCOUNT]}%" : "",
           style: TextDecor.content1Appointment,
         ),
-      ); 
+      );
     }
 
     return Scaffold(
@@ -120,8 +119,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> implements ConfirmBooki
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SizedBox(
-                    width: size.width * 0.35,
+                  Flexible(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -152,8 +150,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> implements ConfirmBooki
                       ],
                     ),
                   ),
-                  SizedBox(
-                    width: size.width * 0.35,
+                  Flexible(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -202,15 +199,13 @@ class _ConfirmBookingState extends State<ConfirmBooking> implements ConfirmBooki
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
-                        width: size.width * 0.35,
+                      Flexible(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: serviceNames,
                         ),
                       ),
-                      SizedBox(
-                        width: size.width * 0.35,
+                      Flexible(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: servicePrices,
@@ -297,13 +292,18 @@ class _ConfirmBookingState extends State<ConfirmBooking> implements ConfirmBooki
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'Total: ',
-                        style: TextDecor.inter16Bold,
+                      Flexible(
+                        child: Text(
+                          'Total: ',
+                          style: TextDecor.inter16Bold,
+                        ),
                       ),
-                      Text(
-                        Utility.formatCurrency(data[ViewBookingData.TOTAL_PRICE]),
-                        style: TextDecor.content1Appointment,
+                      Flexible(
+                        child: Text(
+                          Utility.formatCurrency(
+                              data[ViewBookingData.TOTAL_PRICE]),
+                          style: TextDecor.content1Appointment,
+                        ),
                       ),
                     ],
                   ),
