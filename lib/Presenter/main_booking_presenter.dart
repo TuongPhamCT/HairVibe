@@ -131,10 +131,13 @@ class MainBookingPresenter {
   }
 
   Future<void> handleSelectDate(DateTime selectedDate, DateTime focusedDate) async {
+    _view.onWaitingProgressBar();
     this.selectedDate = selectedDate;
     this.focusedDate = focusedDate;
     cacheTimeCheckIndex = -1;
+    currentBarberAppointments = await _appointmentRepo.getAppointmentsByBarberIdAndDate(selectedBarber!.userID!, selectedDate);
     _generateTimeList();
+    _view.onPopContext();
     _view.onSelectDate();
   }
 
@@ -230,14 +233,18 @@ class MainBookingPresenter {
 
     for (int i = start ; i <= end ; i += timeStep.inMinutes) {
       TimeOfDay timeStamp = Utility.convertIntToTimeOfDay(i);
+      bool isConflicted = false;
       // Check if this timestamp conflict with barber appointments
       for (AppointmentModel appointment in currentBarberAppointments) {
         TimeOfDay appointmentStart = Utility.getTimeOfDayFromDateTime(appointment.date!);
         if (Utility.isScheduleConflicted(appointmentStart, appointment.getDuration(), timeStamp, _getTotalDuration())) {
-          continue;
+          isConflicted = true;
+          break;
         }
       }
-      timeList.add(timeStamp);
+      if (!isConflicted) {
+        timeList.add(timeStamp);
+      }
     }
 
     times = List.generate(
