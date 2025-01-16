@@ -7,6 +7,7 @@ abstract class UtilWidgets {
   // const title
   static const NOTIFICATION = "Notification";
   static const WARNING = "Warning";
+  static const CONFIRM = "Confirm";
 
   static void createLoadingWidget(BuildContext context) {
     showDialog(

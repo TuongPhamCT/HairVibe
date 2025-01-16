@@ -93,32 +93,7 @@ class _HomeScreenState extends State<HomeScreen>
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
           child: Column(
             children: [
-              Row(
-                children: [
-                  const Expanded(
-                    child: SearchField(),
-                  ),
-                  const SizedBox(width: 20),
-                  InkWell(
-                    onTap: () {},
-                    child: Container(
-                      height: 55,
-                      width: 55,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Palette.primary,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: const Icon(
-                        FontAwesomeIcons.sliders,
-                        color: Colors.black,
-                        size: 30,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 35),
+              const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

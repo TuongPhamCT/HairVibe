@@ -3,6 +3,7 @@ import 'package:font_awesome_icon_class/font_awesome_icon_class.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/commands/command_interface.dart';
+import 'package:hairvibe/widgets/util_widgets.dart';
 
 class ServiceListItem extends StatefulWidget {
   final String? serviceName;
@@ -57,53 +58,45 @@ class _ServiceListItemState extends State<ServiceListItem> {
                 ),
               ],
             ),
-            Text(
-              widget.cost ?? "XX,000 VNĐ",
-              style: TextDecor.serviceListItemTitle,
-            ),
-            if (widget.deletable == true)
-              IconButton(
-                padding: EdgeInsets.zero,
-                onPressed: () async {
-                  await showAskDeleteDialog();
-                },
-                icon: const Icon(
-                  FontAwesomeIcons.deleteLeft,
-                  color: Palette.primary,
-                  size: 27,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  widget.cost ?? "0\$",
+                  style: TextDecor.serviceListItemTitle,
                 ),
-              ),
+                if (widget.deletable == true)
+                  IconButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: () {
+                      showAskDeleteDialog();
+                    },
+                    icon: const Icon(
+                      FontAwesomeIcons.deleteLeft,
+                      color: Palette.primary,
+                      size: 27,
+                    ),
+                  ),
+              ],
+            )
           ],
         ),
       ),
     );
   }
 
-  Future<void> showAskDeleteDialog() async {
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Confirm'),
-          content: const Text(
-              'Are you sure you want to delete this service?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                widget.onDelete?.execute();
-              },
-              child: const Text('Delete'),
-            ),
-          ],
-        );
-      },
+  void showAskDeleteDialog() {
+    UtilWidgets.createYesNoDialog(
+        context: context,
+        title: UtilWidgets.CONFIRM,
+        content: 'Are you sure you want to delete this service?',
+        onAccept: () {
+          Navigator.of(context).pop();
+          widget.onDelete?.execute();
+        },
+        onCancel: () {
+          Navigator.of(context).pop();
+        }
     );
   }
 }
