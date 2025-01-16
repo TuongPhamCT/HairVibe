@@ -26,6 +26,10 @@ class DetailBarberPresenter {
   List<WorkSessionModel> workSessions = [];
 
   Future<void> getData() async {
+    if (_userSingleton.currentUserIsBarber()) {
+      _barberSingleton.reset();
+    }
+
     if (_userSingleton.currentUserIsCustomer() == false && _barberSingleton.barber == null) {
       _barberSingleton.setBarber(_userSingleton.currentUser!);
       if (_userSingleton.currentUserIsBarber()) {
