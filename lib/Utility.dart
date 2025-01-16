@@ -162,4 +162,18 @@ abstract class Utility {
   static Future<void> waitDuration(int milliseconds) async {
     await Future.delayed(Duration(milliseconds: milliseconds));
   }
+
+  static bool isPreviousDate(DateTime date) {
+    DateTime now = DateTime.now();
+    if (date.year < now.year) {
+      return true;
+    }
+    if (date.month < now.month) {
+      return true;
+    }
+    if (date.day < now.day) {
+      return true;
+    }
+    return false;
+  }
 }

@@ -99,6 +99,9 @@ class _SignInTabState extends State<SignInTab> implements SignInTabContract {
 
   @override
   void onPopContext() {
+    if (!mounted) {
+      return;
+    }
     Navigator.of(context, rootNavigator: true).pop();
   }
 

@@ -140,12 +140,13 @@ class MainBookingPresenter {
 
   void handleSelectTime(int index) {
     if (cacheTimeCheckIndex >= 0) {
-      times[cacheTimeCheckIndex]['isChecked'] = false;
+      if (cacheTimeCheckIndex != index) {
+        times[cacheTimeCheckIndex]['isChecked'] = false;
+        times[index]['isChecked'] = true;
+        cacheTimeCheckIndex = index;
+      }
     }
-    if (cacheTimeCheckIndex != index) {
-      times[index]['isChecked'] = ! times[index]['isChecked'];
-      cacheTimeCheckIndex = index;
-    }
+
     _view.onSelectTime();
   }
 
