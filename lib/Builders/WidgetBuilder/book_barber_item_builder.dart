@@ -35,6 +35,7 @@ class BookBarberItemBuilder implements CustomizedWidgetBuilder {
 
     return BookBarberItem(
       title: barber!.name!,
+      image: barber!.image ?? "",
       isSelected: isSelected,
       onTap: onTap,
       rating: rating ?? "4.5",

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hairvibe/Commands/command_interface.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
@@ -6,6 +7,7 @@ import 'package:hairvibe/config/asset_helper.dart';
 
 class BarberListItem extends StatefulWidget {
   final String? barberName;
+  final String? image;
   final String? description;
   final String? rating;
   final CommandInterface? onPressed;
@@ -13,6 +15,7 @@ class BarberListItem extends StatefulWidget {
   const BarberListItem({
     super.key,
     this.barberName,
+    this.image,
     this.description,
     this.rating,
     this.onPressed
@@ -41,11 +44,16 @@ class _BarberListItemState extends State<BarberListItem> {
             Container(
               height: 100,
               width: 100,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(AssetHelper.barberAvatar),
-                  fit: BoxFit.cover,
-                ),
+              decoration: BoxDecoration(
+                image: widget.image != null && widget.image!.isNotEmpty
+                    ? DecorationImage(
+                        image: NetworkImage(widget.image!),
+                        fit: BoxFit.cover,
+                      )
+                    : const DecorationImage(
+                        image: AssetImage(AssetHelper.logo),
+                        fit: BoxFit.cover,
+                      ),
               ),
             ),
             const SizedBox(
