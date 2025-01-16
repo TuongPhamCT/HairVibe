@@ -3,12 +3,14 @@ import 'package:hairvibe/Facades/notification_facade.dart';
 import 'package:hairvibe/Models/appointment_model.dart';
 import 'package:hairvibe/Models/appointment_repo.dart';
 import 'package:hairvibe/Singletons/appointment_singleton.dart';
+import 'package:hairvibe/Singletons/user_singleton.dart';
 
 class AdminAppointmentDetailPagePresenter {
   final AdminAppointmentDetailPageContract _view;
   AdminAppointmentDetailPagePresenter(this._view);
 
-  final AppointmentSingleton _singleton = AppointmentSingleton.getInstance();
+  final AppointmentSingleton _appointmentSingleton = AppointmentSingleton.getInstance();
+  final UserSingleton _userSingleton = UserSingleton.getInstance();
   final AppointmentRepository _appointmentRepo = AppointmentRepository();
   final NotificationFacade _notificationFacade = NotificationFacade();
 
@@ -18,7 +20,7 @@ class AdminAppointmentDetailPagePresenter {
 
   void handleCancelAppointment() {
     try {
-      AppointmentModel targetAppointment = _singleton.appointment!;
+      AppointmentModel targetAppointment = _appointmentSingleton.appointment!;
       targetAppointment.status = AppointmentStatus.CANCELLED;
       _appointmentRepo.updateAppointment(targetAppointment);
       _notificationFacade.createCancelAppointmentNotification(
@@ -26,6 +28,7 @@ class AdminAppointmentDetailPagePresenter {
           sendToBarber: true,
           sendToCustomer: true
       );
+      _userSingleton.notifySubscribers();
       _view.onCancelAppointmentSucceeded();
     } catch (e) {
       print(e);
@@ -34,7 +37,7 @@ class AdminAppointmentDetailPagePresenter {
   }
 
   void handleBack() {
-    _singleton.reset();
+    _appointmentSingleton.reset();
     _view.onBack();
   }
 
@@ -44,12 +47,13 @@ class AdminAppointmentDetailPagePresenter {
 
   void handleCompleteAppointment() {
     try {
-      AppointmentModel targetAppointment = _singleton.appointment!;
+      AppointmentModel targetAppointment = _appointmentSingleton.appointment!;
       targetAppointment.status = AppointmentStatus.COMPLETED;
       _appointmentRepo.updateAppointment(targetAppointment);
       _notificationFacade.createCompleteAppointmentNotification(
           appointment: targetAppointment,
       );
+      _userSingleton.notifySubscribers();
       _view.onCompleteAppointmentSucceeded();
     } catch (e) {
       print(e);
