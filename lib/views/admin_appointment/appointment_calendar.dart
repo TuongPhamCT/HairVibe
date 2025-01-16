@@ -25,6 +25,7 @@ class AdminAppointmentPageState extends State<AdminAppointmentPage>
     implements AdminAppointmentPageContract, NotificationSubscriber, DataFetchingSubscriber {
   AdminAppointmentPagePresenter? _presenter;
   final NotificationSingleton _notificationSingleton = NotificationSingleton.getInstance();
+  final UserSingleton _userSingleton = UserSingleton.getInstance();
 
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
@@ -39,6 +40,7 @@ class AdminAppointmentPageState extends State<AdminAppointmentPage>
   void initState() {
     _presenter = AdminAppointmentPagePresenter(this);
     _notificationSingleton.subscribe(this);
+    _userSingleton.subscribe(this);
     _notificationCount = _notificationSingleton.getUnreadCount();
     bottomBarRenderStrategy = UserSingleton.getInstance().getBottomBarRenderStrategy(1);
     super.initState();
@@ -57,6 +59,7 @@ class AdminAppointmentPageState extends State<AdminAppointmentPage>
   @override
   void dispose() {
     _notificationSingleton.unsubscribe(this);
+    _userSingleton.unsubscribe(this);
     super.dispose();
   }
 
@@ -224,6 +227,7 @@ class AdminAppointmentPageState extends State<AdminAppointmentPage>
 
   @override
   void updateData() {
+    isLoading = true;
     _presenter?.getData();
   }
 }
