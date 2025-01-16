@@ -11,7 +11,6 @@ class SuccessBooking extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -20,45 +19,56 @@ class SuccessBooking extends StatelessWidget {
         centerTitle: true,
         title: Text('Book Appointment', style: TextDecor.homeTitle),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(width: size.width, height: size.height * 0.24),
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(100),
-            ),
-            child: const Icon(
-              Icons.check_circle,
-              color: Palette.primary,
-              size: 200,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            'Booking Successful',
-            style: TextDecor.inter27Semi,
-          ),
-          SizedBox(width: size.width, height: size.height * 0.2),
-          CustomButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed(ViewBooking.routeName);
-              },
-              text: 'View E-Receipt'),
-          const SizedBox(height: 15),
-          Center(
-            child: InkWell(
-              onTap: () {
-                Navigator.of(context).pushNamed(HomeScreen.routeName);
-              },
-              child: Text(
-                'Back to Home',
-                style: TextDecor.inter19Semi,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          double iconSize = constraints.maxWidth * 0.4;
+          double padding = constraints.maxWidth * 0.1;
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: constraints.maxHeight * 0.1),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                child: Icon(
+                  Icons.check_circle,
+                  color: Palette.primary,
+                  size: iconSize,
+                ),
               ),
-            ),
-          ),
-        ],
+              const SizedBox(height: 10),
+              Text(
+                'Booking Successful',
+                style: TextDecor.inter27Semi,
+              ),
+              SizedBox(height: constraints.maxHeight * 0.1),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: padding),
+                child: CustomButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(ViewBooking.routeName);
+                  },
+                  text: 'View E-Receipt',
+                ),
+              ),
+              const SizedBox(height: 15),
+              Center(
+                child: InkWell(
+                  onTap: () {
+                    Navigator.of(context).pushNamed(HomeScreen.routeName);
+                  },
+                  child: Text(
+                    'Back to Home',
+                    style: TextDecor.inter19Semi,
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
