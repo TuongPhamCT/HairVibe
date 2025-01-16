@@ -11,6 +11,7 @@ import 'package:hairvibe/config/asset_helper.dart';
 import 'package:hairvibe/views/admin_management/add_service.dart';
 import 'package:hairvibe/widgets/admin_bottom_bar.dart';
 
+import '../../Builders/WidgetBuilder/review_item_builder.dart';
 import '../../Builders/WidgetBuilder/service_list_item_builder.dart';
 import '../../Models/rating_model.dart';
 import '../../Models/user_model.dart';
@@ -28,10 +29,12 @@ class AdminCommentPageState extends State<AdminCommentPage>
     with SingleTickerProviderStateMixin
     implements AdminCommentPageContract {
   AdminCommentPagePresenter? _presenter;
+  final CustomizedWidgetBuilderDirector director = CustomizedWidgetBuilderDirector();
   late TabController _tabController;
   final int _currentPageIndex = 3;
   bool isLoading = true;
   String barberName = "";
+  String avatarUrl = "";
 
   @override
   void initState() {
@@ -95,10 +98,15 @@ class AdminCommentPageState extends State<AdminCommentPage>
                       Positioned(
                         bottom: -40,
                         left: MediaQuery.of(context).size.width / 2 - 40,
-                        child: const CircleAvatar(
-                          radius: 40,
-                          backgroundImage: AssetImage(AssetHelper.logo),
-                        ),
+                        child: avatarUrl.isNotEmpty
+                          ? CircleAvatar(
+                            radius: 40,
+                            backgroundImage: NetworkImage(avatarUrl),
+                          )
+                          : const CircleAvatar(
+                            radius: 40,
+                            backgroundImage: AssetImage(AssetHelper.logo),
+                          ),
                       ),
                     ],
                   ),
@@ -147,32 +155,14 @@ class AdminCommentPageState extends State<AdminCommentPage>
     return ListView.builder(
       itemCount: _presenter!.ratings.length, // Example count
       itemBuilder: (context, index) {
+        ReviewItemBuilder builder = ReviewItemBuilder();
         RatingModel rating = _presenter!.ratings[index];
-        UserModel user = _presenter!.users[rating.userID!]!;
-        return ListTile(
-          leading: const CircleAvatar(
-            backgroundColor: Colors.grey,
-          ),
-          title: Text(user.name ?? "Reviewer $index",
-              style: TextDecor.homeTitle.copyWith(color: Colors.white)),
-          subtitle: Text(rating.info.toString(),
-              style: const TextStyle(color: Colors.white)),
-          trailing: RatingBar.builder(
-            initialRating: rating.rate ?? 1,
-            minRating: 1,
-            direction: Axis.horizontal,
-            allowHalfRating: true,
-            itemCount: 5,
-            itemSize: 45,
-            itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-            itemBuilder: (context, _) => const Icon(
-              Icons.star,
-              color: Colors.amber,
-            ),
-            ignoreGestures: true,
-            onRatingUpdate: (double value) {},
-          ),
+        director.makeReviewItem(
+            builder: builder,
+            user: _presenter!.users[rating.userID!]!,
+            rating: rating,
         );
+        return builder.createWidget();
       },
     );
   }
@@ -240,8 +230,6 @@ class AdminCommentPageState extends State<AdminCommentPage>
             shrinkWrap: true,
             itemCount: _presenter!.services.length,
             itemBuilder: (context, index) {
-              CustomizedWidgetBuilderDirector director =
-                  CustomizedWidgetBuilderDirector();
               ServiceListItemBuilder builder = ServiceListItemBuilder();
               director.makeAdminCommentServiceItem(
                   builder: builder,
@@ -269,6 +257,7 @@ class AdminCommentPageState extends State<AdminCommentPage>
         _tabController.animateTo(1, duration: const Duration(milliseconds: 0));
       }
       barberName = _presenter!.getUserName();
+      avatarUrl = _presenter!.getAvatarUrl();
       isLoading = false;
     });
   }

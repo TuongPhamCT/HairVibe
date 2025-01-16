@@ -86,7 +86,7 @@ class _DetailBarberState extends State<DetailBarber>
                   )
                 :
                   const DecorationImage(
-                    image: AssetImage(AssetHelper.barberAvatar),
+                    image: AssetImage(AssetHelper.logo),
                     fit: BoxFit.cover,
                   )
                 ,

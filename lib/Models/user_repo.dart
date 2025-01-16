@@ -79,6 +79,21 @@ class UserRepository {
     }
   }
 
+  Future<List<UserModel>> getAllAdmins() async {
+    try {
+      final QuerySnapshot querySnapshot = await _storage.collection(UserModel.collectionName)
+          .where('userType', isEqualTo: UserType.ADMIN).get();
+      final barbers = querySnapshot
+          .docs
+          .map((doc) => UserModel.fromJson(doc.data() as Map<String, dynamic>))
+          .toList();
+      return barbers;
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
   Future<int> getBarbersCount() async {
     final List<UserModel> users = await getAllBarbers();
     return users.length;

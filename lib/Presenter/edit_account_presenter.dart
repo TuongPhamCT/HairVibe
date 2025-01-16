@@ -1,7 +1,11 @@
+import 'dart:io';
 import 'package:hairvibe/Contract/edit_account_contract.dart';
+import 'package:hairvibe/Facades/image_storage_facade.dart';
 import 'package:hairvibe/Models/user_model.dart';
 import 'package:hairvibe/Models/user_repo.dart';
+import 'package:hairvibe/Singletons/user_singleton.dart';
 import 'package:hairvibe/facades/authenticator_facade.dart';
+import 'package:image_picker/image_picker.dart';
 
 class EditAccountPresenter {
   final EditAccountContract _view;
@@ -9,8 +13,10 @@ class EditAccountPresenter {
 
   final UserRepository _userRepo = UserRepository();
   final AuthenticatorFacade _auth = AuthenticatorFacade();
+  final ImageStorageFacade _imageStorageFacade = ImageStorageFacade();
 
   UserModel? _model;
+  File? tempAvatar;
 
   String? _validateName(String? name) {
     if (name!.isNotEmpty){
@@ -75,9 +81,21 @@ class EditAccountPresenter {
       result = await _auth.changePassword(password);
     }
 
+    // change avatar
+    if (result && tempAvatar != null) {
+      String? path = await _imageStorageFacade.uploadImage(StorageFolderNames.BARBER_IMAGES, tempAvatar!);
+      if (path != null) {
+        _model?.image = path;
+      } else {
+        result = false;
+      }
+    }
+
     if (result) {
       result = await _userRepo.updateUser(_model!);
+      UserSingleton.getInstance().setCurrentUser(_model!);
     }
+
 
     _view.onPopContext();
 
@@ -87,5 +105,14 @@ class EditAccountPresenter {
       _view.onEditFailed();
     }
     return;
+  }
+
+  Future<void> handleEditAvatar() async {
+    XFile? pickedFile = await _imageStorageFacade.pickImage();
+
+    if (pickedFile != null) {
+      tempAvatar = File(pickedFile.path);
+      _view.onChangeAvatar();
+    }
   }
 }

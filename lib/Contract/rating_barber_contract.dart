@@ -3,4 +3,5 @@ abstract class RatingBarberContract {
   void onPopContext();
   void onRatingSucceeded();
   void onRatingFailed(String message);
+  void onBack();
 }

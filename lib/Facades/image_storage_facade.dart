@@ -5,16 +5,16 @@ import 'package:image_picker/image_picker.dart';
 class ImageStorageFacade {
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
-  // Upload ảnh lên Firebase Storage và trả về URL
-  Future<String?> uploadImage(String folderName) async {
+  Future<XFile?> pickImage() async {
+    // Chọn ảnh từ thư viện
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    return pickedFile;
+  }
+
+  Future<String?> uploadImage(String folderName, File file) async {
     try {
-      // Chọn ảnh từ thư viện
-      final ImagePicker picker = ImagePicker();
-      final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-      if (pickedFile != null) {
-        File file = File(pickedFile.path);
-
         // Tham chiếu Firebase Storage
         Reference ref = _storage
             .ref()
@@ -27,12 +27,21 @@ class ImageStorageFacade {
         // Lấy URL sau khi upload
         String downloadUrl = await snapshot.ref.getDownloadURL();
         return downloadUrl;
-      } else {
-        print("No image selected.");
-        return null;
-      }
     } catch (e) {
       print("Error uploading image: $e");
+      return null;
+    }
+  }
+
+  // Upload ảnh lên Firebase Storage và trả về URL
+  Future<String?> pickAndUploadImage(String folderName) async {
+    final XFile? pickedFile = await pickImage();
+
+    if (pickedFile != null) {
+      File file = File(pickedFile.path);
+      return await uploadImage(folderName, file);
+    } else {
+      print("No image selected.");
       return null;
     }
   }

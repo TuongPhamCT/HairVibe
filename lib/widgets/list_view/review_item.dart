@@ -9,13 +9,15 @@ class ReviewItem extends StatelessWidget {
   final String? date;
   final double? rating;
   final String? comment;
+  final String? avatarUrl;
 
   const ReviewItem({
     super.key,
-    this.userName,
-    this.date,
-    this.rating,
-    this.comment
+    required this.userName,
+    required this.date,
+    required this.rating,
+    required this.comment,
+    required this.avatarUrl
   });
 
   @override
@@ -36,13 +38,21 @@ class ReviewItem extends StatelessWidget {
               Container(
                 width: 40,
                 height: 40,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  image: const DecorationImage(
-                    image: AssetImage(AssetHelper.barberAvatar),
-                    fit: BoxFit.cover,
+                decoration: avatarUrl != null && avatarUrl!.isNotEmpty
+                  ? BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      image: DecorationImage(
+                        image: NetworkImage(avatarUrl!),
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                  : BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    image: const DecorationImage(
+                      image: AssetImage(AssetHelper.logo),
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
               ),
               const SizedBox(width: 10),
               Column(

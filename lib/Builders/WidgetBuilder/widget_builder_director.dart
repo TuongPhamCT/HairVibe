@@ -3,6 +3,7 @@ import 'package:hairvibe/Builders/WidgetBuilder/book_barber_item_builder.dart';
 import 'package:hairvibe/Builders/WidgetBuilder/cancelled_appoint_item_builder.dart';
 import 'package:hairvibe/Builders/WidgetBuilder/check_service_list_item_builder.dart';
 import 'package:hairvibe/Builders/WidgetBuilder/completed_appoint_item_builder.dart';
+import 'package:hairvibe/Builders/WidgetBuilder/review_item_builder.dart';
 import 'package:hairvibe/Builders/WidgetBuilder/service_list_item_builder.dart';
 import 'package:hairvibe/Builders/WidgetBuilder/upcoming_appoint_item_builder.dart';
 import 'package:hairvibe/Builders/WidgetBuilder/voucher_item_builder.dart';
@@ -26,6 +27,7 @@ import 'package:hairvibe/commands/command_interface.dart';
 
 import '../../Commands/voucher_page/voucher_page_on_pressed_command.dart';
 import '../../Models/appointment_model.dart';
+import '../../Models/rating_model.dart';
 import '../../Models/service_model.dart';
 import '../../Models/user_model.dart';
 import '../../Utility.dart';
@@ -206,5 +208,17 @@ class CustomizedWidgetBuilderDirector {
         ));
       }
     }
+  }
+
+  // TODO: other
+
+  void makeReviewItem({
+    required ReviewItemBuilder builder,
+    required UserModel user,
+    required RatingModel rating
+  }) {
+    builder.reset();
+    builder.setRatingModel(rating);
+    builder.setUserModel(user);
   }
 }

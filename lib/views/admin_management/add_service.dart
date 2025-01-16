@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hairvibe/Presenter/add_service_page_presenter.dart';
 import 'package:hairvibe/Singletons/barber_singleton.dart';
+import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
 import 'package:hairvibe/views/admin_management/comment.dart';
 import 'package:hairvibe/widgets/util_widgets.dart';
@@ -141,6 +142,7 @@ class AddServicePageState extends State<AddServicePage> implements AddServicePag
   void _showDurationPicker() {
     showModalBottomSheet(
       context: context,
+      backgroundColor: Palette.primary,
       builder: (context) {
         return ListView.builder(
           itemCount: 5,
