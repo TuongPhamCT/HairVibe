@@ -3,6 +3,7 @@ import 'package:hairvibe/Models/appointment_model.dart';
 import 'package:hairvibe/Models/user_model.dart';
 import 'package:hairvibe/Models/user_repo.dart';
 import 'package:hairvibe/Singletons/appointment_singleton.dart';
+import 'package:hairvibe/Singletons/booking_singleton.dart';
 
 import '../Facades/authenticator_facade.dart';
 import '../Models/appointment_repo.dart';
@@ -13,7 +14,7 @@ class AppointmentTabPresenter {
   final AppointmentRepository _appointRepo = AppointmentRepository();
   final UserRepository _userRepo = UserRepository();
   final AuthenticatorFacade _auth = AuthenticatorFacade();
-  final AppointmentSingleton _singleton = AppointmentSingleton.getInstance();
+  final AppointmentSingleton _appointmentSingleton = AppointmentSingleton.getInstance();
 
   List<AppointmentModel> cancelledAppointments = [];
   List<AppointmentModel> completedAppointments = [];
@@ -40,8 +41,8 @@ class AppointmentTabPresenter {
 
   Future<void> handleViewReceiptPressed(AppointmentModel model) async {
     _view.onWaitingProgressBar();
-    _singleton.setAppointment(model);
-    await _singleton.loadViewBookingData();
+    _appointmentSingleton.setAppointment(model);
+    await _appointmentSingleton.loadViewBookingData();
     _view.onPopContext();
     _view.onViewReceiptPressed();
   }
@@ -51,7 +52,7 @@ class AppointmentTabPresenter {
   }
 
   void handleCancelPressed(AppointmentModel model) {
-    _singleton.setAppointment(model);
+    _appointmentSingleton.setAppointment(model);
     _view.onCancelPressed();
   }
 }
