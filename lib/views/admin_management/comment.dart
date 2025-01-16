@@ -126,7 +126,7 @@ class AdminCommentPageState extends State<AdminCommentPage>
                     ],
                   ),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.5,
+                    height: MediaQuery.of(context).size.height * 0.39,
                     child: TabBarView(
                       controller: _tabController,
                       children: [
