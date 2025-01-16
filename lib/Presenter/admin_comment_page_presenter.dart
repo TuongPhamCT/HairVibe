@@ -34,6 +34,10 @@ class AdminCommentPagePresenter {
     return _userSingleton.currentUser!.name ?? "";
   }
 
+  String getAvatarUrl() {
+    return _userSingleton.currentUser!.image ?? "";
+  }
+
   Future<void> handleDeleteService(ServiceModel service) async {
     _view.onWaitingProgressBar();
     await _serviceRepo.deleteServiceById(service.serviceID!);

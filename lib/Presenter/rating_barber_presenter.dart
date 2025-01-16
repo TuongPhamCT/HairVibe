@@ -75,4 +75,11 @@ class RatingBarberPresenter {
     _view.onPopContext();
     _view.onRatingSucceeded();
   }
+
+  void handleBack() {
+    if (_barberSingleton.barber!.userType == UserType.ADMIN) {
+      _barberSingleton.reset();
+    }
+    _view.onBack();
+  }
 }

@@ -7,4 +7,5 @@ abstract class EditAccountContract {
   void onWaitingProgressBar();
   void onPopContext();
   void onValidatingFailed(Map<String, String?> errors);
+  void onChangeAvatar();
 }

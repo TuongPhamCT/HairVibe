@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_icon_class/font_awesome_icon_class.dart';
 import 'package:hairvibe/Contract/edit_account_contract.dart';
@@ -29,6 +30,8 @@ class _EditAccountState extends State<EditAccount> implements EditAccountContrac
   String? fullNameError;
   String? phoneError;
   bool isLoading = true;
+  File? avatarFile;
+  String avatarUrl = "";
 
   @override
   void initState() {
@@ -99,16 +102,34 @@ class _EditAccountState extends State<EditAccount> implements EditAccountContrac
               Container(
                 width: 150,
                 height: 150,
-                decoration: BoxDecoration(
-                  image: const DecorationImage(
-                    image: AssetImage(AssetHelper.barberAvatar),
-                    fit: BoxFit.cover,
-                  ),
-                  borderRadius: BorderRadius.circular(100),
-                ),
+                decoration: avatarFile != null
+                  ? BoxDecoration(
+                      image: DecorationImage(
+                        image: FileImage(avatarFile!),
+                        fit: BoxFit.cover,
+                      ),
+                      borderRadius: BorderRadius.circular(100),
+                    )
+                  : avatarUrl.isNotEmpty
+                    ? BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage(avatarUrl),
+                          fit: BoxFit.cover,
+                        ),
+                        borderRadius: BorderRadius.circular(100),
+                      )
+                    : BoxDecoration(
+                        image: const DecorationImage(
+                          image: AssetImage(AssetHelper.logo),
+                          fit: BoxFit.cover,
+                        ),
+                        borderRadius: BorderRadius.circular(100),
+                      ),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  _presenter?.handleEditAvatar();
+                },
                 child: Text(
                   'EDIT PROFILE PICTURE',
                   style: TextDecor.robo14Bold,
@@ -182,6 +203,7 @@ class _EditAccountState extends State<EditAccount> implements EditAccountContrac
       emailController.text = model.email!;
       fullNameController.text = model.name!;
       phoneController.text = model.phoneNumber!;
+      avatarUrl = model.image ?? "";
       isLoading = false;
     });
   }
@@ -205,5 +227,12 @@ class _EditAccountState extends State<EditAccount> implements EditAccountContrac
         passwordError = errors["password"];
       });
     }
+  }
+
+  @override
+  void onChangeAvatar() {
+    setState(() {
+      avatarFile = _presenter?.tempAvatar;
+    });
   }
 }

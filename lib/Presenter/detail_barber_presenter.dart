@@ -118,7 +118,7 @@ class DetailBarberPresenter {
 
   Future<void> addPhoto() async {
     _view.onWaitingProgressBar();
-    String? path = await _imageStorageFacade.uploadImage(StorageFolderNames.BARBER_IMAGES);
+    String? path = await _imageStorageFacade.pickAndUploadImage(StorageFolderNames.BARBER_IMAGES);
 
     if (path != null) {
       UserModel model = _userSingleton.currentUser!;

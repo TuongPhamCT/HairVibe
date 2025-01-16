@@ -93,7 +93,7 @@ class _BarberProfilePageState extends State<BarberProfilePage> implements Detail
                         :
                           const CircleAvatar(
                             radius: 40,
-                            backgroundImage: AssetImage(AssetHelper.barberAvatar),
+                            backgroundImage: AssetImage(AssetHelper.logo),
                           )
                         ,
                       ),

@@ -26,6 +26,7 @@ abstract class UtilWidgets {
         return AlertDialog(
           title: Text(title),
           content: Text(content),
+          backgroundColor: Palette.primary,
           actions: [
             TextButton(
               onPressed: onClick,
@@ -45,6 +46,7 @@ abstract class UtilWidgets {
         return AlertDialog(
           title: Text(title),
           content: Text(content),
+          backgroundColor: Palette.primary,
           actions: [
             TextButton(
               onPressed: onClick,
@@ -70,6 +72,7 @@ abstract class UtilWidgets {
         return AlertDialog(
           title: Text(title),
           content: Text(content),
+          backgroundColor: Palette.primary,
           actions: [
             TextButton(
               onPressed: onAccept,

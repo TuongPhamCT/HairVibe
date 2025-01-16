@@ -29,6 +29,7 @@ class ReviewItemBuilder implements CustomizedWidgetBuilder {
       date: Utility.formatDateFromDateTime(ratingModel!.date),
       rating: ratingModel!.rate?.toDouble(),
       comment: ratingModel!.info,
+      avatarUrl: userModel!.image,
     );
   }
 

@@ -59,7 +59,7 @@ class _RatingBarberPageState extends State<RatingBarberPage>
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            _presenter?.handleBack();
           },
           icon: const Icon(
             FontAwesomeIcons.angleLeft,
@@ -180,7 +180,7 @@ class _RatingBarberPageState extends State<RatingBarberPage>
         "Review successfully!",
         () {
           Navigator.of(context, rootNavigator: true).pop();
-          Navigator.of(context, rootNavigator: true).pop();
+          _presenter?.handleBack();
         }
     );
   }
@@ -200,5 +200,10 @@ class _RatingBarberPageState extends State<RatingBarberPage>
     setState(() {
       _soLuongThongBao = notificationSingleton.getUnreadCount();
     });
+  }
+
+  @override
+  void onBack() {
+    Navigator.pop(context);
   }
 }
