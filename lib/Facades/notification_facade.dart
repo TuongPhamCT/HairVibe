@@ -19,10 +19,19 @@ class NotificationFacade {
   Future<void> createCancelAppointmentNotification({
     required AppointmentModel appointment,
     required bool sendToBarber,
-    required bool sendToCustomer
+    required bool sendToCustomer,
+    String? reason,
   }) async {
-    String content = "Your appointment at ${Utility.formatStringFromDateTime(appointment.date)} was cancel."
-        " Appointment ID: ${appointment.appointmentID}";
+    String content = "";
+    if (reason != null) {
+      content = "Your appointment at ${Utility.formatStringFromDateTime(appointment.date)} was cancel"
+          " (Appointment ID: ${appointment.appointmentID})"
+          " with reason: $reason";
+    } else {
+      content = "Your appointment at ${Utility.formatStringFromDateTime(appointment.date)} was cancel."
+          " (Appointment ID: ${appointment.appointmentID})";
+    }
+
     if (sendToBarber) {
       NoticeModel notification = createNotification(receiverID: appointment.barberID!, content: content);
       await _noticeRepo.addNoticeToFirestore(notification);
@@ -38,7 +47,7 @@ class NotificationFacade {
     required AppointmentModel appointment,
   }) async {
     String content = "Your appointment at ${Utility.formatStringFromDateTime(appointment.date)} was completed."
-        " Appointment ID: ${appointment.appointmentID}";
+        " (Appointment ID: ${appointment.appointmentID})";
     NoticeModel notification = createNotification(receiverID: appointment.customerID!, content: content);
     await _noticeRepo.addNoticeToFirestore(notification);
   }
@@ -48,7 +57,7 @@ class NotificationFacade {
     required String customerName,
   }) async {
     String content = "$customerName has booked an appointment with you at ${Utility.formatStringFromDateTime(appointment.date)}."
-        " Appointment ID: ${appointment.appointmentID}";
+        " (Appointment ID: ${appointment.appointmentID})";
     NoticeModel notification = createNotification(receiverID: appointment.barberID!, content: content);
     await _noticeRepo.addNoticeToFirestore(notification);
   }

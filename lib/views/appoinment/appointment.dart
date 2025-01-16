@@ -9,6 +9,7 @@ import 'package:hairvibe/observers/notification_subcriber.dart';
 import 'package:hairvibe/views/appoinment/cancelled_tab.dart';
 import 'package:hairvibe/views/appoinment/completed_tab.dart';
 import 'package:hairvibe/views/appoinment/upcoming_tab.dart';
+import 'package:hairvibe/views/booking/main_booking.dart';
 import 'package:hairvibe/widgets/bottom_bar.dart';
 import 'package:hairvibe/widgets/noti_bell.dart';
 import 'package:hairvibe/widgets/util_widgets.dart';
@@ -134,7 +135,7 @@ class _AppointmentScreenState extends State<AppointmentScreen>
 
   @override
   void onRebookPressed() {
-    // TODO: implement onRebookPressed
+    Navigator.of(context).pushNamed(MainBooking.routeName);
   }
 
   @override

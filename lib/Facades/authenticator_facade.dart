@@ -19,10 +19,22 @@ class AuthenticatorFacade {
   }
 
   // Sign in
-  Future<UserCredential> signInWithEmailAndPassword(
-      String email, String password) async {
-    return await _auth.signInWithEmailAndPassword(
-        email: email.trim(), password: password.trim());
+  Future<UserCredential?> signInWithEmailAndPassword({
+    required String email,
+    required String password,
+    AuthError? errorCatcher
+  }) async {
+    try {
+      return await _auth.signInWithEmailAndPassword(
+          email: email.trim(), password: password.trim());
+    } on FirebaseAuthException catch (e) {
+      errorCatcher?.errorCode = e.code;
+      return null;
+    } catch (e) {
+      errorCatcher?.errorCode = AuthError.UNDEFINED;
+      errorCatcher?.text = e.toString();
+      return null;
+    }
   }
 
   // sign up
@@ -101,4 +113,14 @@ class AuthenticatorFacade {
       return false;
     }
   }
+}
+
+class AuthError {
+  String? errorCode;
+  String? text;
+
+  static const UNDEFINED = 'undefined';
+  static const USER_NOT_FOUND = 'user-not-found';
+  static const WRONG_PASSWORD = 'wrong-password';
+  static const NETWORK_FAILED = 'network-request-failed';
 }
