@@ -3,6 +3,7 @@ import 'package:hairvibe/Models/appointment_model.dart';
 import 'package:hairvibe/Presenter/admin_appointment_presenter.dart';
 import 'package:hairvibe/Singletons/notification_singleton.dart';
 import 'package:hairvibe/Utility.dart';
+import 'package:hairvibe/observers/data_fetching_subcriber.dart';
 import 'package:hairvibe/observers/notification_subcriber.dart';
 import 'package:hairvibe/views/admin_appointment/appointment_details.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -21,7 +22,7 @@ class AdminAppointmentPage extends StatefulWidget {
 }
 
 class AdminAppointmentPageState extends State<AdminAppointmentPage>
-    implements AdminAppointmentPageContract, NotificationSubscriber {
+    implements AdminAppointmentPageContract, NotificationSubscriber, DataFetchingSubscriber {
   AdminAppointmentPagePresenter? _presenter;
   final NotificationSingleton _notificationSingleton = NotificationSingleton.getInstance();
 
@@ -219,5 +220,10 @@ class AdminAppointmentPageState extends State<AdminAppointmentPage>
     setState(() {
       _notificationCount = _notificationSingleton.getUnreadCount();
     });
+  }
+
+  @override
+  void updateData() {
+    _presenter?.getData();
   }
 }
