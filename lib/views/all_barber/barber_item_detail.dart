@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hairvibe/Commands/command_interface.dart';
 import 'package:hairvibe/Theme/palette.dart';
 import 'package:hairvibe/Theme/text_decor.dart';
@@ -7,20 +8,23 @@ import 'package:hairvibe/views/all_barber/barber_image_item.dart';
 
 class BarberItemDetail extends StatefulWidget {
   final String? barberName;
+  final String? image;
   final String? description;
   final String? rating;
   final List<int>? workSessions;
   final CommandInterface? onDetailPressed;
   final CommandInterface? onBookPressed;
 
-  const BarberItemDetail(
-      {super.key,
-      this.barberName,
-      this.description,
-      this.rating,
-      this.workSessions,
-      this.onDetailPressed,
-      this.onBookPressed});
+  const BarberItemDetail({
+      super.key,
+      required this.barberName,
+      required this.image,
+      required this.description,
+      required this.rating,
+      required this.workSessions,
+      required this.onDetailPressed,
+      required this.onBookPressed
+  });
 
   @override
   State<BarberItemDetail> createState() => _BarberItemDetailState();
@@ -61,11 +65,16 @@ class _BarberItemDetailState extends State<BarberItemDetail> {
                     Container(
                       height: 100,
                       width: 100,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage(AssetHelper.barberAvatar),
-                          fit: BoxFit.cover,
-                        ),
+                      decoration: BoxDecoration(
+                        image: widget.image != null && widget.image!.isNotEmpty
+                          ? DecorationImage(
+                              image: NetworkImage(widget.image!),
+                              fit: BoxFit.cover,
+                            )
+                          : const DecorationImage(
+                              image: AssetImage(AssetHelper.logo),
+                              fit: BoxFit.cover,
+                            ),
                       ),
                     ),
                     const SizedBox(
@@ -112,21 +121,6 @@ class _BarberItemDetailState extends State<BarberItemDetail> {
                       ),
                     ),
                   ],
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                SizedBox(
-                  height: 75,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    physics: const ScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: 4,
-                    itemBuilder: (context, index) {
-                      return const BarberImageItem();
-                    },
-                  ),
                 ),
                 const SizedBox(
                   height: 9,

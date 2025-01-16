@@ -6,12 +6,14 @@ import 'package:hairvibe/config/asset_helper.dart';
 
 class BookBarberItem extends StatelessWidget {
   final String title;
+  final String image;
   final bool isSelected;
   final CommandInterface? onTap;
   final String rating;
   const BookBarberItem({
     super.key,
     required this.title,
+    required this.image,
     required this.isSelected,
     required this.onTap,
     required this.rating
@@ -41,8 +43,13 @@ class BookBarberItem extends StatelessWidget {
               width: 85,
               height: 85,
               decoration: BoxDecoration(
-                image: const DecorationImage(
-                  image: AssetImage(AssetHelper.barberAvatar),
+                image: image.isNotEmpty
+                    ? DecorationImage(
+                  image: NetworkImage(image),
+                  fit: BoxFit.cover,
+                )
+                    : const DecorationImage(
+                  image: AssetImage(AssetHelper.logo),
                   fit: BoxFit.cover,
                 ),
                 borderRadius: BorderRadius.circular(50),

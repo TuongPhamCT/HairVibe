@@ -35,6 +35,7 @@ class BarberListItemBuilder implements CustomizedWidgetBuilder {
     return BarberListItem(
       barberName: barber!.name,
       description: description,
+      image: barber!.image,
       rating: rating,
       onPressed: onPressed,
     );

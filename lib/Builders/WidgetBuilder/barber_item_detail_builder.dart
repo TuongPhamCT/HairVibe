@@ -47,6 +47,7 @@ class BarberItemDetailBuilder implements CustomizedWidgetBuilder {
         description: description,
         rating: rating,
         workSessions: workSessions,
+        image: barber!.image,
         onDetailPressed: onDetailPressed,
         onBookPressed: onBookPressed
     );
