@@ -145,6 +145,9 @@ class MainBookingPresenter {
         times[index]['isChecked'] = true;
         cacheTimeCheckIndex = index;
       }
+    } else {
+      times[index]['isChecked'] = true;
+      cacheTimeCheckIndex = index;
     }
 
     _view.onSelectTime();
