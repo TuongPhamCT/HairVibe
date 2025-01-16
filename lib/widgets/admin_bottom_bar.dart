@@ -46,7 +46,8 @@ class _AdminBottomBarState extends State<AdminBottomBar> {
 
   @override
   Widget build(BuildContext context) {
-    String namePrefix = UserSingleton.getInstance().currentUser!.name!.characters.first;
+    String namePrefix =
+        UserSingleton.getInstance().currentUser!.name!.characters.first;
 
     return Container(
       decoration: const BoxDecoration(
@@ -82,8 +83,8 @@ class _AdminBottomBarState extends State<AdminBottomBar> {
         backgroundColor: Colors.black,
         selectedItemColor: Palette.primary,
         unselectedItemColor: Colors.white,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
         items: [
           const BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.houseChimney),
@@ -104,7 +105,8 @@ class _AdminBottomBarState extends State<AdminBottomBar> {
           BottomNavigationBarItem(
             icon: CircleAvatar(
               backgroundColor: Palette.primary,
-              child: Text(namePrefix.toUpperCase(), style: const TextStyle(color: Colors.black)),
+              child: Text(namePrefix.toUpperCase(),
+                  style: const TextStyle(color: Colors.black)),
             ),
             label: 'Menu',
           ),
