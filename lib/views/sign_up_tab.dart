@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hairvibe/ChainOfRes/validation/validation_target.dart';
 import 'package:hairvibe/Contract/sign_up_tab_contract.dart';
 import 'package:hairvibe/Presenter/sign_up_tab_presenter.dart';
 import 'package:hairvibe/Theme/palette.dart';
@@ -147,15 +148,13 @@ class _SignUpTabState extends State<SignUpTab> implements SignUpTabContract {
   }
 
   @override
-  void onValidatingFailed(Map<String, String?> errors) {
-    if (errors.isNotEmpty){
+  void onValidatingFailed(ValidationTarget errors) {
       setState(() {
-        emailError = errors["email"];
-        fullNameError = errors["name"];
-        phoneError = errors["phoneNumber"];
-        passwordError = errors["password"];
-        confirmPasswordError = errors["confirmPassword"];
+        emailError = errors.getErrorText(ValidationUniqueKey.EMAIL);
+        fullNameError = errors.getErrorText("name");
+        phoneError = errors.getErrorText("phoneNumber");
+        passwordError = errors.getErrorText(ValidationUniqueKey.PASSWORD);
+        confirmPasswordError = errors.getErrorText(ValidationUniqueKey.REPASSWORD);
       });
-    }
   }
 }
