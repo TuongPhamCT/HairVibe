@@ -1,3 +1,4 @@
+import 'package:hairvibe/Const/app_config.dart';
 import 'package:hairvibe/Contract/barber_contact_list_contract.dart';
 import 'package:hairvibe/Models/user_model.dart';
 import 'package:hairvibe/Models/user_repo.dart';
@@ -6,7 +7,7 @@ class BarberContactListPagePresenter {
   final BarberContactListPageContract _view;
   BarberContactListPagePresenter(this._view);
 
-  final UserRepository _userRepo = UserRepository();
+  final UserRepository _userRepo = UserRepository(AppConfig.dbType);
 
   List<UserModel> customers = [];
 

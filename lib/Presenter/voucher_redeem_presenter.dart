@@ -1,3 +1,4 @@
+import 'package:hairvibe/Const/app_config.dart';
 import 'package:hairvibe/Contract/voucher_redeem_contract.dart';
 import 'package:hairvibe/Facades/authenticator_facade.dart';
 import 'package:hairvibe/Models/coupon_model.dart';
@@ -13,8 +14,8 @@ class VoucherRedeemPresenter {
   VoucherRedeemPresenter(this._view);
 
   final AuthenticatorFacade _auth = AuthenticatorFacade();
-  final CouponRepository _couponRepo = CouponRepository();
-  final UserRepository _userRepo = UserRepository();
+  final CouponRepository _couponRepo = CouponRepository(AppConfig.dbType);
+  final UserRepository _userRepo = UserRepository(AppConfig.dbType);
 
   final AppointmentSingleton _appointmentSingleton = AppointmentSingleton.getInstance();
   final BookingSingleton _bookingSingleton = BookingSingleton.getInstance();

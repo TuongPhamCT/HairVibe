@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hairvibe/Builders/ModelBuilder/appointment_model_builder.dart';
+import 'package:hairvibe/Const/app_config.dart';
 import 'package:hairvibe/Contract/main_booking_contract.dart';
 import 'package:hairvibe/Facades/authenticator_facade.dart';
 import 'package:hairvibe/Models/appointment_model.dart';
@@ -26,12 +27,12 @@ class MainBookingPresenter {
   final BookingSingleton _bookingSingleton = BookingSingleton.getInstance();
   final AppointmentSingleton _appointmentSingleton = AppointmentSingleton.getInstance();
 
-  final ServiceRepository _serviceRepo = ServiceRepository();
-  final UserRepository _userRepo = UserRepository();
-  final WorkSessionRepository _workSessionRepo = WorkSessionRepository();
-  final LeaveRepository _leaveRepo = LeaveRepository();
-  final AppointmentRepository _appointmentRepo = AppointmentRepository();
-  final RatingRepository _ratingRepo = RatingRepository();
+  final ServiceRepository _serviceRepo = ServiceRepository(AppConfig.dbType);
+  final UserRepository _userRepo = UserRepository(AppConfig.dbType);
+  final WorkSessionRepository _workSessionRepo = WorkSessionRepository(AppConfig.dbType);
+  final LeaveRepository _leaveRepo = LeaveRepository(AppConfig.dbType);
+  final AppointmentRepository _appointmentRepo = AppointmentRepository(AppConfig.dbType);
+  final RatingRepository _ratingRepo = RatingRepository(AppConfig.dbType);
 
   final TimeOfDay workSessionStart = const TimeOfDay(hour: 9, minute: 0);
   final TimeOfDay workSessionEnd = const TimeOfDay(hour: 18, minute: 0);

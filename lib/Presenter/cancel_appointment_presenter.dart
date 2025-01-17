@@ -1,4 +1,5 @@
 import 'package:hairvibe/Builders/ModelBuilder/appointment_model_builder.dart';
+import 'package:hairvibe/Const/app_config.dart';
 import 'package:hairvibe/Contract/cancel_appointment_contract.dart';
 import 'package:hairvibe/Facades/notification_facade.dart';
 import 'package:hairvibe/Models/appointment_model.dart';
@@ -11,7 +12,7 @@ class CancelAppointmentPagePresenter {
 
   final AppointmentSingleton _singleton = AppointmentSingleton.getInstance();
   final AppointmentModelBuilder _builder = AppointmentModelBuilder();
-  final AppointmentRepository _repo = AppointmentRepository();
+  final AppointmentRepository _repo = AppointmentRepository(AppConfig.dbType);
   final NotificationFacade _notificationFacade = NotificationFacade();
 
   Future<void> handleConfirmPressed(String reason) async {

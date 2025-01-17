@@ -1,3 +1,4 @@
+import 'package:hairvibe/Const/app_config.dart';
 import 'package:hairvibe/Facades/authenticator_facade.dart';
 import 'package:hairvibe/Models/appointment_model.dart';
 import 'package:hairvibe/Models/user_repo.dart';
@@ -17,7 +18,7 @@ class AppointmentSingleton {
 
   AppointmentModel? appointment;
 
-  final UserRepository _userRepo = UserRepository();
+  final UserRepository _userRepo = UserRepository(AppConfig.dbType);
   final AuthenticatorFacade _auth = AuthenticatorFacade();
 
   Map<String, dynamic> cacheData = {};

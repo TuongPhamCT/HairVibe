@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hairvibe/Const/app_config.dart';
 import 'package:hairvibe/Contract/add_barber_screen_contract.dart';
 import 'package:string_validator/string_validator.dart';
 
@@ -11,7 +12,7 @@ class AddBarberScreenPresenter {
   AddBarberScreenPresenter(this._view);
 
   final AuthenticatorFacade _auth = AuthenticatorFacade();
-  final UserRepository _userRepo = UserRepository();
+  final UserRepository _userRepo = UserRepository(AppConfig.dbType);
 
   String? _validateEmail(String? email) {
     email = email?.trim();
@@ -100,7 +101,7 @@ class AddBarberScreenPresenter {
           userType: UserType.BARBER
       );
 
-      await _userRepo.addUserToFirestore(model);
+      await _userRepo.addUser(model);
       _view.onPopContext();
       _view.onSave();
     } else if (result == null) {

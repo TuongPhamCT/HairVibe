@@ -1,3 +1,4 @@
+import 'package:hairvibe/Const/app_config.dart';
 import 'package:hairvibe/Contract/barber_home_screen_contract.dart';
 import 'package:hairvibe/Models/appointment_model.dart';
 import 'package:hairvibe/Models/appointment_repo.dart';
@@ -9,9 +10,9 @@ class BarberHomeScreenPresenter {
   final BarberHomeScreenContract _view;
   BarberHomeScreenPresenter(this._view);
 
-  final UserRepository _userRepo = UserRepository();
-  final ServiceRepository _serviceRepo = ServiceRepository();
-  final AppointmentRepository _appointmentRepo = AppointmentRepository();
+  final UserRepository _userRepo = UserRepository(AppConfig.dbType);
+  final ServiceRepository _serviceRepo = ServiceRepository(AppConfig.dbType);
+  final AppointmentRepository _appointmentRepo = AppointmentRepository(AppConfig.dbType);
 
   int servicesCount = 0;
   int todayAppointmentCount = 0;

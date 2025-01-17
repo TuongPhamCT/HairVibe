@@ -1,3 +1,4 @@
+import 'package:hairvibe/Const/app_config.dart';
 import 'package:hairvibe/Contract/account_page_contract.dart';
 import 'package:hairvibe/Facades/authenticator_facade.dart';
 import 'package:hairvibe/Models/rating_repo.dart';
@@ -14,8 +15,8 @@ class AccountPagePresenter {
 
   final UserSingleton _userSingleton = UserSingleton.getInstance();
   final BarberSingleton _barberSingleton = BarberSingleton.getInstance();
-  final UserRepository _userRepository = UserRepository();
-  final RatingRepository _ratingRepository = RatingRepository();
+  final UserRepository _userRepository = UserRepository(AppConfig.dbType);
+  final RatingRepository _ratingRepository = RatingRepository(AppConfig.dbType);
   final AuthenticatorFacade _auth = AuthenticatorFacade();
 
   Future<void> handleReviewAdmin() async {

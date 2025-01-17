@@ -1,4 +1,5 @@
 import 'package:hairvibe/Builders/ModelBuilder/appointment_model_builder.dart';
+import 'package:hairvibe/Const/app_config.dart';
 import 'package:hairvibe/Facades/notification_facade.dart';
 import 'package:hairvibe/Models/appointment_repo.dart';
 import 'package:hairvibe/Models/coupon_model.dart';
@@ -17,7 +18,7 @@ class BookingSingleton {
   }
 
   final AppointmentModelBuilder builder = AppointmentModelBuilder();
-  final AppointmentRepository _appointmentRepo = AppointmentRepository();
+  final AppointmentRepository _appointmentRepo = AppointmentRepository(AppConfig.dbType);
 
   String? customerID;
   String? barberID;
@@ -80,7 +81,7 @@ class BookingSingleton {
 
     AppointmentModel appointment = builder.build();
 
-    await _appointmentRepo.addAppointmentToFirestore(appointment);
+    await _appointmentRepo.addAppointment(appointment);
     await notificationFacade.createBookingAppointmentNotification(
         appointment: appointment,
         customerName: UserSingleton.getInstance().currentUser!.name!

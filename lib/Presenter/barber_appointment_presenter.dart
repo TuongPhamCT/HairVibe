@@ -1,3 +1,4 @@
+import 'package:hairvibe/Const/app_config.dart';
 import 'package:hairvibe/Contract/barber_appointment_contract.dart';
 import 'package:hairvibe/Models/appointment_model.dart';
 import 'package:hairvibe/Models/appointment_repo.dart';
@@ -9,7 +10,7 @@ class BarberAppointmentPagePresenter {
 
   final AppointmentSingleton _appointmentSingleton =
       AppointmentSingleton.getInstance();
-  final AppointmentRepository _appointmentRepo = AppointmentRepository();
+  final AppointmentRepository _appointmentRepo = AppointmentRepository(AppConfig.dbType);
 
   List<AppointmentModel> appointments = [];
   DateTime selectedDate = DateTime.now();

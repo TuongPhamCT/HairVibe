@@ -32,4 +32,9 @@ class ServiceRepository {
   Future<List<ServiceModel>> getAllServices() async {
     return await _impl.getAllServices();
   }
+
+  Future<int> getServicesCount() async {
+    final List<ServiceModel> services = await getAllServices();
+    return services.length;
+  }
 }

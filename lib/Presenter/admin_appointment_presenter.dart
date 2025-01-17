@@ -1,3 +1,4 @@
+import 'package:hairvibe/Const/app_config.dart';
 import 'package:hairvibe/Contract/admin_appointment_contract.dart';
 import 'package:hairvibe/Facades/authenticator_facade.dart';
 import 'package:hairvibe/Models/appointment_model.dart';
@@ -13,8 +14,8 @@ class AdminAppointmentPagePresenter {
   AdminAppointmentPagePresenter(this._view);
 
   final AppointmentSingleton _appointmentSingleton = AppointmentSingleton.getInstance();
-  final AppointmentRepository _appointmentRepo = AppointmentRepository();
-  final UserRepository _userRepo = UserRepository();
+  final AppointmentRepository _appointmentRepo = AppointmentRepository(AppConfig.dbType);
+  final UserRepository _userRepo = UserRepository(AppConfig.dbType);
   final AuthenticatorFacade _auth = AuthenticatorFacade();
 
   Map<String, String> customerNames = {};

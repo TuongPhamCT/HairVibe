@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:hairvibe/Const/app_config.dart';
 import 'package:hairvibe/Contract/edit_account_contract.dart';
 import 'package:hairvibe/Facades/image_storage_facade.dart';
 import 'package:hairvibe/Models/user_model.dart';
@@ -11,7 +12,7 @@ class EditAccountPresenter {
   final EditAccountContract _view;
   EditAccountPresenter(this._view);
 
-  final UserRepository _userRepo = UserRepository();
+  final UserRepository _userRepo = UserRepository(AppConfig.dbType);
   final AuthenticatorFacade _auth = AuthenticatorFacade();
   final ImageStorageFacade _imageStorageFacade = ImageStorageFacade();
 

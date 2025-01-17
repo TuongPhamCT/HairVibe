@@ -1,3 +1,4 @@
+import 'package:hairvibe/Const/app_config.dart';
 import 'package:hairvibe/Models/service_model.dart';
 import 'package:hairvibe/Models/service_repo.dart';
 
@@ -7,7 +8,7 @@ class AllServiceScreenPresenter {
   final AllServiceScreenContract _view;
   AllServiceScreenPresenter(this._view);
 
-  final ServiceRepository _serviceRepo = ServiceRepository();
+  final ServiceRepository _serviceRepo = ServiceRepository(AppConfig.dbType);
 
   List<ServiceModel> serviceList = [];
 

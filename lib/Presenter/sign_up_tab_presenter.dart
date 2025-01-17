@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hairvibe/Const/app_config.dart';
 import 'package:hairvibe/Contract/sign_up_tab_contract.dart';
 import 'package:hairvibe/Models/user_model.dart';
 import 'package:hairvibe/Models/user_repo.dart';
@@ -8,7 +9,7 @@ import 'package:string_validator/string_validator.dart';
 class SignUpTabPresenter {
   final SignUpTabContract _view;
   final AuthenticatorFacade _auth = AuthenticatorFacade();
-  final UserRepository _userRepo = UserRepository();
+  final UserRepository _userRepo = UserRepository(AppConfig.dbType);
 
   SignUpTabPresenter(this._view);
 
@@ -97,7 +98,7 @@ class SignUpTabPresenter {
           phoneNumber: phone,
           userType: UserType.CUSTOMER
       );
-      await _userRepo.addUserToFirestore(model);
+      await _userRepo.addUser(model);
       _view.onPopContext();
       _view.onSignUpSucceeded();
     } else if (result == null) {

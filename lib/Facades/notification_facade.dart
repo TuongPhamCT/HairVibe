@@ -1,11 +1,12 @@
 import 'package:hairvibe/Models/notice_repo.dart';
 import 'package:hairvibe/Utility.dart';
 
+import '../Const/app_config.dart';
 import '../Models/appointment_model.dart';
 import '../Models/notice_model.dart';
 
 class NotificationFacade {
-  final NoticeRepository _noticeRepo = NoticeRepository();
+  final NoticeRepository _noticeRepo = NoticeRepository(AppConfig.dbType);
 
   NoticeModel createNotification({required String receiverID, required String content}) {
     return NoticeModel(
@@ -34,12 +35,12 @@ class NotificationFacade {
 
     if (sendToBarber) {
       NoticeModel notification = createNotification(receiverID: appointment.barberID!, content: content);
-      await _noticeRepo.addNoticeToFirestore(notification);
+      await _noticeRepo.addNotice(notification);
     }
 
     if (sendToCustomer) {
       NoticeModel notification = createNotification(receiverID: appointment.customerID!, content: content);
-      await _noticeRepo.addNoticeToFirestore(notification);
+      await _noticeRepo.addNotice(notification);
     }
   }
 
@@ -49,7 +50,7 @@ class NotificationFacade {
     String content = "Your appointment at ${Utility.formatStringFromDateTime(appointment.date)} was completed."
         " (Appointment ID: ${appointment.appointmentID})";
     NoticeModel notification = createNotification(receiverID: appointment.customerID!, content: content);
-    await _noticeRepo.addNoticeToFirestore(notification);
+    await _noticeRepo.addNotice(notification);
   }
 
   Future<void> createBookingAppointmentNotification({
@@ -59,7 +60,7 @@ class NotificationFacade {
     String content = "$customerName has booked an appointment with you at ${Utility.formatStringFromDateTime(appointment.date)}."
         " (Appointment ID: ${appointment.appointmentID})";
     NoticeModel notification = createNotification(receiverID: appointment.barberID!, content: content);
-    await _noticeRepo.addNoticeToFirestore(notification);
+    await _noticeRepo.addNotice(notification);
   }
 
   Future<void> createRatingBarberNotification({
@@ -69,6 +70,6 @@ class NotificationFacade {
   }) async {
     String content = "$customerName has left a review for you with rating of $ratingValue stars.";
     NoticeModel notification = createNotification(receiverID: barberID, content: content);
-    await _noticeRepo.addNoticeToFirestore(notification);
+    await _noticeRepo.addNotice(notification);
   }
 }
