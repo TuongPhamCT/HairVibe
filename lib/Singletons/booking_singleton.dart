@@ -25,10 +25,10 @@ class BookingSingleton {
 
   CouponModel? usedCoupon;
   // Use when user navigate from Voucher Page
-  CouponModel? cacheCoupon;
+  CouponModel? selectedCoupon;
 
-  ServiceModel? cacheService;
-  UserModel? cacheBarber;
+  ServiceModel? selectedService;
+  UserModel? selectedBarber;
 
   void setCustomerID(String customerID) {
     this.customerID = customerID;
@@ -42,22 +42,22 @@ class BookingSingleton {
     usedCoupon = coupon;
   }
 
-  void setCacheCoupon(CouponModel coupon) {
-    cacheCoupon = coupon;
+  void setSelectedCoupon(CouponModel coupon) {
+    selectedCoupon = coupon;
   }
 
-  void setCacheBarber(UserModel barber) {
-    cacheBarber = barber;
+  void setSelectedBarber(UserModel barber) {
+    selectedBarber = barber;
   }
 
-  void setCacheService(ServiceModel service) {
-    cacheService = service;
+  void setSelectedService(ServiceModel service) {
+    selectedService = service;
   }
 
   void resetCache() {
-    cacheService = null;
-    cacheCoupon = null;
-    cacheBarber = null;
+    selectedService = null;
+    selectedCoupon = null;
+    selectedBarber = null;
   }
 
   void reset() {

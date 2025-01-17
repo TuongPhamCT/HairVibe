@@ -34,7 +34,7 @@ class BarberScreenPresenter {
   }
 
   void handleBookBarberPressed(UserModel model) {
-    _bookingSingleton.setCacheBarber(model);
+    _bookingSingleton.setSelectedBarber(model);
     _view.onBookBarberPressed();
   }
 
