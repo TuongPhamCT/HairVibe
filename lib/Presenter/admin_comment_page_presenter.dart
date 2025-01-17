@@ -1,3 +1,4 @@
+import 'package:hairvibe/Const/app_config.dart';
 import 'package:hairvibe/Contract/admin_comment_page_contract.dart';
 import 'package:hairvibe/Models/rating_repo.dart';
 import 'package:hairvibe/Models/service_repo.dart';
@@ -13,9 +14,9 @@ class AdminCommentPagePresenter {
   AdminCommentPagePresenter(this._view);
 
   final UserSingleton _userSingleton = UserSingleton.getInstance();
-  final RatingRepository _ratingRepo = RatingRepository();
-  final UserRepository _userRepo = UserRepository();
-  final ServiceRepository _serviceRepo = ServiceRepository();
+  final RatingRepository _ratingRepo = RatingRepository(AppConfig.dbType);
+  final UserRepository _userRepo = UserRepository(AppConfig.dbType);
+  final ServiceRepository _serviceRepo = ServiceRepository(AppConfig.dbType);
 
   List<RatingModel> ratings = [];
   Map<String, UserModel> users = {};

@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hairvibe/Const/app_config.dart';
 import 'package:hairvibe/Contract/sign_in_tab_contract.dart';
 import 'package:hairvibe/Facades/authenticator_facade.dart';
 import 'package:hairvibe/Models/user_repo.dart';
@@ -12,7 +13,7 @@ class SignInTabPresenter {
 
   SignInTabPresenter(this._view);
   final AuthenticatorFacade _auth = AuthenticatorFacade();
-  final UserRepository _userRepo = UserRepository();
+  final UserRepository _userRepo = UserRepository(AppConfig.dbType);
   final UserSingleton _userSingleton = UserSingleton.getInstance();
 
   Future<void> login(String email, String password) async {

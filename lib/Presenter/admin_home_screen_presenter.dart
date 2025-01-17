@@ -1,3 +1,4 @@
+import 'package:hairvibe/Const/app_config.dart';
 import 'package:hairvibe/Contract/admin_home_screen_contract.dart';
 import 'package:hairvibe/Facades/authenticator_facade.dart';
 import 'package:hairvibe/Models/appointment_model.dart';
@@ -10,9 +11,9 @@ class AdminHomeScreenPresenter {
   final AdminHomeScreenContract _view;
   AdminHomeScreenPresenter(this._view);
 
-  final UserRepository _userRepo = UserRepository();
-  final ServiceRepository _serviceRepo = ServiceRepository();
-  final AppointmentRepository _appointmentRepo = AppointmentRepository();
+  final UserRepository _userRepo = UserRepository(AppConfig.dbType);
+  final ServiceRepository _serviceRepo = ServiceRepository(AppConfig.dbType);
+  final AppointmentRepository _appointmentRepo = AppointmentRepository(AppConfig.dbType);
   final AuthenticatorFacade _auth = AuthenticatorFacade();
 
   int servicesCount = 0;

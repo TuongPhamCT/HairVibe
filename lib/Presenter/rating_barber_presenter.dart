@@ -1,3 +1,4 @@
+import 'package:hairvibe/Const/app_config.dart';
 import 'package:hairvibe/Contract/rating_barber_contract.dart';
 import 'package:hairvibe/Facades/notification_facade.dart';
 import 'package:hairvibe/Models/rating_model.dart';
@@ -11,7 +12,7 @@ class RatingBarberPresenter {
   final RatingBarberContract _view;
   RatingBarberPresenter(this._view);
 
-  final RatingRepository _ratingRepository = RatingRepository();
+  final RatingRepository _ratingRepository = RatingRepository(AppConfig.dbType);
   final NotificationFacade _notificationFacade = NotificationFacade();
   final BarberSingleton _barberSingleton = BarberSingleton.getInstance();
 
@@ -36,7 +37,7 @@ class RatingBarberPresenter {
       );
 
       _view.onWaitingProgressBar();
-      ratingModel.ratingID = await _ratingRepository.addRatingToFirestore(ratingModel);
+      ratingModel.ratingID = await _ratingRepository.addRating(ratingModel);
       if (ratingModel.ratingID!.isEmpty) {
         _view.onPopContext();
         _view.onRatingFailed("Something was wrong. Please try again.");

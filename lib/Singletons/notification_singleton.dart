@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hairvibe/Const/app_config.dart';
 import 'package:hairvibe/Facades/authenticator_facade.dart';
 import 'package:hairvibe/Models/notice_repo.dart';
 import 'package:hairvibe/Singletons/user_singleton.dart';
@@ -16,7 +17,7 @@ class NotificationSingleton {
     return _instance!;
   }
 
-  final NoticeRepository _noticeRepo = NoticeRepository();
+  final NoticeRepository _noticeRepo = NoticeRepository(AppConfig.dbType);
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final AuthenticatorFacade _auth = AuthenticatorFacade();
 

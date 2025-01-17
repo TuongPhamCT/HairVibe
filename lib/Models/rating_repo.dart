@@ -34,4 +34,16 @@ class RatingRepository {
   Future<List<RatingModel>> getRatingsByBarberId(String barberId) async {
     return await _impl.getRatingsByBarberId(barberId);
   }
+
+  Future<double> calculateRatingOfBarber(String barberId) async {
+    List<RatingModel> list = await getRatingsByBarberId(barberId);
+    if (list.isEmpty) {
+      return 0;
+    }
+    double avgRating = 0;
+    for (RatingModel model in list) {
+      avgRating += (model.rate ?? 0);
+    }
+    return avgRating / list.length;
+  }
 }

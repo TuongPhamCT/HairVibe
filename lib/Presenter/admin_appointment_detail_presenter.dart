@@ -1,3 +1,4 @@
+import 'package:hairvibe/Const/app_config.dart';
 import 'package:hairvibe/Contract/admin_appointment_detail_contract.dart';
 import 'package:hairvibe/Facades/notification_facade.dart';
 import 'package:hairvibe/Models/appointment_model.dart';
@@ -11,7 +12,7 @@ class AdminAppointmentDetailPagePresenter {
 
   final AppointmentSingleton _appointmentSingleton = AppointmentSingleton.getInstance();
   final UserSingleton _userSingleton = UserSingleton.getInstance();
-  final AppointmentRepository _appointmentRepo = AppointmentRepository();
+  final AppointmentRepository _appointmentRepo = AppointmentRepository(AppConfig.dbType);
   final NotificationFacade _notificationFacade = NotificationFacade();
 
   void handleCancelButtonPressed() {

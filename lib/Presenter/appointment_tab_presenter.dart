@@ -1,3 +1,4 @@
+import 'package:hairvibe/Const/app_config.dart';
 import 'package:hairvibe/Contract/appointment_tab_contract.dart';
 import 'package:hairvibe/Models/appointment_model.dart';
 import 'package:hairvibe/Models/user_model.dart';
@@ -11,8 +12,8 @@ import '../Models/appointment_repo.dart';
 class AppointmentTabPresenter {
   final AppointmentTabContract _view;
   AppointmentTabPresenter(this._view);
-  final AppointmentRepository _appointRepo = AppointmentRepository();
-  final UserRepository _userRepo = UserRepository();
+  final AppointmentRepository _appointRepo = AppointmentRepository(AppConfig.dbType);
+  final UserRepository _userRepo = UserRepository(AppConfig.dbType);
   final AuthenticatorFacade _auth = AuthenticatorFacade();
   final AppointmentSingleton _appointmentSingleton = AppointmentSingleton.getInstance();
 

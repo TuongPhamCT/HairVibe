@@ -1,3 +1,4 @@
+import 'package:hairvibe/Const/app_config.dart';
 import 'package:hairvibe/Contract/add_service_page_contract.dart';
 import 'package:hairvibe/Models/service_repo.dart';
 
@@ -7,7 +8,7 @@ class AddServicePagePresenter {
   final AddServicePageContract _view;
   AddServicePagePresenter(this._view);
 
-  final ServiceRepository _serviceRepo = ServiceRepository();
+  final ServiceRepository _serviceRepo = ServiceRepository(AppConfig.dbType);
 
   Future<void> handleCreateService({
     required String name,
@@ -41,7 +42,7 @@ class AddServicePagePresenter {
       info: description
     );
 
-    if (await _serviceRepo.addServiceToFirestore(service) != "") {
+    if (await _serviceRepo.addService(service) != "") {
       _view.onPopContext();
       _view.onCreateSucceeded();
     } else {
