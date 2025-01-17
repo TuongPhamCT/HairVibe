@@ -1,10 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hairvibe/Const/database_config.dart';
 import 'package:hairvibe/Models/appointment_model.dart';
 import 'package:hairvibe/Models/appointment_repo_impl.dart';
 import 'package:hairvibe/Models/firebase/firebase_appointment_repo.dart';
-import 'package:hairvibe/Models/mongoDB/mongoDB_appointment_repo_impl.dart';
-import 'package:hairvibe/Utility.dart';
 
 class AppointmentRepository {
 

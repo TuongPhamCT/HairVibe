@@ -3,7 +3,7 @@ import 'package:hairvibe/Models/service_model.dart';
 
 import '../service_repo_impl.dart';
 
-class FirebaseServiceRepoImpl implements ServiceRepoImpl {
+class FirebaseServiceRepoImpl implements ServiceRepoImplInterface {
   final FirebaseFirestore _storage = FirebaseFirestore.instance;
 
   @override

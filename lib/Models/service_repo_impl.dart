@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hairvibe/Models/service_model.dart';
 
-abstract class ServiceRepoImpl {
+abstract class ServiceRepoImplInterface {
 
   Future<String> addService(ServiceModel model);
 
