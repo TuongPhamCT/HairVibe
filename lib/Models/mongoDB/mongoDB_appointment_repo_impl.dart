@@ -1,8 +1,9 @@
+import 'package:hairvibe/Models/appointment_repo_impl.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:hairvibe/Models/appointment_model.dart';
 import 'package:hairvibe/Utility.dart';
 
-class MongoDBAppointmentRepoImplementation {
+class MongoDBAppointmentRepoImplementation implements AppointmentRepoImplInterface {
   final Db _db = Db(
       'mongodb://localhost:27017/hairvibe'); // Replace with your MongoDB connection string
   final String collectionName = AppointmentModel.collectionName;
@@ -20,6 +21,7 @@ class MongoDBAppointmentRepoImplementation {
     }
   }
 
+  @override
   Future<bool> updateAppointment(AppointmentModel model) async {
     try {
       await _db.open();
@@ -37,6 +39,7 @@ class MongoDBAppointmentRepoImplementation {
     }
   }
 
+  @override
   Future<AppointmentModel?> getAppointmentById(String id) async {
     try {
       await _db.open();
@@ -51,6 +54,7 @@ class MongoDBAppointmentRepoImplementation {
     }
   }
 
+  @override
   Future<List<AppointmentModel>> getAllAppointments() async {
     try {
       await _db.open();
@@ -80,6 +84,7 @@ class MongoDBAppointmentRepoImplementation {
     }
   }
 
+  @override
   Future<List<AppointmentModel>> getAppointmentsByDate(DateTime date) async {
     try {
       await _db.open();
