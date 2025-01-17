@@ -5,6 +5,7 @@ import 'package:hairvibe/Models/work_session_repo_impl.dart';
 
 import '../Const/database_config.dart';
 import 'firebase/firebase_work_session_repo.dart';
+import 'mongoDB/mongoDB_work_session_repo_impl.dart';
 
 class WorkSessionRepository {
   late WorkSessionRepoImplInterface _impl;

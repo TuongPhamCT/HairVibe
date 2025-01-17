@@ -1,16 +1,16 @@
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:hairvibe/Models/user_model.dart';
-
-class MongoDBUserRepoImplementation {
+import 'package:hairvibe/Models/user_repo_impl.dart';
+class MongoDBUserRepoImpl implements UserRepoImplInterface {
   final Db _db = Db(
       'mongodb://localhost:27017/hairvibe'); // Replace with your MongoDB connection string
-  final String collectionName = UserModel.collectionName;
 
-  Future<void> addUserToMongo(UserModel user) async {
+ @override
+  Future<void> addUser(UserModel user) async {
     try {
       await _db.open();
-      final collection = _db.collection(collectionName);
-      await collection.insertOne(user.toJson());
+      final collection = _db.collection(UserModel.collectionName);
+      await collection.insert(user.toJson());
       print('User added to MongoDB with ID: ${user.userID}');
     } catch (e) {
       print('Error adding user to MongoDB: $e');
@@ -19,15 +19,16 @@ class MongoDBUserRepoImplementation {
     }
   }
 
+  @override
   Future<bool> updateUser(UserModel model) async {
     try {
       await _db.open();
-      final collection = _db.collection(collectionName);
-      final result = await collection.updateOne(
-        where.eq('_id', model.userID),
-        modify.set('data', model.toJson()),
+      final collection = _db.collection(UserModel.collectionName);
+      final result = await collection.update(
+        where.eq('userID', model.userID),
+        model.toJson(),
       );
-      return result.isSuccess;
+      return result['n'] > 0; // Check if any document was updated
     } catch (e) {
       print('Error updating user in MongoDB: $e');
       return false;
@@ -36,24 +37,30 @@ class MongoDBUserRepoImplementation {
     }
   }
 
-  Future<UserModel?> getUserById(String id) async {
+  @override
+  Future<UserModel> getUserById(String id) async {
     try {
       await _db.open();
-      final collection = _db.collection(collectionName);
-      final result = await collection.findOne(where.eq('_id', id));
-      return result != null ? UserModel.fromJson(result) : null;
+      final collection = _db.collection(UserModel.collectionName);
+      final result = await collection.findOne(where.eq('userID', id));
+      if (result != null) {
+        return UserModel.fromJson(result);
+      } else {
+        throw Exception('User not found');
+      }
     } catch (e) {
       print('Error fetching user by ID from MongoDB: $e');
-      return null;
+      rethrow;
     } finally {
       await _db.close();
     }
   }
 
+  @override
   Future<List<UserModel>> getAllUsers() async {
     try {
       await _db.open();
-      final collection = _db.collection(collectionName);
+      final collection = _db.collection(UserModel.collectionName);
       final results = await collection.find().toList();
       return results.map((json) => UserModel.fromJson(json)).toList();
     } catch (e) {
@@ -64,33 +71,70 @@ class MongoDBUserRepoImplementation {
     }
   }
 
-  Future<List<UserModel>> getUsersByType(String userType) async {
+  @override
+  Future<List<UserModel>> getAllCustomers() async {
     try {
       await _db.open();
-      final collection = _db.collection(collectionName);
-      final results =
-          await collection.find(where.eq('userType', userType)).toList();
+      final collection = _db.collection(UserModel.collectionName);
+      final results = await collection.find(where.eq('userType', UserType.CUSTOMER)).toList();
       return results.map((json) => UserModel.fromJson(json)).toList();
     } catch (e) {
-      print('Error fetching users by type from MongoDB: $e');
+      print('Error fetching all customers from MongoDB: $e');
       return [];
     } finally {
       await _db.close();
     }
   }
 
-  Future<int> getUsersCountByType(String userType) async {
+  @override
+  Future<List<UserModel>> getAllBarbers() async {
     try {
-      final users = await getUsersByType(userType);
-      return users.length;
+      await _db.open();
+      final collection = _db.collection(UserModel.collectionName);
+      final results = await collection.find(where.eq('userType', UserType.BARBER)).toList();
+      return results.map((json) => UserModel.fromJson(json)).toList();
     } catch (e) {
-      print('Error counting users by type from MongoDB: $e');
+      print('Error fetching all barbers from MongoDB: $e');
+      return [];
+    } finally {
+      await _db.close();
+    }
+  }
+
+  @override
+  Future<List<UserModel>> getAllAdmins() async {
+    try {
+      await _db.open();
+      final collection = _db.collection(UserModel.collectionName);
+      final results = await collection.find(where.eq('userType', UserType.ADMIN)).toList();
+      return results.map((json) => UserModel.fromJson(json)).toList();
+    } catch (e) {
+      print('Error fetching all admins from MongoDB: $e');
+      return [];
+    } finally {
+      await _db.close();
+    }
+  }
+
+  @override
+  Future<int> getBarbersCount() async {
+    try {
+      final barbers = await getAllBarbers();
+      return barbers.length;
+    } catch (e) {
+      print('Error counting barbers in MongoDB: $e');
       return 0;
     }
   }
 
-  Future<int> getBarbersCount() async => getUsersCountByType(UserType.BARBER);
-
-  Future<int> getCustomersCount() async =>
-      getUsersCountByType(UserType.CUSTOMER);
+  @override
+  Future<int> getCustomersCount() async {
+    try {
+      final customers = await getAllCustomers();
+      return customers.length;
+    } catch (e) {
+      print('Error counting customers in MongoDB: $e');
+      return 0;
+    }
+  }
 }

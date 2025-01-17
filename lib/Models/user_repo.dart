@@ -4,6 +4,7 @@ import 'package:hairvibe/Models/user_repo_impl.dart';
 
 import '../Const/database_config.dart';
 import 'firebase/firebase_user_repo.dart';
+import 'mongoDB/mongoDB_user_repo_impl.dart';
 
 class UserRepository {
   late UserRepoImplInterface _impl;
