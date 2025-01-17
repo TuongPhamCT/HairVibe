@@ -1,4 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hairvibe/ChainOfRes/validation/email_validation_handler.dart';
+import 'package:hairvibe/ChainOfRes/validation/empty_validation_handler.dart';
+import 'package:hairvibe/ChainOfRes/validation/validation_target.dart';
 import 'package:hairvibe/Const/app_config.dart';
 import 'package:hairvibe/Contract/sign_up_tab_contract.dart';
 import 'package:hairvibe/Models/user_model.dart';
@@ -6,51 +9,24 @@ import 'package:hairvibe/Models/user_repo.dart';
 import 'package:hairvibe/facades/authenticator_facade.dart';
 import 'package:string_validator/string_validator.dart';
 
+import '../ChainOfRes/validation/password_validation_handler.dart';
+import '../ChainOfRes/validation/repassword_validation_handler.dart';
+
 class SignUpTabPresenter {
   final SignUpTabContract _view;
   final AuthenticatorFacade _auth = AuthenticatorFacade();
   final UserRepository _userRepo = UserRepository(AppConfig.dbType);
 
-  SignUpTabPresenter(this._view);
+  final EmptyValidationHandler validator1 = EmptyValidationHandler();
+  final EmailValidationHandler validator2 = EmailValidationHandler();
+  final PasswordValidationHandler validator3 = PasswordValidationHandler();
+  final RePasswordValidationHandler validator4 = RePasswordValidationHandler();
 
-  String? _validateEmail(String? email) {
-    email = email?.trim();
-    if (email == null || email.isEmpty) {
-      return "Please enter your email!";
-    } else if (!isEmail(email)) {
-      return "Email is not in the correct format!";
-    }
-    return null;
+  SignUpTabPresenter(this._view) {
+    validator1.setNext(validator2);
+    validator2.setNext(validator3);
+    validator3.setNext(validator4);
   }
-
-  String? _validateName(String? name) {
-    if (name!.isNotEmpty) {
-      return null;
-    }
-    return "Required";
-  }
-
-  String? _validatePhoneNumber(String? phone) {
-    if (phone!.isNotEmpty) {
-      return null;
-    }
-    return "Required";
-  }
-
-  String? _validatePassword(String? password) {
-    if (password!.length >= 8) {
-      return null;
-    }
-    return "Password must be at least 8 characters long.";
-  }
-
-  String? _validateConfirmPassword(String? password, String? confirmPassword) {
-    if (password == confirmPassword) {
-      return null;
-    }
-    return "Passwords do not match";
-  }
-
 
   Future<void> signUp(
       String email,
@@ -62,20 +38,20 @@ class SignUpTabPresenter {
     email = email.trim();
     name = name.trim();
 
-    Map<String, String?> errorTexts = {};
     // Validating
-    errorTexts["email"] = _validateEmail(email);
-    errorTexts["name"] = _validateName(name);
-    errorTexts["phoneNumber"] = _validatePhoneNumber(phone);
-    errorTexts["password"] = _validatePassword(password);
-    errorTexts["confirmPassword"] =
-        _validateConfirmPassword(password, confirmPassword);
+    ValidationTarget validationTarget = ValidationTarget();
+    validationTarget.addEmailField(email);
+    validationTarget.addField(key: "name", value: name);
+    validationTarget.addField(key: "phoneNumber", value: phone);
+    validationTarget.addPasswordField(password);
+    validationTarget.addRePasswordField(confirmPassword);
 
-    for (String? value in errorTexts.values){
-      if (value != null){
-        _view.onValidatingFailed(errorTexts);
-      }
+    validator1.handle(validationTarget);
+
+    if (validationTarget.isValid() == false){
+      _view.onValidatingFailed(validationTarget);
     }
+
 
     // Sign Up email
     _view.onWaitingProgressBar();

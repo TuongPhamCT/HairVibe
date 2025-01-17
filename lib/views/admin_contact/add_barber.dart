@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hairvibe/ChainOfRes/validation/validation_target.dart';
 import 'package:hairvibe/Contract/add_barber_screen_contract.dart';
 import 'package:hairvibe/Presenter/add_barber_screen_presenter.dart';
 import 'package:hairvibe/Theme/palette.dart';
@@ -144,16 +145,14 @@ class _AddBarberScreenState extends State<AddBarberScreen> implements AddBarberS
   }
 
   @override
-  void onValidatingFailed(Map<String, String?> errors) {
-    if (errors.isNotEmpty){
-      setState(() {
-        emailError = errors["email"];
-        fullNameError = errors["name"];
-        phoneError = errors["phoneNumber"];
-        passwordError = errors["password"];
-        confirmPasswordError = errors["confirmPassword"];
-      });
-    }
+  void onValidatingFailed(ValidationTarget errors) {
+    setState(() {
+      emailError = errors.getErrorText(ValidationUniqueKey.EMAIL);
+      fullNameError = errors.getErrorText("name");
+      phoneError = errors.getErrorText("phoneNumber");
+      passwordError = errors.getErrorText(ValidationUniqueKey.PASSWORD);
+      confirmPasswordError = errors.getErrorText(ValidationUniqueKey.REPASSWORD);
+    });
   }
 
   @override
