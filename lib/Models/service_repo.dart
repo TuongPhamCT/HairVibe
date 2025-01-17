@@ -3,6 +3,7 @@ import 'package:hairvibe/Models/service_repo_impl.dart';
 
 import '../Const/database_config.dart';
 import 'firebase/firebase_service_repo.dart';
+import 'mongoDB/mongoDB_service_repo_impl.dart';
 
 class ServiceRepository {
   late ServiceRepoImplInterface _impl;

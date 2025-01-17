@@ -2,6 +2,7 @@ import 'package:hairvibe/Const/database_config.dart';
 import 'package:hairvibe/Models/appointment_model.dart';
 import 'package:hairvibe/Models/appointment_repo_impl.dart';
 import 'package:hairvibe/Models/firebase/firebase_appointment_repo.dart';
+import 'package:hairvibe/Models/mongoDB/mongoDB_appointment_repo_impl.dart';
 
 class AppointmentRepository {
 
