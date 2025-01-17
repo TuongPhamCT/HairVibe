@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hairvibe/Models/leave_model.dart';
 
 import '../Const/database_config.dart';
@@ -17,6 +16,7 @@ class LeaveRepository {
         _impl = MongoDBCouponRepoImpl();
     }
   }
+
   Future<void> addLeave(LeaveModel model) async {
     return await _impl.addLeave(model);
   }

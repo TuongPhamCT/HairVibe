@@ -1,52 +1,35 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hairvibe/Models/service_model.dart';
+import 'package:hairvibe/Models/service_repo_impl.dart';
+
+import '../Const/database_config.dart';
+import 'firebase/firebase_service_repo.dart';
 
 class ServiceRepository {
-  final FirebaseFirestore _storage = FirebaseFirestore.instance;
-  // final FirebaseAuth _auth = FirebaseAuth.instance;
+  late ServiceRepoImplInterface _impl;
 
-  Future<String> addServiceToFirestore(ServiceModel model) async {
-    try {
-      DocumentReference docRef = _storage.collection(ServiceModel.collectionName).doc();
-      await docRef.set(model.toJson()).whenComplete(()
-      => print('Service added to Firestore with ID: ${docRef.id}')
-      );
-      return docRef.id;
-    } catch (e) {
-      print('Error adding Service to Firestore: $e');
-      return "";
+  ServiceRepository(String dbType) {
+    switch (dbType) {
+      case DatabaseConfig.FIREBASE:
+        _impl = FirebaseServiceRepoImpl();
+        break;
+      case DatabaseConfig.MONGO_DB:
+        _impl = MongoDBServiceRepoImpl();
     }
+  }
+
+  Future<String> addService(ServiceModel model) async {
+    return await _impl.addService(model);
   }
 
   Future<bool> updateService(ServiceModel model) async {
-    bool isSuccess = false;
-
-    await _storage.collection(ServiceModel.collectionName)
-        .doc(model.serviceID)
-        .update(model.toJson())
-        .then((_) => isSuccess = true);
-
-    return isSuccess;
+    return await _impl.updateService(model);
   }
 
-  Future<void> deleteServiceById(String id) async => _storage.collection(ServiceModel.collectionName).doc(id).delete();
+  Future<void> deleteServiceById(String id) async {
+    await _impl.deleteServiceById(id);
+  }
 
   Future<List<ServiceModel>> getAllServices() async {
-    try {
-      final QuerySnapshot querySnapshot = await _storage.collection(ServiceModel.collectionName).get();
-      final ratings = querySnapshot
-          .docs
-          .map((doc) => ServiceModel.fromJson(doc.id, doc.data() as Map<String, dynamic>))
-          .toList();
-      return ratings;
-    } catch (e) {
-      print(e);
-      return [];
-    }
-  }
-
-  Future<int> getServicesCount() async {
-    final List<ServiceModel> services = await getAllServices();
-    return services.length;
+    return await _impl.getAllServices();
   }
 }
