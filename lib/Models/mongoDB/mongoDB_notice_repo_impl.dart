@@ -1,6 +1,6 @@
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:hairvibe/Models/user_model.dart';
-import 'notice_model.dart';
+import '../notice_model.dart';
 
 class MongoDBNoticeRepoImplementation {
   final Db _db = Db(
