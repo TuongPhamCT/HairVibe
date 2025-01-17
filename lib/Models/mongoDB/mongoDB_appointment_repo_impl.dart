@@ -3,15 +3,16 @@ import 'package:mongo_dart/mongo_dart.dart';
 import 'package:hairvibe/Models/appointment_model.dart';
 import 'package:hairvibe/Utility.dart';
 
-class MongoDBAppointmentRepoImplementation implements AppointmentRepoImplInterface {
+class MongoDBAppointmentRepoImpl implements AppointmentRepoImplInterface {
   final Db _db = Db(
       'mongodb://localhost:27017/hairvibe'); // Replace with your MongoDB connection string
-  final String collectionName = AppointmentModel.collectionName;
+ 
 
-  Future<void> addAppointmentToMongo(AppointmentModel model) async {
+  @override
+  Future<void> addAppointment(AppointmentModel model) async {
     try {
       await _db.open();
-      final collection = _db.collection(collectionName);
+      final collection = _db.collection(AppointmentModel.collectionName);
       await collection.insertOne(model.toJson());
       print('Appointment added to MongoDB with ID: ${model.appointmentID}');
     } catch (e) {
@@ -25,7 +26,7 @@ class MongoDBAppointmentRepoImplementation implements AppointmentRepoImplInterfa
   Future<bool> updateAppointment(AppointmentModel model) async {
     try {
       await _db.open();
-      final collection = _db.collection(collectionName);
+      final collection = _db.collection(AppointmentModel.collectionName);
       final result = await collection.updateOne(
         where.eq('appointmentID', model.appointmentID),
         modify.set('data', model.toJson()),
@@ -43,7 +44,7 @@ class MongoDBAppointmentRepoImplementation implements AppointmentRepoImplInterfa
   Future<AppointmentModel?> getAppointmentById(String id) async {
     try {
       await _db.open();
-      final collection = _db.collection(collectionName);
+      final collection = _db.collection(AppointmentModel.collectionName);
       final result = await collection.findOne(where.eq('appointmentID', id));
       return result != null ? AppointmentModel.fromJson(result) : null;
     } catch (e) {
@@ -58,7 +59,7 @@ class MongoDBAppointmentRepoImplementation implements AppointmentRepoImplInterfa
   Future<List<AppointmentModel>> getAllAppointments() async {
     try {
       await _db.open();
-      final collection = _db.collection(collectionName);
+      final collection = _db.collection(AppointmentModel.collectionName);
       final results = await collection.find().toList();
       return results.map((json) => AppointmentModel.fromJson(json)).toList();
     } catch (e) {
@@ -69,15 +70,15 @@ class MongoDBAppointmentRepoImplementation implements AppointmentRepoImplInterfa
     }
   }
 
-  Future<List<AppointmentModel>> getAppointmentsByField(
-      String field, dynamic value) async {
+  Future<List<AppointmentModel>> _getAppointmentsByQuery(
+      SelectorBuilder query) async {
     try {
       await _db.open();
-      final collection = _db.collection(collectionName);
-      final results = await collection.find(where.eq(field, value)).toList();
+      final collection = _db.collection(AppointmentModel.collectionName);
+      final results = await collection.find(query).toList();
       return results.map((json) => AppointmentModel.fromJson(json)).toList();
     } catch (e) {
-      print(e);
+      print('Error fetching Appointments by query: $e');
       return [];
     } finally {
       await _db.close();
@@ -85,57 +86,91 @@ class MongoDBAppointmentRepoImplementation implements AppointmentRepoImplInterfa
   }
 
   @override
+  Future<List<AppointmentModel>> getAllCancelledAppointments(String id) =>
+      _getAppointmentsByQuery(
+          where.eq('status', AppointmentStatus.CANCELLED).eq('customerID', id));
+
+  @override
+  Future<List<AppointmentModel>> getAllCompletedAppointments(String id) =>
+      _getAppointmentsByQuery(
+          where.eq('status', AppointmentStatus.COMPLETED).eq('customerID', id));
+
+  @override
+  Future<List<AppointmentModel>> getAllUpcomingAppointments(String id) =>
+      _getAppointmentsByQuery(
+          where.eq('status', AppointmentStatus.UPCOMING).eq('customerID', id));
+
+  @override
+  Future<List<AppointmentModel>> getAppointmentsByUserId(String id) =>
+      _getAppointmentsByQuery(where.eq('customerID', id));
+
+  @override
   Future<List<AppointmentModel>> getAppointmentsByDate(DateTime date) async {
-    try {
-      await _db.open();
-      final collection = _db.collection(collectionName);
-      final results = await collection.find().toList();
-      return results
-          .map((json) => AppointmentModel.fromJson(json))
-          .where((appointment) => Utility.isSameDate(appointment.date, date))
-          .toList();
-    } catch (e) {
-      print(e);
-      return [];
-    } finally {
-      await _db.close();
-    }
+    final appointments = await getAllAppointments();
+    return appointments
+        .where((appointment) => Utility.isSameDate(appointment.date, date))
+        .toList();
   }
 
+  @override
   Future<List<AppointmentModel>> getActiveAppointmentsByDate(
       DateTime date) async {
-    try {
-      await _db.open();
-      final collection = _db.collection(collectionName);
-      final results = await collection
-          .find(
-            where.oneFrom('status',
-                [AppointmentStatus.COMPLETED, AppointmentStatus.UPCOMING]),
-          )
-          .toList();
-      return results
-          .map((json) => AppointmentModel.fromJson(json))
-          .where((appointment) => Utility.isSameDate(appointment.date, date))
-          .toList();
-    } catch (e) {
-      print(e);
-      return [];
-    } finally {
-      await _db.close();
-    }
+    final appointments = await _getAppointmentsByQuery(where.oneFrom(
+        'status', [AppointmentStatus.COMPLETED, AppointmentStatus.UPCOMING]));
+    return appointments
+        .where((appointment) => Utility.isSameDate(appointment.date, date))
+        .toList();
   }
 
-  Future<String> generateAppointmentID() async {
-    try {
-      await _db.open();
-      final collection = _db.collection(collectionName);
-      final count = await collection.count();
-      return count.toString().padLeft(8, '0');
-    } catch (e) {
-      print(e);
-      return '00000000';
-    } finally {
-      await _db.close();
-    }
+  @override
+  Future<List<AppointmentModel>> getAppointmentsByUserIdAndDate(
+      String id, DateTime date) async {
+    final appointments =
+        await _getAppointmentsByQuery(where.eq('customerID', id));
+    return appointments
+        .where((appointment) => Utility.isSameDate(appointment.date, date))
+        .toList();
   }
+
+  @override
+  Future<List<AppointmentModel>> getAppointmentsByBarberIdAndDate(
+      String id, DateTime date) async {
+    final appointments =
+        await _getAppointmentsByQuery(where.eq('barberID', id));
+    return appointments
+        .where((appointment) => Utility.isSameDate(appointment.date, date))
+        .toList();
+  }
+
+  @override
+  Future<List<AppointmentModel>> getActiveAppointmentsByBarberIdAndDate(
+      String id, DateTime date) async {
+    final appointments = await _getAppointmentsByQuery(where
+        .eq('barberID', id)
+        .oneFrom('status',
+            [AppointmentStatus.COMPLETED, AppointmentStatus.UPCOMING]));
+    return appointments
+        .where((appointment) => Utility.isSameDate(appointment.date, date))
+        .toList();
+  }
+
+  @override
+  Future<List<AppointmentModel>> getCompletedAppointmentsByBarberIdAndDate(
+      String id, DateTime date) async {
+    final appointments = await _getAppointmentsByQuery(
+        where.eq('barberID', id).eq('status', AppointmentStatus.COMPLETED));
+    return appointments
+        .where((appointment) => Utility.isSameDate(appointment.date, date))
+        .toList();
+  }
+
+  @override
+  Future<List<AppointmentModel>> getAppointmentsByBarberId(String id) =>
+      _getAppointmentsByQuery(where.eq('barberID', id));
+
+  @override
+  Future<List<AppointmentModel>> getAppointmentsByUserIdAndBarberId(
+          String userID, String barberID) =>
+      _getAppointmentsByQuery(
+          where.eq('userID', userID).eq('barberID', barberID));
 }

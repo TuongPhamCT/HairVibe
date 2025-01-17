@@ -2,6 +2,7 @@ import '../Const/database_config.dart';
 import 'firebase/firebase_notice_repo.dart';
 import 'notice_model.dart';
 import 'notice_repo_impl.dart';
+import 'mongoDB/mongoDB_notice_repo_impl.dart';
 
 class NoticeRepository {
   late NoticeRepoImplInterface _impl;

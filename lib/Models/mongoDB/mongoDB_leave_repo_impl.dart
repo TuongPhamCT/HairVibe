@@ -1,16 +1,17 @@
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:hairvibe/Models/leave_model.dart';
+import 'package:hairvibe/Models/leave_repo_impl.dart';
 
-class MongoDBLeaveRepoImplementation {
+class MongoDBLeaveRepoImpl implements LeaveRepoImplInterface {
   final Db _db = Db(
       'mongodb://localhost:27017/hairvibe'); // Replace with your MongoDB connection string
-  final String collectionName = LeaveModel.collectionName;
 
-  Future<void> addLeaveToMongo(LeaveModel model) async {
+  @override
+  Future<void> addLeave(LeaveModel model) async {
     try {
       await _db.open();
-      final collection = _db.collection(collectionName);
-      await collection.insertOne(model.toJson());
+      final collection = _db.collection(LeaveModel.collectionName);
+      await collection.insert(model.toJson());
       print('Leave added to MongoDB with ID: ${model.leaveID}');
     } catch (e) {
       print('Error adding Leave to MongoDB: $e');
@@ -19,10 +20,11 @@ class MongoDBLeaveRepoImplementation {
     }
   }
 
+  @override
   Future<List<LeaveModel>> getLeavesByBarberId(String id) async {
     try {
       await _db.open();
-      final collection = _db.collection(collectionName);
+      final collection = _db.collection(LeaveModel.collectionName);
       final results = await collection.find(where.eq('barberID', id)).toList();
       return results.map((json) => LeaveModel.fromJson(json)).toList();
     } catch (e) {
@@ -33,15 +35,16 @@ class MongoDBLeaveRepoImplementation {
     }
   }
 
+  @override
   Future<bool> updateLeave(LeaveModel model) async {
     try {
       await _db.open();
-      final collection = _db.collection(collectionName);
-      final result = await collection.updateOne(
+      final collection = _db.collection(LeaveModel.collectionName);
+      final result = await collection.update(
         where.eq('leaveID', model.leaveID),
-        modify.set('data', model.toJson()),
+        model.toJson(),
       );
-      return result.isSuccess;
+      return result['n'] > 0; // Check if any document was updated
     } catch (e) {
       print('Error updating Leave in MongoDB: $e');
       return false;

@@ -1,19 +1,20 @@
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:hairvibe/Models/service_model.dart';
+import '../service_repo_impl.dart';
 
-class MongoDBServiceRepoImplementation {
+class MongoDBServiceRepoImpl implements ServiceRepoImplInterface {
   final Db _db = Db(
       'mongodb://localhost:27017/hairvibe'); // Replace with your MongoDB connection string
-  final String collectionName = ServiceModel.collectionName;
 
-  Future<String> addServiceToMongo(ServiceModel model) async {
+  @override
+  Future<String> addService(ServiceModel model) async {
     try {
       await _db.open();
-      final collection = _db.collection(collectionName);
-      final result = await collection.insertOne(model.toJson());
-      final insertedId = result['insertedId'];
-      print('Service added to MongoDB with ID: $insertedId');
-      return insertedId.toString();
+      final collection = _db.collection(ServiceModel.collectionName);
+      final result = await collection.insert(model.toJson());
+      final serviceId = result['insertedId'].toString();
+      print('Service added to MongoDB with ID: $serviceId');
+      return serviceId;
     } catch (e) {
       print('Error adding Service to MongoDB: $e');
       return "";
@@ -22,15 +23,16 @@ class MongoDBServiceRepoImplementation {
     }
   }
 
+  @override
   Future<bool> updateService(ServiceModel model) async {
     try {
       await _db.open();
-      final collection = _db.collection(collectionName);
-      final result = await collection.updateOne(
-        where.eq('_id', model.serviceID),
-        modify.set('data', model.toJson()),
+      final collection = _db.collection(ServiceModel.collectionName);
+      final result = await collection.update(
+        where.eq('serviceID', model.serviceID),
+        model.toJson(),
       );
-      return result.isSuccess;
+      return result['n'] > 0; // Check if any document was updated
     } catch (e) {
       print('Error updating Service in MongoDB: $e');
       return false;
@@ -39,12 +41,13 @@ class MongoDBServiceRepoImplementation {
     }
   }
 
+  @override
   Future<void> deleteServiceById(String id) async {
     try {
       await _db.open();
-      final collection = _db.collection(collectionName);
-      await collection.deleteOne(where.eq('_id', id));
-      print('Service with ID: $id deleted from MongoDB.');
+      final collection = _db.collection(ServiceModel.collectionName);
+      await collection.remove(where.eq('serviceID', id));
+      print('Service deleted from MongoDB with ID: $id');
     } catch (e) {
       print('Error deleting Service from MongoDB: $e');
     } finally {
@@ -52,29 +55,20 @@ class MongoDBServiceRepoImplementation {
     }
   }
 
+  @override
   Future<List<ServiceModel>> getAllServices() async {
     try {
       await _db.open();
-      final collection = _db.collection(collectionName);
+      final collection = _db.collection(ServiceModel.collectionName);
       final results = await collection.find().toList();
       return results
-          .map((json) => ServiceModel.fromJson(json['_id'].toString(), json))
+          .map((json) => ServiceModel.fromJson(json['_id'], json))
           .toList();
     } catch (e) {
       print('Error fetching all Services from MongoDB: $e');
       return [];
     } finally {
       await _db.close();
-    }
-  }
-
-  Future<int> getServicesCount() async {
-    try {
-      final services = await getAllServices();
-      return services.length;
-    } catch (e) {
-      print('Error fetching Service count from MongoDB: $e');
-      return 0;
     }
   }
 }

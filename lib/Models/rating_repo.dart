@@ -5,6 +5,7 @@ import 'package:hairvibe/Models/user_model.dart';
 
 import '../Const/database_config.dart';
 import 'firebase/firebase_rating_repo.dart';
+import 'mongoDB/mongoDB_rating_repo_impl.dart';
 
 class RatingRepository {
   late RatingRepoImplInterface _impl;

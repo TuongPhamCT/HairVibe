@@ -3,6 +3,7 @@ import 'package:hairvibe/Models/leave_model.dart';
 import '../Const/database_config.dart';
 import 'firebase/firebase_leave_repo.dart';
 import 'leave_repo_impl.dart';
+import 'mongoDB/mongoDB_leave_repo_impl.dart';
 
 class LeaveRepository {
   late LeaveRepoImplInterface _impl;
@@ -13,7 +14,7 @@ class LeaveRepository {
         _impl = FirebaseLeaveRepoImpl();
         break;
       case DatabaseConfig.MONGO_DB:
-        _impl = MongoDBCouponRepoImpl();
+        _impl = MongoDBLeaveRepoImpl();
     }
   }
 
