@@ -27,7 +27,7 @@ class ConfirmBookingPresenter {
   }
 
   bool checkCacheVoucher() {
-    CouponModel? coupon = _bookingSingleton.cacheCoupon;
+    CouponModel? coupon = _bookingSingleton.selectedCoupon;
     if (coupon != null) {
       _bookingSingleton.usedCoupon = coupon;
       _appointmentSingleton.setDiscount(coupon.discountRate!);

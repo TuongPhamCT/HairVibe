@@ -58,7 +58,7 @@ class MainBookingPresenter {
   Future<void> getData() async {
     List<ServiceModel> serviceList = await _serviceRepo.getAllServices();
 
-    ServiceModel? storedService = _bookingSingleton.cacheService;
+    ServiceModel? storedService = _bookingSingleton.selectedService;
 
     services = List.generate(
       serviceList.length,
@@ -78,7 +78,7 @@ class MainBookingPresenter {
     }
 
     barbers = await _userRepo.getAllBarbers();
-    UserModel? storedBarber = _bookingSingleton.cacheBarber;
+    UserModel? storedBarber = _bookingSingleton.selectedBarber;
 
     selectedBarber = barbers.first;
     selectedBarberIndex = 0;

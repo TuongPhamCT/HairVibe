@@ -29,7 +29,7 @@ class VoucherPagePresenter {
   }
 
   void handleUseVoucher(CouponModel coupon) {
-    _bookingSingleton.setCacheCoupon(coupon);
+    _bookingSingleton.setSelectedCoupon(coupon);
     _view.onUseVoucher();
   }
 }

@@ -44,7 +44,7 @@ class HomeScreenPresenter {
   }
 
   void handleServicePressed(ServiceModel model) {
-    _bookingSingleton.setCacheService(model);
+    _bookingSingleton.setSelectedService(model);
     _view.onServicePressed();
   }
 
