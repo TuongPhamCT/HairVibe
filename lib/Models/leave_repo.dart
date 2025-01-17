@@ -1,37 +1,31 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hairvibe/Models/leave_model.dart';
 
-class LeaveRepository {
-  final FirebaseFirestore _storage = FirebaseFirestore.instance;
+import '../Const/database_config.dart';
+import 'firebase/firebase_leave_repo.dart';
+import 'leave_repo_impl.dart';
 
-  void addLeaveToFirestore(LeaveModel model) async {
-    try {
-      DocumentReference docRef = _storage.collection(LeaveModel.collectionName).doc(model.leaveID);
-      await docRef.set(model.toJson()).whenComplete(()
-      => print('Leave added to Firestore with ID: ${docRef.id}'));
-    } catch (e) {
-      print('Error adding Leave to Firestore: $e');
+class LeaveRepository {
+  late LeaveRepoImplInterface _impl;
+
+  LeaveRepository(String dbType) {
+    switch (dbType) {
+      case DatabaseConfig.FIREBASE:
+        _impl = FirebaseLeaveRepoImpl();
+        break;
+      case DatabaseConfig.MONGO_DB:
+        _impl = MongoDBCouponRepoImpl();
     }
+  }
+  Future<void> addLeave(LeaveModel model) async {
+    return await _impl.addLeave(model);
   }
 
   Future<List<LeaveModel>> getLeavesByBarberId(String id) async {
-    final QuerySnapshot querySnapshot = await _storage.collection(LeaveModel.collectionName)
-        .where('barberID', isEqualTo: id).get();
-    final leaves = querySnapshot
-        .docs
-        .map((doc) => LeaveModel.fromJson(doc as Map<String, dynamic>))
-        .toList();
-    return leaves;
+    return await _impl.getLeavesByBarberId(id);
   }
 
   Future<bool> updateLeave(LeaveModel model) async {
-    bool isSuccess = false;
-
-    await _storage.collection(LeaveModel.collectionName)
-        .doc(model.leaveID)
-        .update(model.toJson())
-        .then((_) => isSuccess = true);
-
-    return isSuccess;
+    return await _impl.updateLeave(model);
   }
 }
