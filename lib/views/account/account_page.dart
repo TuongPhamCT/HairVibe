@@ -131,13 +131,8 @@ class _AccountPageState extends State<AccountPage>
             ),
             const SizedBox(height: 40),
             InkWell(
-              onTap: () async {
-                UserSingleton userSingleton = UserSingleton.getInstance();
-                await _auth.signOut();
-                await userSingleton.handleActionsAfterLogOut();
-                if (context.mounted) {
-                  Navigator.of(context).pushNamed(AuthScreen.routeName);
-                }
+              onTap: () {
+                _presenter?.handleLogOut();
               },
               child: Row(
                 children: [
@@ -179,6 +174,15 @@ class _AccountPageState extends State<AccountPage>
   @override
   void toReviewAdmin() {
     Navigator.of(context).pushNamed(RatingBarberPage.routeName);
+  }
+
+  @override
+  void onLogOut() {
+    if (context.mounted) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const AuthScreen()),
+      );
+    }
   }
 
 }

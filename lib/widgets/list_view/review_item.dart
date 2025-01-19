@@ -11,14 +11,13 @@ class ReviewItem extends StatelessWidget {
   final String? comment;
   final String? avatarUrl;
 
-  const ReviewItem({
-    super.key,
-    required this.userName,
-    required this.date,
-    required this.rating,
-    required this.comment,
-    required this.avatarUrl
-  });
+  const ReviewItem(
+      {super.key,
+      required this.userName,
+      required this.date,
+      required this.rating,
+      required this.comment,
+      required this.avatarUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -39,20 +38,20 @@ class ReviewItem extends StatelessWidget {
                 width: 40,
                 height: 40,
                 decoration: avatarUrl != null && avatarUrl!.isNotEmpty
-                  ? BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      image: DecorationImage(
-                        image: NetworkImage(avatarUrl!),
-                        fit: BoxFit.cover,
+                    ? BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        image: DecorationImage(
+                          image: NetworkImage(avatarUrl!),
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        image: const DecorationImage(
+                          image: AssetImage(AssetHelper.logo),
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    )
-                  : BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    image: const DecorationImage(
-                      image: AssetImage(AssetHelper.logo),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
               ),
               const SizedBox(width: 10),
               Column(
@@ -60,30 +59,35 @@ class ReviewItem extends StatelessWidget {
                 children: [
                   Text(
                     userName ?? "User",
-                    style: TextDecor.forgotTitle,
+                    style: TextDecor.homeTitle,
                   ),
-                  Text(
-                    date ?? "dd/MM/yyyy",
-                    style: TextDecor.robo13SemiHint,
+                  Row(
+                    children: [
+                      Text(
+                        date ?? "dd/MM/yyyy",
+                        style: TextDecor.robo13SemiHint,
+                      ),
+                      const SizedBox(width: 10),
+                      RatingBar.builder(
+                        initialRating: rating ?? 5,
+                        minRating: 1,
+                        direction: Axis.horizontal,
+                        allowHalfRating: true,
+                        itemCount: 5,
+                        itemSize: 18,
+                        unratedColor: const Color(0xffDADADA),
+                        itemBuilder: (context, _) => const Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
+                        onRatingUpdate: (value) {},
+                        ignoreGestures: true,
+                      ),
+                    ],
                   ),
                 ],
               ),
               Expanded(child: Container()),
-              RatingBar.builder(
-                initialRating: rating ?? 5,
-                minRating: 1,
-                direction: Axis.horizontal,
-                allowHalfRating: true,
-                itemCount: 5,
-                itemSize: 18,
-                unratedColor: const Color(0xffDADADA),
-                itemBuilder: (context, _) => const Icon(
-                  Icons.star,
-                  color: Colors.amber,
-                ),
-                onRatingUpdate: (value) {},
-                ignoreGestures: true,
-              ),
             ],
           ),
           const SizedBox(height: 8),

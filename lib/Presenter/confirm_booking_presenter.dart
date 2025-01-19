@@ -1,3 +1,4 @@
+import 'package:hairvibe/Const/app_config.dart';
 import 'package:hairvibe/Contract/confirm_booking_contract.dart';
 import 'package:hairvibe/Models/coupon_model.dart';
 import 'package:hairvibe/Models/user_model.dart';
@@ -11,7 +12,7 @@ class ConfirmBookingPresenter {
 
   final BookingSingleton _bookingSingleton = BookingSingleton.getInstance();
   final AppointmentSingleton _appointmentSingleton = AppointmentSingleton.getInstance();
-  final UserRepository _userRepo = UserRepository();
+  final UserRepository _userRepo = UserRepository(AppConfig.dbType);
 
   void handleAddVoucherPressed() {
     _view.onAddVoucher();
@@ -26,7 +27,7 @@ class ConfirmBookingPresenter {
   }
 
   bool checkCacheVoucher() {
-    CouponModel? coupon = _bookingSingleton.cacheCoupon;
+    CouponModel? coupon = _bookingSingleton.selectedCoupon;
     if (coupon != null) {
       _bookingSingleton.usedCoupon = coupon;
       _appointmentSingleton.setDiscount(coupon.discountRate!);

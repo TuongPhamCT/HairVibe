@@ -1,4 +1,5 @@
 import 'package:hairvibe/Builders/ModelBuilder/appointment_model_builder.dart';
+import 'package:hairvibe/Const/app_config.dart';
 import 'package:hairvibe/Facades/notification_facade.dart';
 import 'package:hairvibe/Models/appointment_repo.dart';
 import 'package:hairvibe/Models/coupon_model.dart';
@@ -17,17 +18,17 @@ class BookingSingleton {
   }
 
   final AppointmentModelBuilder builder = AppointmentModelBuilder();
-  final AppointmentRepository _appointmentRepo = AppointmentRepository();
+  final AppointmentRepository _appointmentRepo = AppointmentRepository(AppConfig.dbType);
 
   String? customerID;
   String? barberID;
 
   CouponModel? usedCoupon;
   // Use when user navigate from Voucher Page
-  CouponModel? cacheCoupon;
+  CouponModel? selectedCoupon;
 
-  ServiceModel? cacheService;
-  UserModel? cacheBarber;
+  ServiceModel? selectedService;
+  UserModel? selectedBarber;
 
   void setCustomerID(String customerID) {
     this.customerID = customerID;
@@ -41,22 +42,22 @@ class BookingSingleton {
     usedCoupon = coupon;
   }
 
-  void setCacheCoupon(CouponModel coupon) {
-    cacheCoupon = coupon;
+  void setSelectedCoupon(CouponModel coupon) {
+    selectedCoupon = coupon;
   }
 
-  void setCacheBarber(UserModel barber) {
-    cacheBarber = barber;
+  void setSelectedBarber(UserModel barber) {
+    selectedBarber = barber;
   }
 
-  void setCacheService(ServiceModel service) {
-    cacheService = service;
+  void setSelectedService(ServiceModel service) {
+    selectedService = service;
   }
 
   void resetCache() {
-    cacheService = null;
-    cacheCoupon = null;
-    cacheBarber = null;
+    selectedService = null;
+    selectedCoupon = null;
+    selectedBarber = null;
   }
 
   void reset() {
@@ -80,7 +81,7 @@ class BookingSingleton {
 
     AppointmentModel appointment = builder.build();
 
-    await _appointmentRepo.addAppointmentToFirestore(appointment);
+    await _appointmentRepo.addAppointment(appointment);
     await notificationFacade.createBookingAppointmentNotification(
         appointment: appointment,
         customerName: UserSingleton.getInstance().currentUser!.name!

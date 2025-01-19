@@ -97,23 +97,23 @@ class _MainBookingState extends State<MainBooking> implements MainBookingContrac
                   const SizedBox(
                     height: 10,
                   ),
-                  Column(
-                    children: [
-                      ListView.builder(
-                        itemCount: services.length,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          CheckServiceListItemBuilder builder = CheckServiceListItemBuilder();
-                          director.makeCheckServiceListItem(
-                              builder: builder,
-                              service: services[index]['serviceModel'],
-                              index: index,
-                              presenter: _presenter!
-                          );
-                          return builder.createWidget();
-                        },
-                      )
-                    ] ,
+                  SizedBox(
+                    width: size.width,
+                    height: size.height * 0.3,
+                    child: ListView.builder(
+                      itemCount: services.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        CheckServiceListItemBuilder builder = CheckServiceListItemBuilder();
+                        director.makeCheckServiceListItem(
+                            builder: builder,
+                            service: services[index]['serviceModel'],
+                            index: index,
+                            presenter: _presenter!
+                        );
+                        return builder.createWidget();
+                      },
+                    )
                   ),
                   const SizedBox(
                     height: 20,
@@ -137,6 +137,10 @@ class _MainBookingState extends State<MainBooking> implements MainBookingContrac
                             return isSameDay(_selectedDay, day);
                           },
                           onDaySelected: (selectedDay, focusedDay) {
+                            if (Utility.isPreviousDate(selectedDay)) {
+                              selectedDay = focusedDay;
+                              return;
+                            }
                             _presenter!.handleSelectDate(selectedDay, focusedDay);
                           },
                           headerStyle: HeaderStyle(
@@ -201,7 +205,7 @@ class _MainBookingState extends State<MainBooking> implements MainBookingContrac
                                     side: BorderSide(
                                       color: times[index]['isChecked']
                                           ? Palette.primary
-                                          : Palette.inactiveDayWeek,
+                                          : Palette.backgroundColor,
                                     ),
                                   ),
                                 ),
@@ -214,7 +218,7 @@ class _MainBookingState extends State<MainBooking> implements MainBookingContrac
                                   style: TextDecor.timeWork.copyWith(
                                     color: times[index]['isChecked']
                                         ? Palette.primary
-                                        : Palette.inactiveDayWeek,
+                                        : Palette.backgroundColor,
                                   ),
                                 ),
                               );

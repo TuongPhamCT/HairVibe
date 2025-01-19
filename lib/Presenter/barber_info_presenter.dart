@@ -1,3 +1,4 @@
+import 'package:hairvibe/Const/app_config.dart';
 import 'package:hairvibe/Contract/detail_barber_contract.dart';
 import 'package:hairvibe/Models/rating_repo.dart';
 import 'package:hairvibe/Models/user_repo.dart';
@@ -11,8 +12,8 @@ class BarberInfoPresenter {
   BarberInfoPresenter(this._view);
 
   final BarberSingleton _singleton = BarberSingleton.getInstance();
-  final RatingRepository _ratingRepo = RatingRepository();
-  final UserRepository _userRepo = UserRepository();
+  final RatingRepository _ratingRepo = RatingRepository(AppConfig.dbType);
+  final UserRepository _userRepo = UserRepository(AppConfig.dbType);
   List<RatingModel> ratings = [];
   Map<String, UserModel> users = {};
 

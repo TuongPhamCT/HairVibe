@@ -1,64 +1,39 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hairvibe/Models/rating_model.dart';
+import 'package:hairvibe/Models/rating_repo_impl.dart';
 import 'package:hairvibe/Models/user_model.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
+
+import '../Const/database_config.dart';
+import 'firebase/firebase_rating_repo.dart';
+import 'mongoDB/mongoDB_rating_repo_impl.dart';
 
 class RatingRepository {
-  final FirebaseFirestore _storage = FirebaseFirestore.instance;
-  // final FirebaseAuth _auth = FirebaseAuth.instance;
+  late RatingRepoImplInterface _impl;
 
-  Future<String> addRatingToFirestore(RatingModel model) async {
-    try {
-      DocumentReference docRef
-        = _storage.collection(UserModel.collectionName)
-            .doc(model.barberID)
-            .collection(RatingModel.collectionName)
-            .doc(model.ratingID);
-      await docRef.set(model.toJson()).whenComplete(()
-      => print('Ratings added to Firestore with ID: ${docRef.id}'));
-      return docRef.id;
-    } catch (e) {
-      print('Error adding Rating to Firestore: $e');
-      return "";
+  RatingRepository(String dbType) {
+    switch (dbType) {
+      case DatabaseConfig.FIREBASE:
+        _impl = FirebaseRatingRepoImpl();
+        break;
+      case DatabaseConfig.MONGO_DB:
+        _impl = MongoDBRatingRepoImpl();
     }
   }
 
-  Future<void> deleteRatingById(String barberId, String id) async
-    => _storage.collection(UserModel.collectionName)
-          .doc(barberId)
-          .collection(RatingModel.collectionName)
-          .doc(id)
-          .delete();
+  Future<String> addRating(RatingModel model) async {
+    return await _impl.addRating(model);
+  }
+
+  Future<void> deleteRatingById(String barberId, String id) async {
+    await _impl.deleteRatingById(barberId, id);
+  }
 
   Future<bool> updateRating(RatingModel model) async {
-    bool isSuccess = false;
-
-    await _storage.collection(UserModel.collectionName)
-        .doc(model.barberID)
-        .collection(RatingModel.collectionName)
-        .doc(model.ratingID)
-        .update(model.toJson())
-        .then((_) => isSuccess = true);
-
-    return isSuccess;
+    return await _impl.updateRating(model);
   }
 
   Future<List<RatingModel>> getRatingsByBarberId(String barberId) async {
-    try {
-      final QuerySnapshot querySnapshot
-        = await _storage.collection(UserModel.collectionName)
-            .doc(barberId)
-            .collection(RatingModel.collectionName)
-            .get();
-      final ratings = querySnapshot
-          .docs
-          .map((doc) => RatingModel.fromJson(doc.id, doc.data() as Map<String, dynamic>))
-          .toList();
-      return ratings;
-    } catch (e) {
-      print(e);
-      return [];
-    }
+    return await _impl.getRatingsByBarberId(barberId);
   }
 
   Future<double> calculateRatingOfBarber(String barberId) async {
@@ -67,7 +42,7 @@ class RatingRepository {
       return 0;
     }
     double avgRating = 0;
-    for (RatingModel model in list){
+    for (RatingModel model in list) {
       avgRating += (model.rate ?? 0);
     }
     return avgRating / list.length;

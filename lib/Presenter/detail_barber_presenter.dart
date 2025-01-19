@@ -1,3 +1,4 @@
+import 'package:hairvibe/Const/app_config.dart';
 import 'package:hairvibe/Contract/detail_barber_contract.dart';
 import 'package:hairvibe/Facades/image_storage_facade.dart';
 import 'package:hairvibe/Models/rating_repo.dart';
@@ -17,15 +18,19 @@ class DetailBarberPresenter {
 
   final BarberSingleton _barberSingleton = BarberSingleton.getInstance();
   final UserSingleton _userSingleton = UserSingleton.getInstance();
-  final RatingRepository _ratingRepo = RatingRepository();
-  final UserRepository _userRepo = UserRepository();
-  final WorkSessionRepository _workSessionRepository = WorkSessionRepository();
+  final RatingRepository _ratingRepo = RatingRepository(AppConfig.dbType);
+  final UserRepository _userRepo = UserRepository(AppConfig.dbType);
+  final WorkSessionRepository _workSessionRepository = WorkSessionRepository(AppConfig.dbType);
   final ImageStorageFacade _imageStorageFacade = ImageStorageFacade();
   List<RatingModel> ratings = [];
   Map<String, UserModel> users = {};
   List<WorkSessionModel> workSessions = [];
 
   Future<void> getData() async {
+    if (_userSingleton.currentUserIsBarber()) {
+      _barberSingleton.reset();
+    }
+
     if (_userSingleton.currentUserIsCustomer() == false && _barberSingleton.barber == null) {
       _barberSingleton.setBarber(_userSingleton.currentUser!);
       if (_userSingleton.currentUserIsBarber()) {
@@ -96,7 +101,7 @@ class DetailBarberPresenter {
           barberID: user.userID,
           day: i + 1
         );
-        model.workSessionID = await _workSessionRepository.addWorkSessionToFirestore(model);
+        model.workSessionID = await _workSessionRepository.addWorkSession(model);
         workSessions.add(model);
       }
     }

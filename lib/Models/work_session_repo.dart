@@ -1,47 +1,34 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hairvibe/Models/user_model.dart';
 import 'package:hairvibe/Models/work_session_model.dart';
+import 'package:hairvibe/Models/work_session_repo_impl.dart';
+
+import '../Const/database_config.dart';
+import 'firebase/firebase_work_session_repo.dart';
+import 'mongoDB/mongoDB_work_session_repo_impl.dart';
 
 class WorkSessionRepository {
-  final FirebaseFirestore _storage = FirebaseFirestore.instance;
+  late WorkSessionRepoImplInterface _impl;
 
-  Future<String> addWorkSessionToFirestore(WorkSessionModel model) async {
-    try {
-      DocumentReference docRef = _storage.collection(UserModel.collectionName)
-                                          .doc(model.barberID)
-                                          .collection(WorkSessionModel.collectionName)
-                                          .doc();
-      await docRef.set(model.toJson()).whenComplete(()
-      => print('WorkSession added to Firestore with ID: ${docRef.id}'));
-      return docRef.id;
-    } catch (e) {
-      print('Error adding WorkSession to Firestore: $e');
-      return "";
+  WorkSessionRepository(String dbType) {
+    switch (dbType) {
+      case DatabaseConfig.FIREBASE:
+        _impl = FirebaseWorkSessionRepoImpl();
+        break;
+      case DatabaseConfig.MONGO_DB:
+        _impl = MongoDBWorkSessionRepoImpl();
     }
   }
 
-  Future<void> deleteWorkSessionById(String userId, String id) async
-    => _storage.collection(UserModel.collectionName)
-                .doc(userId)
-                .collection(WorkSessionModel.collectionName)
-                .doc(id)
-                .delete();
+  Future<String> addWorkSession(WorkSessionModel model) async {
+    return await _impl.addWorkSession(model);
+  }
+
+  Future<void> deleteWorkSessionById(String userId, String id) async {
+    await _impl.deleteWorkSessionById(userId, id);
+  }
 
   Future<List<WorkSessionModel>> getWorkSessionsByBarberId(String id) async {
-    try {
-      final QuerySnapshot querySnapshot =
-        await _storage.collection(UserModel.collectionName)
-                      .doc(id)
-                      .collection(WorkSessionModel.collectionName)
-                      .get();
-      final sessions = querySnapshot
-          .docs
-          .map((doc) => WorkSessionModel.fromJson(doc.id, doc.data() as Map<String, dynamic>))
-          .toList();
-      return sessions;
-    } catch (e) {
-      print(e);
-      return [];
-    }
+    return await _impl.getWorkSessionsByBarberId(id);
   }
 }

@@ -1,3 +1,4 @@
+import 'package:hairvibe/Const/app_config.dart';
 import 'package:hairvibe/Contract/home_screen_contract.dart';
 import 'package:hairvibe/Models/rating_repo.dart';
 import 'package:hairvibe/Models/service_model.dart';
@@ -12,9 +13,9 @@ class HomeScreenPresenter {
   final HomeScreenContract _view;
   HomeScreenPresenter(this._view);
 
-  final ServiceRepository _serviceRepo = ServiceRepository();
-  final UserRepository _userRepo = UserRepository();
-  final RatingRepository _ratingRepo = RatingRepository();
+  final ServiceRepository _serviceRepo = ServiceRepository(AppConfig.dbType);
+  final UserRepository _userRepo = UserRepository(AppConfig.dbType);
+  final RatingRepository _ratingRepo = RatingRepository(AppConfig.dbType);
 
   final BookingSingleton _bookingSingleton = BookingSingleton.getInstance();
   final BarberSingleton _barberSingleton = BarberSingleton.getInstance();
@@ -43,7 +44,7 @@ class HomeScreenPresenter {
   }
 
   void handleServicePressed(ServiceModel model) {
-    _bookingSingleton.setCacheService(model);
+    _bookingSingleton.setSelectedService(model);
     _view.onServicePressed();
   }
 

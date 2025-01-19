@@ -25,7 +25,7 @@ class _NotificationsPageState extends State<NotificationsPage> implements Notifi
   @override
   void initState() {
     singleton.subscribe(this);
-    singleton.notifications.sort((element1, element2) => element1.date!.compareTo(element2.date!));
+    singleton.notifications.sort((element1, element2) => element1.date!.compareTo(element2.date!) * -1);
 
     for (NoticeModel model in singleton.notifications) {
       String date = Utility.formatDateFromDateTime(model.date);

@@ -1,3 +1,4 @@
+import 'package:hairvibe/Const/app_config.dart';
 import 'package:hairvibe/Models/rating_repo.dart';
 import 'package:hairvibe/Models/user_model.dart';
 import 'package:hairvibe/Models/user_repo.dart';
@@ -12,9 +13,9 @@ class BarberScreenPresenter {
   final BarberScreenContract _view;
   BarberScreenPresenter(this._view);
 
-  final UserRepository _userRepo = UserRepository();
-  final RatingRepository _ratingRepo = RatingRepository();
-  final WorkSessionRepository _workSessionRepo = WorkSessionRepository();
+  final UserRepository _userRepo = UserRepository(AppConfig.dbType);
+  final RatingRepository _ratingRepo = RatingRepository(AppConfig.dbType);
+  final WorkSessionRepository _workSessionRepo = WorkSessionRepository(AppConfig.dbType);
   final BarberSingleton _barberSingleton = BarberSingleton.getInstance();
   final BookingSingleton _bookingSingleton = BookingSingleton.getInstance();
 
@@ -33,7 +34,7 @@ class BarberScreenPresenter {
   }
 
   void handleBookBarberPressed(UserModel model) {
-    _bookingSingleton.setCacheBarber(model);
+    _bookingSingleton.setSelectedBarber(model);
     _view.onBookBarberPressed();
   }
 

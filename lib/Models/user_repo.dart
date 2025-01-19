@@ -1,97 +1,50 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hairvibe/Models/user_model.dart';
+import 'package:hairvibe/Models/user_repo_impl.dart';
+
+import '../Const/database_config.dart';
+import 'firebase/firebase_user_repo.dart';
+import 'mongoDB/mongoDB_user_repo_impl.dart';
 
 class UserRepository {
-  final FirebaseFirestore _storage = FirebaseFirestore.instance;
-  //final FirebaseAuth _auth = FirebaseAuth.instance;
+  late UserRepoImplInterface _impl;
 
-  Future<void> addUserToFirestore(UserModel user) async {
-    try {
-      DocumentReference docRef = _storage.collection(UserModel.collectionName).doc(user.userID);
-      await docRef.set(user.toJson()).whenComplete(()
-        => print('User added to Firestore with ID: ${docRef.id}'));
-    } catch (e) {
-      print('Error adding user to Firestore: $e');
+  UserRepository(String dbType) {
+    switch (dbType) {
+      case DatabaseConfig.FIREBASE:
+        _impl = FirebaseUserRepoImpl();
+        break;
+      case DatabaseConfig.MONGO_DB:
+        _impl = MongoDBUserRepoImpl();
     }
+  }
+
+  Future<void> addUser(UserModel user) async {
+    await _impl.addUser(user);
   }
 
   Future<bool> updateUser(UserModel model) async {
-    bool isSuccess = false;
-
-    await _storage.collection(UserModel.collectionName)
-        .doc(model.userID)
-        .update(model.toJson())
-        .then((_) => isSuccess = true);
-
-    return isSuccess;
+    return await _impl.updateUser(model);
   }
 
   Future<UserModel> getUserById(String id) async {
-    final DocumentReference<Map<String, dynamic>> collectionRef = _storage.collection(UserModel.collectionName).doc(id);
-    DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await collectionRef.get();
-
-    final UserModel user = UserModel.fromJson(documentSnapshot.data() as Map<String, dynamic>);
-    return user;
+    return await _impl.getUserById(id);
   }
 
   Future<List<UserModel>> getAllUsers() async {
-    try {
-      final QuerySnapshot querySnapshot = await _storage.collection(UserModel.collectionName).get();
-      final users = querySnapshot
-          .docs
-          .map((doc) => UserModel.fromJson(doc.data() as Map<String, dynamic>))
-          .toList();
-      return users;
-    } catch (e) {
-      print(e);
-      return [];
-    }
+    return await _impl.getAllBarbers();
   }
 
   Future<List<UserModel>> getAllCustomers() async {
-    try {
-      final QuerySnapshot querySnapshot = await _storage.collection(UserModel.collectionName)
-          .where('userType', isEqualTo: UserType.CUSTOMER).get();
-      final customers = querySnapshot
-          .docs
-          .map((doc) => UserModel.fromJson(doc.data() as Map<String, dynamic>))
-          .toList();
-      return customers;
-    } catch (e) {
-      print(e);
-      return [];
-    }
+    return await _impl.getAllCustomers();
   }
 
   Future<List<UserModel>> getAllBarbers() async {
-    try {
-      final QuerySnapshot querySnapshot = await _storage.collection(UserModel.collectionName)
-          .where('userType', isEqualTo: UserType.BARBER).get();
-      final barbers = querySnapshot
-          .docs
-          .map((doc) => UserModel.fromJson(doc.data() as Map<String, dynamic>))
-          .toList();
-      return barbers;
-    } catch (e) {
-      print(e);
-      return [];
-    }
+    return await _impl.getAllBarbers();
   }
 
   Future<List<UserModel>> getAllAdmins() async {
-    try {
-      final QuerySnapshot querySnapshot = await _storage.collection(UserModel.collectionName)
-          .where('userType', isEqualTo: UserType.ADMIN).get();
-      final barbers = querySnapshot
-          .docs
-          .map((doc) => UserModel.fromJson(doc.data() as Map<String, dynamic>))
-          .toList();
-      return barbers;
-    } catch (e) {
-      print(e);
-      return [];
-    }
+    return await _impl.getAllAdmins();
   }
 
   Future<int> getBarbersCount() async {
@@ -103,10 +56,4 @@ class UserRepository {
     final List<UserModel> users = await getAllCustomers();
     return users.length;
   }
-
-  // Future<String> generateUserID() async {
-  //   List<UserModel> users = await getAllUsers();
-  //   int count = users.length;
-  //   return count.toString().padLeft(5, '0');
-  // }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hairvibe/Builders/ModelBuilder/appointment_model_builder.dart';
+import 'package:hairvibe/Const/app_config.dart';
 import 'package:hairvibe/Contract/main_booking_contract.dart';
 import 'package:hairvibe/Facades/authenticator_facade.dart';
 import 'package:hairvibe/Models/appointment_model.dart';
@@ -26,12 +27,12 @@ class MainBookingPresenter {
   final BookingSingleton _bookingSingleton = BookingSingleton.getInstance();
   final AppointmentSingleton _appointmentSingleton = AppointmentSingleton.getInstance();
 
-  final ServiceRepository _serviceRepo = ServiceRepository();
-  final UserRepository _userRepo = UserRepository();
-  final WorkSessionRepository _workSessionRepo = WorkSessionRepository();
-  final LeaveRepository _leaveRepo = LeaveRepository();
-  final AppointmentRepository _appointmentRepo = AppointmentRepository();
-  final RatingRepository _ratingRepo = RatingRepository();
+  final ServiceRepository _serviceRepo = ServiceRepository(AppConfig.dbType);
+  final UserRepository _userRepo = UserRepository(AppConfig.dbType);
+  final WorkSessionRepository _workSessionRepo = WorkSessionRepository(AppConfig.dbType);
+  final LeaveRepository _leaveRepo = LeaveRepository(AppConfig.dbType);
+  final AppointmentRepository _appointmentRepo = AppointmentRepository(AppConfig.dbType);
+  final RatingRepository _ratingRepo = RatingRepository(AppConfig.dbType);
 
   final TimeOfDay workSessionStart = const TimeOfDay(hour: 9, minute: 0);
   final TimeOfDay workSessionEnd = const TimeOfDay(hour: 18, minute: 0);
@@ -57,7 +58,7 @@ class MainBookingPresenter {
   Future<void> getData() async {
     List<ServiceModel> serviceList = await _serviceRepo.getAllServices();
 
-    ServiceModel? storedService = _bookingSingleton.cacheService;
+    ServiceModel? storedService = _bookingSingleton.selectedService;
 
     services = List.generate(
       serviceList.length,
@@ -77,7 +78,7 @@ class MainBookingPresenter {
     }
 
     barbers = await _userRepo.getAllBarbers();
-    UserModel? storedBarber = _bookingSingleton.cacheBarber;
+    UserModel? storedBarber = _bookingSingleton.selectedBarber;
 
     selectedBarber = barbers.first;
     selectedBarberIndex = 0;
@@ -131,21 +132,28 @@ class MainBookingPresenter {
   }
 
   Future<void> handleSelectDate(DateTime selectedDate, DateTime focusedDate) async {
+    _view.onWaitingProgressBar();
     this.selectedDate = selectedDate;
     this.focusedDate = focusedDate;
     cacheTimeCheckIndex = -1;
+    currentBarberAppointments = await _appointmentRepo.getAppointmentsByBarberIdAndDate(selectedBarber!.userID!, selectedDate);
     _generateTimeList();
+    _view.onPopContext();
     _view.onSelectDate();
   }
 
   void handleSelectTime(int index) {
     if (cacheTimeCheckIndex >= 0) {
-      times[cacheTimeCheckIndex]['isChecked'] = false;
-    }
-    if (cacheTimeCheckIndex != index) {
-      times[index]['isChecked'] = ! times[index]['isChecked'];
+      if (cacheTimeCheckIndex != index) {
+        times[cacheTimeCheckIndex]['isChecked'] = false;
+        times[index]['isChecked'] = true;
+        cacheTimeCheckIndex = index;
+      }
+    } else {
+      times[index]['isChecked'] = true;
       cacheTimeCheckIndex = index;
     }
+
     _view.onSelectTime();
   }
 
@@ -226,14 +234,18 @@ class MainBookingPresenter {
 
     for (int i = start ; i <= end ; i += timeStep.inMinutes) {
       TimeOfDay timeStamp = Utility.convertIntToTimeOfDay(i);
+      bool isConflicted = false;
       // Check if this timestamp conflict with barber appointments
       for (AppointmentModel appointment in currentBarberAppointments) {
         TimeOfDay appointmentStart = Utility.getTimeOfDayFromDateTime(appointment.date!);
         if (Utility.isScheduleConflicted(appointmentStart, appointment.getDuration(), timeStamp, _getTotalDuration())) {
-          continue;
+          isConflicted = true;
+          break;
         }
       }
-      timeList.add(timeStamp);
+      if (!isConflicted) {
+        timeList.add(timeStamp);
+      }
     }
 
     times = List.generate(
